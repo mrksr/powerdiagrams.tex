@@ -1,0 +1,33 @@
+syntax: glob
+# Compiled files (they should be added by-hand)
+*.dvi
+*.pdf
+
+# TeX files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.log
+*.out
+*.synctex.gz
+*.thm
+*.toc
+*.nav
+*.snm
+
+# latexmk files
+*.fdb_latexmk
+*.fls
+*.lof
+*.tex.latexmain
+
+# Swap files
+*.swp
+
+# Minted
+*_minted*
+
+# pdfpc
+*.info
+*.pdfpc
