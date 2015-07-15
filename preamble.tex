@@ -1,0 +1,64 @@
+\documentclass[envcountsame]{llncs}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+
+\usepackage{todonotes}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathdots}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{csquotes}
+
+% \usepackage{xcolor}
+% \usepackage{tabu}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+\usetikzlibrary{shapes}
+\usetikzlibrary{fit}
+
+\usepackage[pdftex, hypertexnames=false]{hyperref}
+\usepackage[nameinlink, capitalize]{cleveref}
+\usepackage{autonum}
+
+% \newcommand{\blindtext}{Blindtext!}
+\usepackage[math]{blindtext}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rnn}{\mathbb{R}^+_0}
+\newcommand{\Oh}{\mathcal{O}}
+\newcommand{\Ih}{\mathcal{I}}
+\newcommand{\Ell}{\mathcal{L}}
+
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
+\newcommand{\powerset}[1]{\mathcal{P}\left( #1 \right)}
+\newcommand{\setnot}[1]{\overline{#1}}
+\newcommand{\setsymdiff}{\,\triangle\,}
+
+\newcommand{\defeq}{\coloneqq} %Mathtools already defines this
+
+\DeclareMathOperator{\st}{s.t.}
+
+\pagestyle{plain}
+
+\xdefinecolor{tumblue}     {RGB}{  0,101,189}
+\xdefinecolor{tumgreen}    {RGB}{162,173,  0}
+\xdefinecolor{tumred}      {RGB}{229, 52, 24}
+\xdefinecolor{tumivory}    {RGB}{218,215,203}
+\xdefinecolor{tumorange}   {RGB}{227,114, 34}
+\xdefinecolor{tumlightblue}{RGB}{152,198,234}
+
+\newcommand{\define}[1]{#1}
+% Dummy commands to reuse beamer code
+\newcommand{\structure}[1]{#1}
+\newcommand{\alert}[1]{#1}
+
+% LLNCS algorithms
+\spnewtheorem{algorithm}{Algorithm}{\bfseries}{\itshape}
