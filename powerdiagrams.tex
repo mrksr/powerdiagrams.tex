@@ -1,28 +1,96 @@
 \input{preamble.tex}
 \input{tikzpictures.tex}
 
-\title{Calculating Power Diagrams Using Convex Hulls}
+\title{Incidence Structures of Power Diagrams}
 \subtitle{Interdisciplinary Project}
 \author{Markus Kaiser}
 \institute{Technische Universität München\\
     \email{\href{mailto:markus.kaiser@in.tum.de}{markus.kaiser@in.tum.de}}}
 
+\pagestyle{plain}
+
 \begin{document}
 
 \maketitle
 \begin{abstract}
-    Cool Paper!
+    \blindtext
 \end{abstract}
 
-\section{Definition of Power Diagrams}
+\section{Power Diagrams}
 \label{sec:powerdiagrams}
-\subsection{Diagrams}
-\label{sub:diagramme}
-\todo[inline]{Voronoi Diagrams}
+
+Power diagrams in $d$-dimensional Euclidean space $\R^d$ can be understood as a particular generalization of the more well known Voronoi diagrams.
+A \define{Voronoi diagram} is a partition of the space introduced by a finite set of points $M \subset \R^d$ and a metric $\dist(\cdot, \cdot)$.
+It assigns every point $p \in M$ its \define{region} of points for which there is no other point in $M$ which is closer.
+Using the euclidean metric, these regions are guaranteed to be convex.
+The normal vectors of the hyperplanes at the boundaries are given by the connecting line of neighbouring points with the hyperplane bisecting this line.
+\begin{figure}[Htb]
+    \centering
+    \begin{tikzpicture}
+        \path[clip, use as bounding box] (-3, 0) rectangle (7, 4);
+
+        \node[voronoi center, label=4] (s0) at (     5.0,     3.0) {};
+        \node[voronoi center, label={above right:6}] (s1) at (     5.5,     1.0) {};
+        \node[voronoi center, label=1] (s2) at (    -1.0,     2.0) {};
+        \node[voronoi center, label=2] (s3) at (     1.0,     1.0) {};
+        \node[voronoi center, label=3] (s4) at (     1.0,     3.0) {};
+        \node[voronoi center, label=5] (s5) at (     3.0,     1.0) {};
+
+        \coordinate (p0) at (    0.25,     2.0);
+        \coordinate (p1) at (    4.25,    1.75);
+        \coordinate (p2) at (     3.0,     3.0);
+        \coordinate (p3) at (     2.0,     2.0);
+
+        \draw[thin]
+            (s5) edge (s0)
+            (s5) edge (s1)
+            (s0) edge (s1);
+        \draw[right angle length=1.5ex, right angle symbol={s5}{s0}{p1}];
+        \draw[right angle length=1.5ex, right angle symbol={s5}{s1}{p1}];
+        \draw[right angle length=1.5ex, right angle symbol={s1}{s0}{p1}];
+
+        \draw[extremal edge] (p0) edge node[extremal spheres] {${1, 2}$} ($(p0) + 10*( -0.4472, -0.8944)$);
+        \draw[extremal edge] (p0) edge node[extremal spheres] {${1, 3}$} ($(p0) + 10*( -0.4472,  0.8944)$);
+        \draw[internal edge] (p0) edge node[internal spheres] {${2, 3}$} (p3);
+        \draw[extremal edge] (p1) edge node[extremal spheres, pos=0.2] {${4, 6}$} ($(p1) + 10*(  0.9701,  0.2425)$);
+        \draw[extremal edge] (p1) edge node[extremal spheres] {${5, 6}$} ($(p1) + 10*(    -0.0,    -1.0)$);
+        \draw[internal edge] (p1) edge node[internal spheres] {${4, 5}$} (p2);
+        \draw[extremal edge] (p2) edge node[extremal spheres, pos=0.05] {${3, 4}$} ($(p2) + 10*(     0.0,     1.0)$);
+        \draw[internal edge] (p2) edge node[internal spheres] {${3, 5}$} (p3);
+        \draw[extremal edge] (p3) edge node[extremal spheres] {${2, 5}$} ($(p3) + 10*(     0.0,    -1.0)$);
+
+        \node[point] () at (p0) {};
+        \node[point] () at (p1) {};
+        \node[point] () at (p2) {};
+        \node[point] () at (p3) {};
+    \end{tikzpicture}
+    \caption{2D-Voronoi Diagrams partition the plane into regions of points with a common closest input point. The edges separating two regions can be calculated as the perpendicular bisector of the line connecting their centers. Two regions are neighbours if there exists an edge between their points in the Delaunay triangulation of the same set.}
+    \label{fig:voronoi}
+\end{figure}
+
+\cref{fig:voronoi} shows an example of a Voronoi diagram in $d = 2$ dimensions.
+While obtaining the hyperplanes which potentially separate the regions is easy, it must identified which of them actually exist, since not every region is a neighbour of every other region.
+It can be shown \cite{aurenhammer1991voronoi} that there exists a dual relationship between Voronoi diagrams in two dimensions and Delaunay triangulations.
+A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points are connected iff the smallest circle containing all three points does not contain any other point in $M$.
+Two regions in the Voronoi diagram then are neighbours iff there exists an edge in the Delaunay triangulation between their corresponding points.
+
+This gives rise to efficient algorithms for constructing the diagrams, since the triangulations can be obtained in $\Oh(n \log n)$ time by incrementally inserting points in an existing triangulation.
+This algorithm was first described by Green and Sibson \cite{green1978computing} and is optimal, since one can reduce the sorting problem to finding triangulations \cite{aurenhammer1991voronoi}.
+Another algorithm to find Delauny triangulation described by Aurenhammer involves lifting the two dimensional input into three dimensions by projecting it to a paraboloid.
+The triangulation can then be found by computing the lower convex hull of those points, also yielding $\Oh(n \log n)$ complexity in two dimensions.
+
+This paper will introduce a generalization of Voronoi diagrams called power diagrams.
+After introducing the necessary notation, a dual relationship between these power diagrams in $d$ dimensions and polyhedra in $d+1$ dimensions will be proven.
+This allows the adaptation of the aforementioned algorithm and shows its correctness in arbitrary dimensions $d \geq 1$.
+Lastly, a concrete implementation of this algorithm and the needed data structures is described.
+
+\subsection{Definition of Power Diagrams}
+\label{sub:definition_of_power_diagrams}
+
 \todo[inline]{Definition of Metric}
 \todo[inline]{Power Diagrams as "Voronoi with Spheres"}
-\subsection{Geometry}
-\label{sub:geometry}
+\subsection{Geometric Notation}
+\label{sub:geometric_notation}
 \todo[inline]{Faces, Facets, $\ldots$}
 \todo[inline]{Polyhedra}
 \todo[inline]{Dual Polyhedra}
@@ -66,8 +134,116 @@
 
 \subsection{Incidence Lattices}
 \label{sub:incidence_lattices}
-\todo[inline]{Model as "Bidirectional Graph"}
+\todo[inline]{Model as Bidirectional Graph}
 \todo[inline]{Adding Faces to the Lattice is fun - Lubs and Groups}
+
+\section{Pretty Pictures}
+\label{sec:pretty_pictures}
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tikzpicture}[scale=1]
+            \path[clip, use as bounding box] (-4, -2) rectangle (6, 4);
+
+            \node[sphere center] (s0) at (     2.0,     3.0) {0};
+            \draw[sphere radius] (s0) circle[radius=1.0];
+            \node[sphere center] (s1) at (     5.0,     0.0) {1};
+            \draw[sphere radius] (s1) circle[radius=1.0];
+            \node[sphere center] (s2) at (    -2.0,     0.0) {2};
+            \draw[sphere radius] (s2) circle[radius=3.0];
+            \node[sphere center] (s3) at (     2.0,     0.0) {3};
+            \draw[sphere radius] (s3) circle[radius=2.0];
+            \node[sphere center] (s4) at (     4.0,     2.0) {4};
+            \draw[sphere radius] (s4) circle[radius=1.0];
+
+            \coordinate (p0) at (   0.625,     2.0);
+            \coordinate (p1) at (     4.0,    0.75);
+            \coordinate (p2) at (    2.75,     2.0);
+
+            \draw[extremal edge] (p0) edge node[extremal spheres] {${0, 2}$} ($(p0) + 10*(    -0.6,     0.8)$);
+            \draw[extremal edge] (p0) edge node[extremal spheres] {${2, 3}$} ($(p0) + 10*(     0.0,    -1.0)$);
+            \draw[internal edge] (p0) edge node[internal spheres] {${0, 3}$} (p2);
+            \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 3}$} ($(p1) + 10*(    -0.0,    -1.0)$);
+            \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 4}$} ($(p1) + 10*(  0.8944,  0.4472)$);
+            \draw[internal edge] (p1) edge node[internal spheres] {${3, 4}$} (p2);
+            \draw[extremal edge] (p2) edge node[extremal spheres] {${0, 4}$} ($(p2) + 10*(  0.4472,  0.8944)$);
+
+            \node[point] () at (p0) {};
+            \node[point] () at (p1) {};
+            \node[point] () at (p2) {};
+        \end{tikzpicture}
+    \end{center}
+    \caption{Great Figure!}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tikzpicture}[scale=1]
+            \path[clip, use as bounding box] (-3, -2.5) rectangle (5, 2.5);
+
+            \node[sphere center] (s0) at (     1.0,     1.0) {0};
+            \draw[sphere radius] (s0) circle[radius=1.0];
+            \node[sphere center] (s1) at (     3.0,     1.0) {1};
+            \draw[sphere radius] (s1) circle[radius=1.0];
+            \node[sphere center] (s2) at (    -1.0,     1.0) {2};
+            \draw[sphere radius] (s2) circle[radius=1.0];
+            \node[sphere center] (s3) at (    -1.0,    -1.0) {3};
+            \draw[sphere radius] (s3) circle[radius=1.0];
+            \node[sphere center] (s4) at (     1.0,    -1.0) {4};
+            \draw[sphere radius] (s4) circle[radius=1.0];
+            \node[sphere center] (s5) at (     3.0,    -1.0) {5};
+            \draw[sphere radius] (s5) circle[radius=1.0];
+
+            \coordinate (p0) at (    -0.0,    -0.0);
+            \coordinate (p1) at (     2.0,     0.0);
+
+            \draw[extremal edge] (p0) edge node[extremal spheres] {${0, 2}$} ($(p0) + 10*(     0.0,     1.0)$);
+            \draw[internal edge] (p0) edge node[internal spheres] {${0, 4}$} (p1);
+            \draw[extremal edge] (p0) edge node[extremal spheres] {${2, 3}$} ($(p0) + 10*(    -1.0,    -0.0)$);
+            \draw[extremal edge] (p0) edge node[extremal spheres] {${3, 4}$} ($(p0) + 10*(     0.0,    -1.0)$);
+            \draw[extremal edge] (p1) edge node[extremal spheres] {${0, 1}$} ($(p1) + 10*(    -0.0,     1.0)$);
+            \draw[extremal edge] (p1) edge node[extremal spheres] {${4, 5}$} ($(p1) + 10*(     0.0,    -1.0)$);
+            \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 5}$} ($(p1) + 10*(     1.0,     0.0)$);
+
+            \node[point] () at (p0) {};
+            \node[point] () at (p1) {};
+        \end{tikzpicture}
+    \end{center}
+    \caption{Great Figure!}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \path[clip, use as bounding box] (-7, -3) rectangle (7, 5);
+
+        \node[sphere center] (s0) at (     0.0,    -5.0) {$0$};
+        \draw[sphere radius] (s0) circle[radius=1.0];
+        \node[sphere center] (s1) at (     1.0,     1.0) {$1$};
+        \draw[sphere radius] (s1) circle[radius=0.1];
+        \node[sphere center] (s2) at (    -1.0,     1.0) {$2$};
+        \draw[sphere radius] (s2) circle[radius=0.1];
+        \node[sphere center] (s3) at (     0.0,     0.0) {$3$};
+        \draw[sphere radius] (s3) circle[radius=1.0];
+
+        \coordinate (p0) at (     0.0,   1.495);
+        \coordinate (p1) at (  -3.995,    -2.5);
+        \coordinate (p2) at (   3.995,    -2.5);
+
+        \draw[extremal edge] (p0) edge node[extremal spheres] {${1, 2}$} ($(p0) + 10*(     0.0,     1.0)$);
+        \draw[internal edge] (p0) edge node[internal spheres] {${2, 3}$} (p1);
+        \draw[internal edge] (p0) edge node[internal spheres] {${1, 3}$} (p2);
+        \draw[extremal edge] (p1) edge node[extremal spheres] {${0, 2}$} ($(p1) + 10*( -0.9864, -0.1644)$);
+        \draw[internal edge] (p1) edge node[internal spheres] {${0, 3}$} (p2);
+        \draw[extremal edge] (p2) edge node[extremal spheres] {${0, 1}$} ($(p2) + 10*(  0.9864, -0.1644)$);
+
+        \node[point] () at (p0) {};
+        \node[point] () at (p1) {};
+        \node[point] () at (p2) {};
+    \end{tikzpicture}
+
+    \caption{Great Figure!}
+\end{figure}
 
 \appendix
 \section{Building the Code}

@@ -15,6 +15,8 @@
 \usepackage{mathtools}
 \usepackage{csquotes}
 
+\usepackage[font=small, labelfont=bf, format=hang, indention=-2em]{caption}
+
 % \usepackage{xcolor}
 % \usepackage{tabu}
 \usepackage{tikz}
@@ -22,11 +24,15 @@
 \pgfplotsset{compat=1.12}
 \usetikzlibrary{calc}
 
-\usepackage[pdftex, hypertexnames=false]{hyperref}
+\usepackage[pdftex, hypertexnames=false, unicode]{hyperref}
 \usepackage[nameinlink, capitalize]{cleveref}
+
+\usepackage{blindtext}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Oh}{\mathcal{O}}
+
+\DeclareMathOperator{\dist}{d}
 
 \newcommand{\abs}[1]{\left\vert #1 \right\vert}
 \newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
