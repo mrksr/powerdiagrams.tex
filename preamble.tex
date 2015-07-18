@@ -1,10 +1,17 @@
 \documentclass[envcountsame]{llncs}
 
-\usepackage[english]{babel}
-\usepackage[utf8]{inputenc}
+\usepackage{polyglossia}
+\setmainlanguage{english}
 
-\usepackage{lmodern}
-\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\setmainfont[
+    Ligatures=TeX,
+    SmallCapsFont={Latin Modern Roman Caps},
+    SlantedFont={* Slanted},
+    ItalicFeatures  = {
+        SmallCapsFont = {LMRomanCaps10-Oblique}
+    },
+    ]{Latin Modern Roman}
 \usepackage{microtype}
 
 \usepackage{todonotes}
