@@ -92,6 +92,7 @@ The distance function of a point $x \in \R^d$ and one weighted point $p$ is then
 While other possible combinations of distance and weight have also been investigated \cite{aurenhammer1987power}, this definition has a connection to the power of circles around the points $p \in M$.
 
 \begin{definition}[Power of a Point]
+    \label{def:power}
     The \define{power} of a point $x \in \R^d$ with respect to a sphere $s = (p, r)$ with center $p \in \R^d$ and radius $r \in \R$ is given by
     \begin{align}
         \pow(x, s) = \dist(x, p)^2 - r^2.
@@ -125,7 +126,8 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
                 (point)
                 node[power point, label={above:$x$}] () {};
         \end{tikzpicture}
-        \caption{}
+        \caption{Interpretation of $\pow$}
+        \label{sfig:pow_interpretation}
     \end{subfigure}\hfill
     \begin{subfigure}[b]{.55\linewidth}
         \begin{tikzpicture}[x=1cm, y=1cm]
@@ -143,7 +145,7 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
 
             \draw
                 (center-a.center) edge (center-b.center)
-                (point) ++(0, 1) edge[very thick, tumgreen] (point |- (0, -2cm));
+                (point)+(0, 1) edge[very thick, tumgreen] (point |- (0, -2cm));
 
             \draw
                 (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s_1)$} (tangent-a)
@@ -158,9 +160,10 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
                 (point)
                 node[power point, label={above right:$x$}] () {};
         \end{tikzpicture}
-        \caption{}
+        \caption{Equality of powers of two spheres}
+        \label{sfig:chordal}
     \end{subfigure}
-    \caption{Power function}
+    \caption{\cref{def:power} has a nice geometric interpretation for points $x$ lying outside of the sphere $s=(p, r)$. The power $\pow(x, s) = \dist(x, p)^2 - r^2$ can be interpreted as the length of a tangent of point $p$ to the sphere $s$. When comparing the powers of two non-intersecting spheres $s_1, s_2$, the set of points $x$ for which $\pow(x, s_1) = \pow(x, s_2)$ is a hyperplane perpendicular to the line connecting the two centers but not necessarily its bisector.}
     \label{fig:power}
 \end{figure}
 
