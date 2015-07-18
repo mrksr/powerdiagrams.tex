@@ -29,12 +29,12 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
     \begin{tikzpicture}
         \path[clip, use as bounding box] (-3, 0) rectangle (7, 4);
 
-        \node[voronoi center, label=4] (s0) at (     5.0,     3.0) {};
-        \node[voronoi center, label={above right:6}] (s1) at (     5.5,     1.0) {};
-        \node[voronoi center, label=1] (s2) at (    -1.0,     2.0) {};
-        \node[voronoi center, label=2] (s3) at (     1.0,     1.0) {};
-        \node[voronoi center, label=3] (s4) at (     1.0,     3.0) {};
-        \node[voronoi center, label=5] (s5) at (     3.0,     1.0) {};
+        \node[sphere center, label={$4$}] (s0) at (     5.0,     3.0) {};
+        \node[sphere center, label={above right:$6$}] (s1) at (     5.5,     1.0) {};
+        \node[sphere center, label={$1$}] (s2) at (    -1.0,     2.0) {};
+        \node[sphere center, label={$2$}] (s3) at (     1.0,     1.0) {};
+        \node[sphere center, label={$3$}] (s4) at (     1.0,     3.0) {};
+        \node[sphere center, label={$5$}] (s5) at (     3.0,     1.0) {};
 
         \coordinate (p0) at (    0.25,     2.0);
         \coordinate (p1) at (    4.25,    1.75);
@@ -64,7 +64,7 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
         \node[point] () at (p2) {};
         \node[point] () at (p3) {};
     \end{tikzpicture}
-    \caption{2D-Voronoi Diagrams partition the plane into regions of points with a common closest input point. The edges separating two regions can be calculated as the perpendicular bisector of the line connecting their centers. Two regions are neighbours if there exists an edge between their points in the Delaunay triangulation of the same set.}
+    \caption{2D-Voronoi diagrams partition the plane into regions of points with a common closest input point. The edges separating two regions can be calculated as the perpendicular bisector of the line connecting their centers. Two regions are neighbours if there exists an edge between their points in the Delaunay triangulation of the same set.}
     \label{fig:voronoi}
 \end{figure}
 
@@ -86,6 +86,129 @@ Lastly, a concrete implementation of this algorithm and the needed data structur
 
 \subsection{Definition of Power Diagrams}
 \label{sub:definition_of_power_diagrams}
+There are multiple possible modifications of Voronoi diagrams, a few of which are decribed in \cite{aurenhammer1987power}.
+To obtain \define{power diagrams}, each point $p \in M$ is assigned a \define{weight} $w(p)$, where a larger weight results in a larger cell.
+The distance function of a point $x \in \R^d$ and one weighted point $p$ is then given by $\dist(x, p)^2 - w(p)$.
+While other possible combinations of distance and weight have also been investigated \cite{aurenhammer1987power}, this definition has a connection to the power of circles around the points $p \in M$.
+
+\begin{definition}[Power of a Point]
+    The \define{power} of a point $x \in \R^d$ with respect to a sphere $s = (p, r)$ with center $p \in \R^d$ and radius $r \in \R$ is given by
+    \begin{align}
+        \pow(x, s) = \dist(x, p)^2 - r^2.
+    \end{align}
+\end{definition}
+
+This power function was for example mentioned at the beginning of the 19th century by Steiner \cite{steiner1881jacob} or Laguerre \cite{blaschke2013vorlesungen} as a measure of the relationship of a point to a circle.
+A point has a negative power if inside, a positive power if outside and its power vanishes if it lies on the circle.
+Using the Pythagorean theorem, this function has a geometric interpretation shown in \cref{fig:power}.
+\begin{figure}[tb]
+    \centering
+    \begin{subfigure}[b]{.35\linewidth}
+        \begin{tikzpicture}[x=1cm, y=1cm]
+            \coordinate (center) at (0, 0);
+            \coordinate (point) at (2, 3);
+
+            \node[power circle, minimum size=3cm] (circle) at (center) {};
+
+            \coordinate (tangent) at (tangent cs:node=circle,point={(point)},solution=1);
+
+            \draw[right angle length=1.5ex, right angle symbol={center}{tangent}{point}];
+
+            \draw
+                (tangent) edge[black] node[midway, left] {$r$} (center.center)
+                (center.center) edge[black] node[pos=0.6, sloped, below] {$\dist(x, p)$} (point)
+                (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s)$} (tangent);
+            \draw
+                (center)
+                node[power center, label={below:$p$}] () {}
+
+                (point)
+                node[power point, label={above:$x$}] () {};
+        \end{tikzpicture}
+        \caption{}
+    \end{subfigure}\hfill
+    \begin{subfigure}[b]{.55\linewidth}
+        \begin{tikzpicture}[x=1cm, y=1cm]
+            \coordinate (center-a) at (-2, 0);
+            \coordinate (center-b) at (2, 0);
+            \coordinate (point) at (0.46875, 3);
+
+            \node[power circle, minimum size=4cm] (circle-a) at (center-a) {};
+            \node[power circle, minimum size=1cm] (circle-b) at (center-b) {};
+
+            \coordinate (tangent-a) at (tangent cs:node=circle-a,point={(point)},solution=1);
+            \coordinate (tangent-b) at (tangent cs:node=circle-b,point={(point)},solution=2);
+
+            \draw[right angle length=1.5ex, right angle symbol={center-a}{center-b}{point}];
+
+            \draw
+                (center-a.center) edge (center-b.center)
+                (point) ++(0, 1) edge[very thick, tumgreen] (point |- (0, -2cm));
+
+            \draw
+                (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s_1)$} (tangent-a)
+                (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s_2)$} (tangent-b);
+
+            \draw
+                (center-a)
+                node[power center, label={below:$p_1$}] () {}
+                (center-b)
+                node[power center, label={below:$p_2$}] () {}
+
+                (point)
+                node[power point, label={above right:$x$}] () {};
+        \end{tikzpicture}
+        \caption{}
+    \end{subfigure}
+    \caption{Power function}
+    \label{fig:power}
+\end{figure}
+
+\begin{figure}[tb]
+    \centering
+    \begin{tikzpicture}
+        \path[clip, use as bounding box] (-4, -2.05) rectangle (6, 4.05);
+
+        \node[sphere center, label={above:$1$}] (s1) at (     2.0,     3.0) {};
+        \draw[sphere radius] (s1) circle[radius=1.0];
+        \node[sphere center, label={above:$5$}] (s2) at (     5.0,     0.0) {};
+        \draw[sphere radius] (s2) circle[radius=1.0];
+        \node[sphere center, label={above:$3$}] (s3) at (    -2.0,     0.0) {};
+        \draw[sphere radius] (s3) circle[radius=3.0];
+        \node[sphere center, label={above:$4$}] (s4) at (     2.0,     0.0) {};
+        \draw[sphere radius] (s4) circle[radius=2.0];
+        \node[sphere center, label={above:$2$}] (s5) at (     4.0,     2.0) {};
+        \draw[sphere radius] (s5) circle[radius=1.0];
+
+        \coordinate (p1) at (   0.625,     2.0);
+        \coordinate (p2) at (     4.0,    0.75);
+        \coordinate (p3) at (    2.75,     2.0);
+
+        \draw[thin] (s4) edge (s2);
+        \draw[right angle length=1.5ex, right angle symbol={s4}{s2}{p2}];
+        % \draw[thin]
+        %     (s4) edge (s5)
+        %     (s4) edge (s2)
+        %     (s2) edge (s5);
+        % \draw[right angle length=1.5ex, right angle symbol={s4}{s5}{p2}];
+        % \draw[right angle length=1.5ex, right angle symbol={s4}{s2}{p2}];
+        % \draw[right angle length=1.5ex, right angle symbol={s2}{s5}{p2}];
+
+        \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 3}$} ($(p1) + 10*(    -0.6,     0.8)$);
+        \draw[extremal edge] (p1) edge node[extremal spheres, pos=0.2] {${3, 4}$} ($(p1) + 10*(     0.0,    -1.0)$);
+        \draw[internal edge] (p1) edge node[internal spheres, pos=0.2] {${1, 4}$} (p3);
+        \draw[extremal edge] (p2) edge node[extremal spheres, pos=0.2] {${4, 5}$} ($(p2) + 10*(    -0.0,    -1.0)$);
+        \draw[extremal edge] (p2) edge node[extremal spheres] {${2, 5}$} ($(p2) + 10*(  0.8944,  0.4472)$);
+        \draw[internal edge] (p2) edge node[internal spheres, pos=0.5] {${2, 4}$} (p3);
+        \draw[extremal edge] (p3) edge node[extremal spheres] {${1, 2}$} ($(p3) + 10*(  0.4472,  0.8944)$);
+
+        \node[point] () at (p1) {};
+        \node[point] () at (p2) {};
+        \node[point] () at (p3) {};
+    \end{tikzpicture}
+    \caption{Power Diagram Garage}
+    \label{fig:garage}
+\end{figure}
 
 \todo[inline]{Definition of Metric}
 \todo[inline]{Power Diagrams as "Voronoi with Spheres"}
@@ -105,7 +228,7 @@ Lastly, a concrete implementation of this algorithm and the needed data structur
 \subsection{The transform to $d+1$}
 \label{sub:the_transform}
 \todo[inline]{Transformation function $\Pi$}
-\todo[inline]{Observation about distances}
+\todo[inline]{Power is difference of disstances}
 \todo[inline]{Chordales are vertial projections}
 \todo[inline]{Existance of 0-faces}
 
@@ -136,114 +259,6 @@ Lastly, a concrete implementation of this algorithm and the needed data structur
 \label{sub:incidence_lattices}
 \todo[inline]{Model as Bidirectional Graph}
 \todo[inline]{Adding Faces to the Lattice is fun - Lubs and Groups}
-
-\section{Pretty Pictures}
-\label{sec:pretty_pictures}
-
-\begin{figure}[H]
-    \begin{center}
-        \begin{tikzpicture}[scale=1]
-            \path[clip, use as bounding box] (-4, -2) rectangle (6, 4);
-
-            \node[sphere center] (s0) at (     2.0,     3.0) {0};
-            \draw[sphere radius] (s0) circle[radius=1.0];
-            \node[sphere center] (s1) at (     5.0,     0.0) {1};
-            \draw[sphere radius] (s1) circle[radius=1.0];
-            \node[sphere center] (s2) at (    -2.0,     0.0) {2};
-            \draw[sphere radius] (s2) circle[radius=3.0];
-            \node[sphere center] (s3) at (     2.0,     0.0) {3};
-            \draw[sphere radius] (s3) circle[radius=2.0];
-            \node[sphere center] (s4) at (     4.0,     2.0) {4};
-            \draw[sphere radius] (s4) circle[radius=1.0];
-
-            \coordinate (p0) at (   0.625,     2.0);
-            \coordinate (p1) at (     4.0,    0.75);
-            \coordinate (p2) at (    2.75,     2.0);
-
-            \draw[extremal edge] (p0) edge node[extremal spheres] {${0, 2}$} ($(p0) + 10*(    -0.6,     0.8)$);
-            \draw[extremal edge] (p0) edge node[extremal spheres] {${2, 3}$} ($(p0) + 10*(     0.0,    -1.0)$);
-            \draw[internal edge] (p0) edge node[internal spheres] {${0, 3}$} (p2);
-            \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 3}$} ($(p1) + 10*(    -0.0,    -1.0)$);
-            \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 4}$} ($(p1) + 10*(  0.8944,  0.4472)$);
-            \draw[internal edge] (p1) edge node[internal spheres] {${3, 4}$} (p2);
-            \draw[extremal edge] (p2) edge node[extremal spheres] {${0, 4}$} ($(p2) + 10*(  0.4472,  0.8944)$);
-
-            \node[point] () at (p0) {};
-            \node[point] () at (p1) {};
-            \node[point] () at (p2) {};
-        \end{tikzpicture}
-    \end{center}
-    \caption{Great Figure!}
-\end{figure}
-
-\begin{figure}[H]
-    \begin{center}
-        \begin{tikzpicture}[scale=1]
-            \path[clip, use as bounding box] (-3, -2.5) rectangle (5, 2.5);
-
-            \node[sphere center] (s0) at (     1.0,     1.0) {0};
-            \draw[sphere radius] (s0) circle[radius=1.0];
-            \node[sphere center] (s1) at (     3.0,     1.0) {1};
-            \draw[sphere radius] (s1) circle[radius=1.0];
-            \node[sphere center] (s2) at (    -1.0,     1.0) {2};
-            \draw[sphere radius] (s2) circle[radius=1.0];
-            \node[sphere center] (s3) at (    -1.0,    -1.0) {3};
-            \draw[sphere radius] (s3) circle[radius=1.0];
-            \node[sphere center] (s4) at (     1.0,    -1.0) {4};
-            \draw[sphere radius] (s4) circle[radius=1.0];
-            \node[sphere center] (s5) at (     3.0,    -1.0) {5};
-            \draw[sphere radius] (s5) circle[radius=1.0];
-
-            \coordinate (p0) at (    -0.0,    -0.0);
-            \coordinate (p1) at (     2.0,     0.0);
-
-            \draw[extremal edge] (p0) edge node[extremal spheres] {${0, 2}$} ($(p0) + 10*(     0.0,     1.0)$);
-            \draw[internal edge] (p0) edge node[internal spheres] {${0, 4}$} (p1);
-            \draw[extremal edge] (p0) edge node[extremal spheres] {${2, 3}$} ($(p0) + 10*(    -1.0,    -0.0)$);
-            \draw[extremal edge] (p0) edge node[extremal spheres] {${3, 4}$} ($(p0) + 10*(     0.0,    -1.0)$);
-            \draw[extremal edge] (p1) edge node[extremal spheres] {${0, 1}$} ($(p1) + 10*(    -0.0,     1.0)$);
-            \draw[extremal edge] (p1) edge node[extremal spheres] {${4, 5}$} ($(p1) + 10*(     0.0,    -1.0)$);
-            \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 5}$} ($(p1) + 10*(     1.0,     0.0)$);
-
-            \node[point] () at (p0) {};
-            \node[point] () at (p1) {};
-        \end{tikzpicture}
-    \end{center}
-    \caption{Great Figure!}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \path[clip, use as bounding box] (-7, -3) rectangle (7, 5);
-
-        \node[sphere center] (s0) at (     0.0,    -5.0) {$0$};
-        \draw[sphere radius] (s0) circle[radius=1.0];
-        \node[sphere center] (s1) at (     1.0,     1.0) {$1$};
-        \draw[sphere radius] (s1) circle[radius=0.1];
-        \node[sphere center] (s2) at (    -1.0,     1.0) {$2$};
-        \draw[sphere radius] (s2) circle[radius=0.1];
-        \node[sphere center] (s3) at (     0.0,     0.0) {$3$};
-        \draw[sphere radius] (s3) circle[radius=1.0];
-
-        \coordinate (p0) at (     0.0,   1.495);
-        \coordinate (p1) at (  -3.995,    -2.5);
-        \coordinate (p2) at (   3.995,    -2.5);
-
-        \draw[extremal edge] (p0) edge node[extremal spheres] {${1, 2}$} ($(p0) + 10*(     0.0,     1.0)$);
-        \draw[internal edge] (p0) edge node[internal spheres] {${2, 3}$} (p1);
-        \draw[internal edge] (p0) edge node[internal spheres] {${1, 3}$} (p2);
-        \draw[extremal edge] (p1) edge node[extremal spheres] {${0, 2}$} ($(p1) + 10*( -0.9864, -0.1644)$);
-        \draw[internal edge] (p1) edge node[internal spheres] {${0, 3}$} (p2);
-        \draw[extremal edge] (p2) edge node[extremal spheres] {${0, 1}$} ($(p2) + 10*(  0.9864, -0.1644)$);
-
-        \node[point] () at (p0) {};
-        \node[point] () at (p1) {};
-        \node[point] () at (p2) {};
-    \end{tikzpicture}
-
-    \caption{Great Figure!}
-\end{figure}
 
 \appendix
 \section{Building the Code}

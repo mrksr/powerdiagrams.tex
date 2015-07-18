@@ -14,11 +14,14 @@
 \tikzstyle{internal spheres} = [node on edge]
 \tikzstyle{extremal spheres} = [node on edge, very near start]
 
-\tikzstyle{sphere center} = [tumred]
-\tikzstyle{sphere radius} = [thin, scale=0.5]
+\tikzstyle{sphere center} = [tumred, circle, fill, minimum size=4pt, inner sep=0pt]
+\tikzstyle{sphere radius} = [thin, black!50]
 \tikzstyle{point} = [circle, draw, fill, minimum size=4pt, inner sep=0pt]
 
-\tikzstyle{voronoi center} = [sphere center, circle, fill, minimum size=4pt, inner sep=0pt]
+\tikzstyle{power center} = [sphere center]
+\tikzstyle{power point} = [point, tumgreen]
+\tikzstyle{power circle} = [draw, circle, thick, inner sep=0pt, outer sep=0pt]
+\tikzstyle{power edge} = [very thick]
 
 \tikzset{
     right angle quadrant/.code={
