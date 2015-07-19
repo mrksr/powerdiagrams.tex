@@ -1,4 +1,4 @@
-\documentclass[envcountsame]{llncs}
+\documentclass[abstract, english, parskip=half*]{scrartcl}
 
 \usepackage{polyglossia}
 \setmainlanguage{english}
@@ -21,6 +21,25 @@
 \usepackage{mathdots}
 \usepackage{mathtools}
 \usepackage{csquotes}
+\usepackage[hyperref,thmmarks,amsmath]{ntheorem}
+
+\theoremstyle{plain}
+\theoremheaderfont{\rmfamily\bfseries\upshape\boldmath}
+\theorembodyfont{\itshape}
+\theoremseparator{}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{problem}[definition]{Problem}
+\newtheorem{algorithm}[definition]{Algorithm}
+\newtheorem{observation}[definition]{Observation}
+
+\theoremstyle{plain}
+\theoremheaderfont{\scshape}
+\theorembodyfont{}
+\theoremseparator{}
+\theoremsymbol{\qed}
+\newtheorem*{proof}{Proof}
 
 \usepackage{subcaption}
 \usepackage[font=small, labelfont=bf, format=hang, indention=-2em]{caption}
@@ -32,6 +51,7 @@
 \pgfplotsset{compat=1.12}
 \usetikzlibrary{calc}
 
+\usepackage{url}
 \usepackage[pdftex, hypertexnames=false, unicode]{hyperref}
 \usepackage[nameinlink, capitalize]{cleveref}
 
@@ -48,5 +68,6 @@
 
 \newcommand{\define}[1]{\emph{#1}}
 
-% LLNCS algorithms
-\spnewtheorem{algorithm}{Algorithm}{\bfseries}{\itshape}
+% From llncs.cls
+\def\squareforqed{\hbox{\rlap{$\sqcap$}$\sqcup$}}
+\def\qed{\ifmmode\squareforqed\else{\unskip\nobreak\hfil \penalty50\hskip1em\null\nobreak\hfil\squareforqed \parfillskip=0pt\finalhyphendemerits=0\endgraf}\fi}
