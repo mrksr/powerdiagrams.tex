@@ -1,4 +1,5 @@
 \documentclass[abstract, english, parskip=half*]{scrartcl}
+\addtokomafont{disposition}{\boldmath}
 
 \usepackage{polyglossia}
 \setmainlanguage{english}
@@ -53,7 +54,7 @@
 
 \usepackage{url}
 \usepackage[pdftex, hypertexnames=false, unicode]{hyperref}
-\usepackage[nameinlink, capitalize]{cleveref}
+\usepackage[nameinlink, noabbrev]{cleveref}
 
 \usepackage{blindtext}
 
@@ -62,9 +63,14 @@
 
 \DeclareMathOperator{\dist}{d}
 \DeclareMathOperator{\pow}{pow}
+\DeclareMathOperator{\PD}{PD}
+\DeclareMathOperator{\cell}{cell}
+\DeclareMathOperator{\chor}{chor}
+\DeclareMathOperator{\aff}{aff}
 
 \newcommand{\abs}[1]{\left\vert #1 \right\vert}
 \newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\powerset}[1]{\mathcal{P}(#1)}
 
 \newcommand{\define}[1]{\emph{#1}}
 

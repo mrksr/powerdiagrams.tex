@@ -18,7 +18,7 @@
 
 Power diagrams in $d$-dimensional Euclidean space $\R^d$ can be understood as a particular generalization of the more well known Voronoi diagrams.
 A \define{Voronoi diagram} is a partition of the space introduced by a finite set of points $M \subset \R^d$ and a metric $\dist(\cdot, \cdot)$.
-It assigns every point $p \in M$ its \define{region} of points for which there is no other point in $M$ which is closer.
+It assigns every point $p \in M$ its \define{region} of points for which $p$ is closer than all other points in $M$.
 Using the euclidean metric, these regions are guaranteed to be convex.
 The normal vectors of the hyperplanes at the boundaries are given by the connecting line of neighbouring points with the hyperplane bisecting this line.
 \begin{figure}[Htb]
@@ -95,24 +95,6 @@ While other possible combinations of distance and weight have also been investig
         \pow(x, s) = \dist(x, p)^2 - r^2.
     \end{align}
 \end{definition}
-\begin{proof}
-    This is because
-    \begin{align}
-        x^2 = y^2
-    \end{align}
-    really.
-\end{proof}
-
-\begin{lemma}
-    asdsad
-\end{lemma}
-\begin{theorem}
-    asdsad
-\end{theorem}
-
-This power function was for example mentioned at the beginning of the 19th century by Steiner \cite{steiner1881jacob} or Laguerre \cite{blaschke2013vorlesungen} as a measure of the relationship of a point to a circle.
-A point has a negative power if inside, a positive power if outside and its power vanishes if it lies on the circle.
-Using the Pythagorean theorem, this function has a geometric interpretation shown in \cref{fig:power}.
 \begin{figure}[tb]
     \centering
     \begin{subfigure}[b]{.35\linewidth}
@@ -120,7 +102,7 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
             \coordinate (center) at (0, 0);
             \coordinate (point) at (2, 3);
 
-            \node[power circle, minimum size=3cm] (circle) at (center) {};
+            \node[power circle, minimum size=3cm, label={[yshift=0.5cm]below:$s$}] (circle) at (center) {};
 
             \coordinate (tangent) at (tangent cs:node=circle,point={(point)},solution=1);
 
@@ -139,7 +121,7 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
         \end{tikzpicture}
         \caption{Interpretation of $\pow$}
         \label{sfig:pow_interpretation}
-    \end{subfigure}\hfill
+    \end{subfigure}
     \begin{subfigure}[b]{.55\linewidth}
         \begin{tikzpicture}[x=1cm, y=1cm]
             \coordinate (center-a) at (-2, 0);
@@ -172,24 +154,30 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
         \caption{Equality of powers of two spheres}
         \label{sfig:chordal}
     \end{subfigure}
-    \caption{\cref{def:power} has a nice geometric interpretation for points $x$ lying outside of the sphere $s=(p, r)$. The power $\pow(x, s) = \dist(x, p)^2 - r^2$ can be interpreted as the length of a tangent of point $p$ to the sphere $s$. When comparing the powers of two non-intersecting spheres $s_1, s_2$, the set of points $x$ for which $\pow(x, s_1) = \pow(x, s_2)$ is a hyperplane perpendicular to the line connecting the two centers but not necessarily its bisector.}
+    \caption{\Cref{def:power} has a nice geometric interpretation for points $x$ lying outside of the sphere $s=(p, r)$. The power $\pow(x, s) = \dist(x, p)^2 - r^2$ can be interpreted as the length of a tangent of point $p$ to the sphere $s$. When comparing the powers of two non-intersecting spheres $s_1, s_2$, the set of points $x$ for which $\pow(x, s_1) = \pow(x, s_2)$ is a hyperplane perpendicular to the line connecting the two centers but not necessarily its bisector.}
     \label{fig:power}
 \end{figure}
 
+The power function was for example mentioned at the beginning of the 19th century by Steiner \cite{steiner1881jacob} or Laguerre \cite{blaschke2013vorlesungen} as a measure of the relationship of a point to a circle.
+A point has a negative power if inside, a positive power if outside and its power vanishes if it lies on the circle.
+Using the Pythagorean theorem, this function has a geometric interpretation shown in \cref{fig:power}.
+
+Using this definition, a pair $s = (p, \sqrt{w(p)})$ of a point and its weight is called a \define{site} of the power diagram, which can be interpreted as a sphere with a radius of $\sqrt{w(p)}$.
+Every such site gets assigned its partition of the space where there is no other site with lower power.
 \begin{figure}[tb]
     \centering
     \begin{tikzpicture}
         \path[clip, use as bounding box] (-4, -2.05) rectangle (6, 4.05);
 
-        \node[sphere center, label={above:$1$}] (s1) at (     2.0,     3.0) {};
+        \node[sphere center, label={above:$s_1$}] (s1) at (     2.0,     3.0) {};
         \draw[sphere radius] (s1) circle[radius=1.0];
-        \node[sphere center, label={above:$5$}] (s2) at (     5.0,     0.0) {};
+        \node[sphere center, label={above:$s_5$}] (s2) at (     5.0,     0.0) {};
         \draw[sphere radius] (s2) circle[radius=1.0];
-        \node[sphere center, label={above:$3$}] (s3) at (    -2.0,     0.0) {};
+        \node[sphere center, label={above:$s_3$}] (s3) at (    -2.0,     0.0) {};
         \draw[sphere radius] (s3) circle[radius=3.0];
-        \node[sphere center, label={above:$4$}] (s4) at (     2.0,     0.0) {};
+        \node[sphere center, label={above:$s_4$}] (s4) at (     2.0,     0.0) {};
         \draw[sphere radius] (s4) circle[radius=2.0];
-        \node[sphere center, label={above:$2$}] (s5) at (     4.0,     2.0) {};
+        \node[sphere center, label={above:$s_2$}] (s5) at (     4.0,     2.0) {};
         \draw[sphere radius] (s5) circle[radius=1.0];
 
         \coordinate (p1) at (   0.625,     2.0);
@@ -218,33 +206,131 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
         \node[point] () at (p2) {};
         \node[point] () at (p3) {};
     \end{tikzpicture}
-    \caption{Power Diagram Garage}
+    \caption{The power diagram of the five sites $\PD(\left\{ s_1, \dots, s_5 \right\})$ is the set of their cells, whose boundaries are shown in the figure. Boundaries are defined by sets of points for which adjacent sites have equal power.}
     \label{fig:garage}
 \end{figure}
 
-\todo[inline]{Definition of Metric}
-\todo[inline]{Power Diagrams as "Voronoi with Spheres"}
+\begin{definition}[Power Diagram]
+    \label{def:powerdiagram}
+    The \define{power diagram} $\PD(S)$ of a finite set of sites $S \subset \R^d \times \R$ is the collection of all \define{cells} corresponding to the sites.
+    \begin{align}
+        \cell &: S \to \powerset{\R^d}\\
+        \cell(s) &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}. \pow(x, s) < \pow(x, t) \right\}\\
+        \PD(S) &\coloneqq \cell(S)
+    \end{align}
+\end{definition}
+
+\Cref{fig:garage} shows an example of a power diagram in two dimensions.
+After introducing some geometric notation, the remainder of this section will show some properties of power diagrams in $d$ dimensions.
+After this, a transform to $d + 1$ dimension will be used to both show a fundamental connection between power diagrams and polytopes and derive an algorithm to efficiently construct power diagrams of arbitrary dimension using convex hulls.
+
 \subsection{Geometric Notation}
 \label{sub:geometric_notation}
+\todo[inline]{Affine Spaces, $\aff$}
 \todo[inline]{Faces, Facets, $\ldots$}
 \todo[inline]{Polyhedra}
+\todo[inline]{Lineality Space}
 \todo[inline]{Dual Polyhedra}
-\subsection{Observations}
-\label{sub:observations}
-\todo[inline]{Chordales}
-\todo[inline]{Weird Consequences like Sphere not in it's cell}
-\todo[inline]{Upper bounds for faces (special case 2D)}
+
+\subsection{Properties of Power Diagrams}
+\label{sub:properties_of_power_diagrams}
+The boundaries of a power diagram are given by sets of points for which the power of at least two sites is equal.
+Using the definition of the power function, it can be shown that these boundaries are hyperplanes.
+\begin{observation}
+    \label{obs:chordale}
+    Let $s = (z_s, r_s)$ and $t = (z_t, r_t)$ be spheres in $\R^d$ with $z_s \neq z_t$. The points $x$ for which $\pow(x, s) = \pow(x, t)$ are called the \define{chordale} of $s$ and $t$ and form the hyperplane
+    \begin{align}
+        \chor(s, t) = \left\{ x \in \R^d \mid 2x(z_s - z_t) = r_t^2 - r_s^2 - z_t^Tz_t + z_s^Tz_s \right\}
+    \end{align}
+    which is perpendicular to the line connecting $z_s$ and $z_t$.
+\end{observation}
+
+The chordal of two concentric spheres is not defined, but can be assumed to be at infinity.
+Note that if $r_s = r_t$, the chordal of the two spheres is the bisector of the line connecting $z_s$ and $z_t$.
+A power diagram for which all radii are equal is therefore equivalent to the Voronoi diagram of the centers.
+
+The normal vectors of the chordales of three spheres are given by the pairwise differences of their centers.
+Since any of these differences can be expressed through the other two, their intersection has higher dimensionality than a general intersection of three hyperplanes has.
+\begin{observation}
+    Let $s, t$ and $u$ be spheres in $\R^d$ with $d \geq 2$.
+    If the spheres are not collinear, the intersection of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
+    If they are collinear, the three chordales are parallel.
+    More generally, the chordales of a sphere with $k \leq d$ non-collinear other spheres in $\R^d$ intersect in a $(d-k)$-flat.
+\end{observation}
+
+Let $S$ be a finite set of $n$ spheres in $\R^d$ whose centers have an affine dimension of $d$.
+Since the cell of every sphere $s \in S$ is bounded by $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the intersection of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
+$\PD(S)$ partitions $\R^d$ into polyhedra, with the exception of points $x$ on chordals for which there exist at least two $s_i \in S$ which minimize $\pow(x, s)$.
+
+\begin{figure}[tb]
+    \centering
+    \begin{tikzpicture}[x=0.5cm, y=0.5cm]
+        \path[clip, use as bounding box] (-5, -7) rectangle (19, 8);
+
+        \node[sphere center, label={above:$s_5$}] (s1) at (    10.0,     4.0) {};
+        \draw[sphere radius] (s1) circle[radius=3.5];
+        \node[sphere center, label={right:$s_3$}] (s2) at (    15.0,    -3.0) {};
+        \draw[sphere radius] (s2) circle[radius=3.2];
+        \node[sphere center, label={left:$s_1$}] (s3) at (     0.0,     0.0) {};
+        \draw[sphere radius] (s3) circle[radius=5.0];
+        \node[sphere center, label={above:$s_4$}] (s4) at (    13.5,    -3.0) {};
+        \draw[sphere radius] (s4) circle[radius=1.3];
+        \node[sphere center, label={above:$s_2$}] (s5) at (    1.7,    0) {};
+        \draw[sphere radius] (s5) circle[radius=1.5];
+
+        \coordinate (p1) at (   7.408,  -2.425);
+        \coordinate (p2) at (    11.4, -0.4293);
+
+        \draw[extremal edge] (p1) edge node[extremal spheres, pos=0.3] {${1, 5}$} ($(p1) + 15*( -0.3714,  0.9285)$);
+        \draw[extremal edge] (p1) edge node[extremal spheres, pos=0.2] {${1, 4}$} ($(p1) + 15*( -0.2169, -0.9762)$);
+        \draw[internal edge] (p1) edge node[internal spheres] {${4, 5}$} (p2);              5
+        \draw[extremal edge] (p2) edge node[extremal spheres, pos=0.3] {${3, 5}$} ($(p2) + 15*(  0.8137,  0.5812)$);
+        \draw[extremal edge] (p2) edge node[extremal spheres, pos=0.3] {${3, 4}$} ($(p2) + 15*(    -0.0,    -1.0)$);
+
+        \node[point] () at (p1) {};
+        \node[point] () at (p2) {};
+    \end{tikzpicture}
+    \caption{The cell of site $s_2$ in this two-dimensional power diagram with five sites is empty. This can happen, if the sphere of a site is completely contained in a sphere of an other site. This condition is not sufficient however, since $s_4$ does have a non-empty cell. The center of $s_4$ is not part of its cell however.}
+    \label{fig:emptycells}
+\end{figure}
+\Cref{fig:emptycells} shows that in contrast to Voronoi diagrams, not every sphere must have a non-empty cell in a power diagram.
+This can happen, if a sphere completely contained in another sphere, but this is not a sufficient condition.
+Being contained in another sphere can also lead to a sphere $s$ having a cell for which $z_s \not\in \cell(s) \neq \emptyset$.
+
+While it is easy to calculate chordales between two spheres, the main question to answer when constructing power diagrams is which chordales actually are tight bounds to a cell and which $j$-faces (for $0 \leq j < d - 1$) exist.
+To describe all existing non-extremal faces, one can find all existing $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hull.
+To justify this approach, we show the following lemma.
+
+\begin{lemma}
+    Let $S \subset \R^d$ be a finite set of spheres.
+    If any cell of $\PD(S)$ is bounded by a $0$-face, then every cell in $\PD(S)$ is bounded by a $0$-face.
+\end{lemma}
+\begin{proof}
+    Let $S \subset \R^d$ be a finite set of spheres $s_i = (z_i, r_i^2)$ with $\abs{S} \geq d+2$ and $s_1, \dots, s_d, s_{d+1}, s_{d+2} \in S$ such that (the cell of) $s_{d+1}$ shares a $0$-face with $s_1, \dots, s_d$ in $\PD(S)$.
+    Since the chordales of $z_{d+1}$ with these sites intersect in a $0$-face, their $d$ normal vectors $\left\{  z_i - z_{d+1} \mid 1 \leq i \leq d\right\}$ must be linearly independent, or equivalently, $\dim(\aff(\left\{ z_1, z_2, \dots, z_{d+1} \right\})) = d$.
+
+    Suppose that $z_{d+2}$ is not bounded by a $0$-face.
+    Then, the face of lowest dimension of the polyhedron of $s_{d+2}$ has at least $1$ dimension and must be unbounded, giving the polyhedron a lineality space of dimensionality at least $1$.
+
+    The vectors in this lineality space must be perpendicular to all chordales of $s_{d+2}$, since the polyhedron is bounded by them.
+    A subset of the normal vectors of these chordales is the set $C = \left\{ z_i - z_{d+2} \mid 1 \leq i \leq d+1 \right\}$.
+    Note that
+    \begin{align}
+        \dim C = \dim \left( \aff \left( \left\{ z_1, z_2, \dots, z_{d+2} \right\} \right) \right) \geq \dim \left( \aff \left( \left\{ z_1, z_2, \dots, z_{d+1} \right\} \right) \right) = d
+    \end{align}
+    and therefore, the linearity space can only have dimension $0$, which is a contradiction.
+\end{proof}
 
 \section{Embedding in $d+1$ Dimensions}
 \label{sec:embedding_in_d_1_dimensions}
-\subsection{The transform to $d+1$}
+\subsection{The Transform to $d+1$ Dimensions}
 \label{sub:the_transform}
 \todo[inline]{Transformation function $\Pi$}
 \todo[inline]{Power is difference of disstances}
 \todo[inline]{Chordales are vertial projections}
 \todo[inline]{Existance of 0-faces}
 
-\subsection{Duality of points and hyperplanes in $E^{d+1}$}
+\subsection{Duality of points and hyperplanes in $\R^{d+1}$}
 \label{sub:duality_of_points_and_hyperplanes_in_e_d_1_}
 \todo[inline]{Polarity function $\Delta$}
 \todo[inline]{Observation about relative positioning}
@@ -256,7 +342,7 @@ Using the Pythagorean theorem, this function has a geometric interpretation show
 \todo[inline]{A cell complex in $E^d$ is polytopal iff $C$ is a power diagram. (Why?)}
 \todo[inline]{For any finite $M \subset E^{d+1}$, there exists a set of spheres such that $PD(S)$ is dual to $CH_b(M)$ and vice versa.}
 
-\section{Implementation}
+\section{Finding Power Diagrams}
 \subsection{Naive Algorithm}
 \label{sub:naive_algorithm}
 \todo[inline]{Combinatorical trys with brute force}
