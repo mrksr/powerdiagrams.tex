@@ -333,11 +333,17 @@ The embedding of power diagrams in an additional dimension relies on the fact th
 
 Inspect the space $\R^{d+1}$ and let the original space $\R^d$ be identified with the hyperplane $h_0: x_{d+1} = 0$.
 Let $U$ denote the paraboloid $x_{d+1} = x^Tx$ with $x = \left( x_1, \dots, x_d \right)^T$.
-The transformation function $\Pi$ will then map any $d$-dimensional sphere $s = (z, r^2)$ with the center $z \in h_0$ to the hyperplane
+\begin{definition}[Transformation Function]
+    Let $s = (z, r^2)$ be a $d$-dimensional sphere with $z \in h_0$.
+    The \define{transformation function $\Pi$} maps this sphere to the hyperplane
+    \begin{align}
+        \Pi(s) &\coloneqq \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid x_{d+1} = 2x^Tz - z^Tz + r^2 \right\}\\
+    &= \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid \left( 2 \cdot z, -1 \right)^T\left( x, x_{d+1} \right) = z^Tz - r^2 \right\}.
+    \end{align}
+\end{definition}
+
+This transform has a direct connection to $U$ since
 \begin{align}
-    \Pi(s) &\coloneqq \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid x_{d+1} = 2x^Tz - z^Tz + r^2 \right\}\\
-    &= \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid \left( 2 \cdot z, -1 \right)^T\left( x, x_{d+1} \right) = z^Tz - r^2 \right\}\\
-    \intertext{and vice versa. Note that}
     \Pi(s) \cap U &= \left\{ (x, x_{d+1}) \in \R^{d+1} \mid x_{d+1} = 2x^Tz - z^Tz + r^2 = x^Tx \right\}
 \end{align}
 where it holds that
@@ -395,12 +401,54 @@ This directly implies the following lemma, which connects chordales to the newly
     Let $s$ and $t$ be non-cocentric spheres in $h_0$.
     Then $\chor(s, t)$ is the vertical projection of $\Pi(s) \cap \Pi(t)$ onto $h_0$.
 \end{lemma}
+\missingfigure{3D Figure showing the Paraboloid and Planes intersecting.}
 
 \subsection{Duality of points and hyperplanes in $\R^{d+1}$}
-\label{sub:duality_of_points_and_hyperplanes_in_e_d_1_}
-\todo[inline]{Polarity function $\Delta$}
-\todo[inline]{Observation about relative positioning}
-\todo[inline]{Lemma 5 about the mapping $\gamma$?}
+\label{sub:duality_of_points_and_hyperplanes}
+The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-faces defined by the intersection of hyperplanes and $(d-j)$-faces in this dual domain.
+
+\begin{definition}[Polarity Function]
+    Let $n \in \R^{d}$ and $n_{d+1} \in \R$.
+    The \define{polarity function $\Delta$} maps the hyperplane $h = \left\{ (x, x_{d+1}) \in \R^{d+1} \mid x_{d+1} = n^Tx + n_{d+1} \right\}$ to the point
+    \begin{align}
+        \Delta(h) &\coloneqq \left( \frac{1}{2} n, -n_{d+1} \right) \in \R^{d+1}
+        \intertext{and any face $f \subseteq \R^{d+1}$ to}
+        \Delta(f) &\coloneqq \bigcup_{f \subseteq h} \Delta(h).
+    \end{align}
+\end{definition}
+
+Let $h$ be a hyperplane in $\R^{d+1}$ and $p \in \R^{d+1}$. The images $\Delta(h)$ and $\Delta(p)$ are called \define{pole} and \define{polar hyperplane} respectively.
+The following lemma shows that the polarity function maps polyhedra to their duals.
+\begin{lemma}
+    $\Delta$ is an involutory function and a bijection between $j$-faces and $(d-j)$-faces in $\R^{d+1}$ (for $0 \leq j \leq d$).
+\end{lemma}
+\begin{proof}
+    \todo[inline]{Weil isso.}
+\end{proof}
+
+An additional property of $\Delta$ is its preservation of relative positions of points and hyperplanes.
+\begin{lemma}
+    Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
+    Then $p$ is above, in or below $h$ iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
+\end{lemma}
+\begin{proof}
+    Let $(x, x_{d+1}),(n, n_{d+1}) \in \R^{d+1}$ and $h = \left\{ (y, y_{d+1}) \in \R^{d+1} \mid y_{d+1} = n^Ty + n_{d+1} \right\}$ a hyperplane in $\R^{d+1}$.
+    Then by definition
+    \begin{align}
+        \Delta(h) &= \left( \frac{1}{2}n, -n_{d+1} \right)\\
+        \Delta(p) &= \left\{ (y, y_{d+1}) \in \R^{d+1} \mid y_{d+1} = 2x^Ty - x_{d+1} \right\}\\
+    \end{align}
+    Any point $(y, y_{d+1}) \in \R^{d+1}$ is above $\Delta{p}$ if
+    \begin{align}
+        2x^Ty - y_{d+1} - x_{d+1} > 0
+    \end{align}
+    and on or below the hyperplane when it is equal or smaller.
+    Inserting $\Delta(h)$ into the equation yields
+    \begin{align}
+        2x^T \left( \frac{1}{2}n \right) + n_{d+1} - x_{d+1} = n^Tx - x_{d+1} + n_{d+1}
+    \end{align}
+    which is equal to the expression determining the relative position of $(x, x_{d+1})$ to $h$.
+\end{proof}
 
 \subsection{Power Diagrams and Polyhedra}
 \label{sub:power_diagrams_and_polyhedra}
@@ -408,7 +456,8 @@ This directly implies the following lemma, which connects chordales to the newly
 \todo[inline]{A cell complex in $E^d$ is polytopal iff $C$ is a power diagram. (Why?)}
 \todo[inline]{For any finite $M \subset E^{d+1}$, there exists a set of spheres such that $PD(S)$ is dual to $CH_b(M)$ and vice versa.}
 
-\section{Finding Power Diagrams}
+\section{Constructing Power Diagrams}
+\label{sec:constructing_power_diagrams}
 \subsection{Naive Algorithm}
 \label{sub:naive_algorithm}
 \todo[inline]{Combinatorical trys with brute force}
