@@ -167,7 +167,7 @@ Every such site gets assigned its partition of the space where there is no other
 \begin{figure}[tb]
     \centering
     \begin{tikzpicture}
-        \path[clip, use as bounding box] (-4, -2.05) rectangle (6, 4.05);
+        \path[clip, use as bounding box] (-6, -2.05) rectangle (7, 4.05);
 
         \node[sphere center, label={above:$s_1$}] (s1) at (     2.0,     3.0) {};
         \draw[sphere radius] (s1) circle[radius=1.0];
@@ -206,7 +206,7 @@ Every such site gets assigned its partition of the space where there is no other
         \node[point] () at (p2) {};
         \node[point] () at (p3) {};
     \end{tikzpicture}
-    \caption{The power diagram of the five sites $\PD(\left\{ s_1, \dots, s_5 \right\})$ is the set of their cells, whose boundaries are shown in the figure. Boundaries are defined by sets of points for which adjacent sites have equal power.}
+    \caption{The power diagram of the five sites $\PD(\left\{ s_1, \dots, s_5 \right\})$ is the set of their cells, whose boundaries are shown in the figure. Boundaries are defined by sets of points for which adjacent sites have equal minimizing power.}
     \label{fig:garage}
 \end{figure}
 
@@ -298,8 +298,8 @@ This can happen, if a sphere completely contained in another sphere, but this is
 Being contained in another sphere can also lead to a sphere $s$ having a cell for which $z_s \not\in \cell(s) \neq \emptyset$.
 
 While it is easy to calculate chordales between two spheres, the main question to answer when constructing power diagrams is which chordales actually are tight bounds to a cell and which $j$-faces (for $0 \leq j < d - 1$) exist.
-To describe all existing non-extremal faces, one can find all existing $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hull.
-To justify this approach, we show the following lemma.
+To describe all existing non-extremal faces, one can find all existing $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
+To justify this approach, the following lemma shows that for power diagrams which have $0$-faces, this approach does not miss internal faces.
 
 \begin{lemma}
     Let $S \subset \R^d$ be a finite set of spheres.
@@ -321,14 +321,80 @@ To justify this approach, we show the following lemma.
     and therefore, the lineality space can only have dimension $0$, which is a contradiction.
 \end{proof}
 
-\section{Embedding in $d+1$ Dimensions}
+\section{Embedding in \texorpdfstring{$d+1$}{d+1} Dimensions}
 \label{sec:embedding_in_d_1_dimensions}
-\subsection{The Transform to $d+1$ Dimensions}
+To derive an algorithm to efficiently compute the cells of power diagrams via the incidence structure of the faces of the boundaries, power diagrams of $d$ dimensions will be embedded into $d+1$ dimensions using a transformation function to map its spheres to hyperplanes.
+This will lead to a result identifying these power diagrams with polyhedra in $d+1$ dimensions which can be expressed as the intersection of upper halfspaces.
+Using this identity together with a duality mapping for polyhedra will finally connect power diagrams to convex hulls and will be the basis of the algorithm to calculate power diagrams.
+
+\subsection{The Transform to \texorpdfstring{$d+1$}{d+1} Dimensions}
 \label{sub:the_transform}
-\todo[inline]{Transformation function $\Pi$}
-\todo[inline]{Power is difference of disstances}
-\todo[inline]{Chordales are vertial projections}
-\todo[inline]{Existance of 0-faces}
+The embedding of power diagrams in an additional dimension relies on the fact that the power function of a sphere in $\R^d$ can be calculated using distances to a hyperplane in $\R^{d+1}$.
+
+Inspect the space $\R^{d+1}$ and let the original space $\R^d$ be identified with the hyperplane $h_0: x_{d+1} = 0$.
+Let $U$ denote the paraboloid $x_{d+1} = x^Tx$ with $x = \left( x_1, \dots, x_d \right)^T$.
+The transformation function $\Pi$ will then map any $d$-dimensional sphere $s = (z, r^2)$ with the center $z \in h_0$ to the hyperplane
+\begin{align}
+    \Pi(s) &\coloneqq \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid x_{d+1} = 2x^Tz - z^Tz + r^2 \right\}\\
+    &= \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid \left( 2 \cdot z, -1 \right)^T\left( x, x_{d+1} \right) = z^Tz - r^2 \right\}\\
+    \intertext{and vice versa. Note that}
+    \Pi(s) \cap U &= \left\{ (x, x_{d+1}) \in \R^{d+1} \mid x_{d+1} = 2x^Tz - z^Tz + r^2 = x^Tx \right\}
+\end{align}
+where it holds that
+\begin{alignat}{2}
+    &&2x^Tz - z^Tz + r^2 &= x^Tx\\
+    &\Leftrightarrow\quad& \dist(x, z) &= r^2\\
+    &\Leftrightarrow\quad& x &\in s.
+\end{alignat}
+The intersection of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
+The following proofs that this mapping is an identification of the two concepts.
+\begin{lemma}
+    $\Pi$ is a bijection between spheres in $h_0$ and hyperplanes in $\R^{d+1}$ which are not parallel to the $x_{d+1}$ axis and intersect $U$.
+\end{lemma}
+\begin{proof}
+    $\Pi$ is clearly injective since $z$ directly influences the normal vector and for two concentric spheres to have the same offset, $r$ must be equal.
+    $\Pi$ is also surjective if every intersection of hyperplane which is not parallel to $x_{d+1}$ with $U$ is an ellipsoid which results in a sphere if projected to $h_0$.
+
+    Let $(n, 1) \in \R^{d+1}$ be a normal vector with $n \neq 0$, let $b \in \R$ be an offset and $h = \left\{ y \in \R^{d+1} \mid (n, 1)^T y = b \right\}$ a hyperplane in $\R^{d+1}$ which is not parallel to the $x_{d+1}$ axis.
+    The projection to $h_0$ of the intersection of $h$ with $U$ is given by
+    \begin{align}
+        h \cap U = \left\{ (x, x_{d+1}) \in \R^{d+1} \mid x_{d+1} = b - n^T x = x^T x \right\}
+    \end{align}
+    where
+    \begin{alignat}{2}
+        &&b - n^Tx &= x^Tx\\
+        &\Leftrightarrow\quad& x^Tx + n^Tx - b &= 0.
+    \end{alignat}
+
+    To show that this projection is actually a sphere, it should be described by a center $v \in \R^d$ and a radius $\alpha \geq 0$ in the equation
+    \begin{alignat}{2}
+        &&(x - v)^2 &= \alpha.
+        \intertext{Now let $\alpha = b + \frac{1}{4} n^Tn$ and $v = \frac{1}{2}n$. Then}
+        &&(x - \frac{1}{2}n)^2 &= b + \frac{1}{4} n^Tn\\
+        &\Leftrightarrow\quad&x^Tx - n^Tx + \frac{1}{4} n^Tn &= b + \frac{1}{4} n^Tn\\
+        &\Leftrightarrow\quad& x^Tx + n^Tx - b &= 0
+    \end{alignat}
+    so the projection of the intersection is indeed a sphere if $b > -\frac{1}{4}n^Tn$, a point if $b = -\frac{1}{4}n^Tn$ and $h$ does not intersect $U$ otherwise.
+\end{proof}
+
+$\Pi(s)$ being the vertical projection of spheres to $U$ can also be used to compute the power of some point with respect to $s$.
+\begin{observation}
+    Let $s = (z, r^2)$ be a sphere in $h_0$ and $x \in h_0$.
+    Let $x^\prime$ and $x^{\prime\prime}$ denote the vertical projections of $x$ onto $U$ and $\Pi(s)$. It then holds that
+    \begin{align}
+        \pow(x, s) = \dist(x, x^\prime) - \dist(x, x^{\prime\prime})
+    \end{align}
+\end{observation}
+\begin{proof}
+    Since the projections of $x$ did not change the first $d$ coordinates, it holds that $\dist(x, x^\prime) = x^Tx$ and $\dist(x, x^{\prime\prime}) = 2x^Tz - z^Tz + r^2$, with their difference being $(x - z)^T(x - z) - r^2 = \pow(x, s)$.
+\end{proof}
+
+This directly implies the following lemma, which connects chordales to the newly formed hyperplanes by recognizing that the intersection of two hyperplanes in $\R^{d+1}$ contains projected points with the same power value for the respective spheres.
+
+\begin{lemma}
+    Let $s$ and $t$ be non-cocentric spheres in $h_0$.
+    Then $\chor(s, t)$ is the vertical projection of $\Pi(s) \cap \Pi(t)$ onto $h_0$.
+\end{lemma}
 
 \subsection{Duality of points and hyperplanes in $\R^{d+1}$}
 \label{sub:duality_of_points_and_hyperplanes_in_e_d_1_}
