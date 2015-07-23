@@ -227,7 +227,8 @@ After this, a transform to $d + 1$ dimension will be used to both show a fundame
 \subsection{Geometric Notation}
 \label{sub:geometric_notation}
 \todo[inline]{Affine Spaces, $\aff$}
-\todo[inline]{Faces, Facets, $\ldots$}
+\todo[inline]{Convex Hull, $\CHb$}
+\todo[inline]{Flats, Faces, Facets, $\ldots$}
 \todo[inline]{Polyhedra}
 \todo[inline]{Lineality Space}
 \todo[inline]{Dual Polyhedra}
@@ -295,7 +296,7 @@ $\PD(S)$ partitions $\R^d$ into polyhedra, with the exception of points $x$ on c
 \end{figure}
 \Cref{fig:emptycells} shows that in contrast to Voronoi diagrams, not every sphere must have a non-empty cell in a power diagram.
 This can happen, if a sphere completely contained in another sphere, but this is not a sufficient condition.
-Being contained in another sphere can also lead to a sphere $s$ having a cell for which $z_s \not\in \cell(s) \neq \emptyset$.
+Being contained in another sphere can also lead to a sphere $s$ having a cell for which $z_s \not\in \cell(s) \neq \varnothing$.
 
 While it is easy to calculate chordales between two spheres, the main question to answer when constructing power diagrams is which chordales actually are tight bounds to a cell and which $j$-faces (for $0 \leq j < d - 1$) exist.
 To describe all existing non-extremal faces, one can find all existing $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
@@ -332,72 +333,75 @@ Using this identity together with a duality mapping for polyhedra will finally c
 The embedding of power diagrams in an additional dimension relies on the fact that the power function of a sphere in $\R^d$ can be calculated using distances to a hyperplane in $\R^{d+1}$.
 
 Inspect the space $\R^{d+1}$ and let the original space $\R^d$ be identified with the hyperplane $h_0: x_{d+1} = 0$.
-Let $U$ denote the paraboloid $x_{d+1} = x^Tx$ with $x = \left( x_1, \dots, x_d \right)^T$.
+Let $U$ denote the paraboloid $x_{d+1} = x_{[d]}^Tx_{[d]}$ with $x_{[d]} = \left( x_1, \dots, x_d \right)^T$.
 \begin{definition}[Transformation Function]
     Let $s = (z, r^2)$ be a $d$-dimensional sphere with $z \in h_0$.
     The \define{transformation function $\Pi$} maps this sphere to the hyperplane
     \begin{align}
-        \Pi(s) &\coloneqq \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid x_{d+1} = 2x^Tz - z^Tz + r^2 \right\}\\
-    &= \left\{ \left( x, x_{d+1} \right) \in \R^{d+1} \mid \left( 2 \cdot z, -1 \right)^T\left( x, x_{d+1} \right) = z^Tz - r^2 \right\}.
+        \Pi(s) &\coloneqq \left\{ x \in \R^{d+1} \mid x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 \right\}\\
+    &= \left\{ x \in \R^{d+1} \mid \left( 2 \cdot z, -1 \right)^T x = z^Tz - r^2 \right\}.
     \end{align}
 \end{definition}
 
 This transform has a direct connection to $U$ since
 \begin{align}
-    \Pi(s) \cap U &= \left\{ (x, x_{d+1}) \in \R^{d+1} \mid x_{d+1} = 2x^Tz - z^Tz + r^2 = x^Tx \right\}
+    \Pi(s) \cap U &= \left\{ x \in \R^{d+1} \mid x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 = x_{[d]}^Tx_{[d]} \right\}
 \end{align}
 where it holds that
 \begin{alignat}{2}
-    &&2x^Tz - z^Tz + r^2 &= x^Tx\\
-    &\Leftrightarrow\quad& \dist(x, z) &= r^2\\
-    &\Leftrightarrow\quad& x &\in s.
+    &&2x_{[d]}^Tz_{[d]} - z_{[d]}^Tz_{[d]} + r^2 &= x_{[d]}^Tx_{[d]}\\
+    &\Leftrightarrow\quad& \dist(x_{[d]}, z) &= r^2\\
+    &\Leftrightarrow\quad& x_{[d]} &\in s.
 \end{alignat}
 The intersection of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
 The following proofs that this mapping is an identification of the two concepts.
 \begin{lemma}
+    \label{lem:pibijection}
     $\Pi$ is a bijection between spheres in $h_0$ and hyperplanes in $\R^{d+1}$ which are not parallel to the $x_{d+1}$ axis and intersect $U$.
 \end{lemma}
 \begin{proof}
     $\Pi$ is clearly injective since $z$ directly influences the normal vector and for two concentric spheres to have the same offset, $r$ must be equal.
     $\Pi$ is also surjective if every intersection of hyperplane which is not parallel to $x_{d+1}$ with $U$ is an ellipsoid which results in a sphere if projected to $h_0$.
 
-    Let $(n, 1) \in \R^{d+1}$ be a normal vector with $n \neq 0$, let $b \in \R$ be an offset and $h = \left\{ y \in \R^{d+1} \mid (n, 1)^T y = b \right\}$ a hyperplane in $\R^{d+1}$ which is not parallel to the $x_{d+1}$ axis.
+    Let $n \in \R^{d+1}$ be a normal vector with $n_{d+1} = 1$, let $b \in \R$ be an offset and $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ a hyperplane in $\R^{d+1}$ which is not parallel to the $x_{d+1}$ axis.
     The projection to $h_0$ of the intersection of $h$ with $U$ is given by
     \begin{align}
-        h \cap U = \left\{ (x, x_{d+1}) \in \R^{d+1} \mid x_{d+1} = b - n^T x = x^T x \right\}
+        h \cap U = \left\{ x \in \R^{d+1} \mid x_{d+1} = b - n_{[d]}^T x_{[d]} = x_{[d]}^T x_{[d]} \right\}
     \end{align}
     where
     \begin{alignat}{2}
-        &&b - n^Tx &= x^Tx\\
-        &\Leftrightarrow\quad& x^Tx + n^Tx - b &= 0.
+        &&b - n_{[d]}^Tx_{[d]} &= x_{[d]}^Tx_{[d]}\\
+        &\Leftrightarrow\quad& x_{[d]}^Tx_{[d]} + n_{[d]}^Tx_{[d]} - b &= 0.
     \end{alignat}
 
     To show that this projection is actually a sphere, it should be described by a center $v \in \R^d$ and a radius $\alpha \geq 0$ in the equation
     \begin{alignat}{2}
-        &&(x - v)^2 &= \alpha.
-        \intertext{Now let $\alpha = b + \frac{1}{4} n^Tn$ and $v = \frac{1}{2}n$. Then}
-        &&(x - \frac{1}{2}n)^2 &= b + \frac{1}{4} n^Tn\\
-        &\Leftrightarrow\quad&x^Tx - n^Tx + \frac{1}{4} n^Tn &= b + \frac{1}{4} n^Tn\\
-        &\Leftrightarrow\quad& x^Tx + n^Tx - b &= 0
+        &&\dist(x_{[d]},v)^2 &= \alpha.
+        \intertext{Now let $\alpha = b + \frac{1}{4} n_{[d]}^Tn_{[d]}$ and $v = \frac{1}{2}n_{[d]}$. Then}
+        &&\dist(x_{[d]},\frac{1}{2}n_{[d]})^2 &= b + \frac{1}{4} n_{[d]}^Tn_{[d]}\\
+        &\Leftrightarrow\quad&x_{[d]}^Tx_{[d]} - n_{[d]}^Tx_{[d]} + \frac{1}{4} n_{[d]}^Tn_{[d]} &= b + \frac{1}{4} n_{[d]}^Tn_{[d]}\\
+        &\Leftrightarrow\quad& x_{[d]}^Tx_{[d]} + n_{[d]}^Tx_{[d]} - b &= 0
     \end{alignat}
-    so the projection of the intersection is indeed a sphere if $b > -\frac{1}{4}n^Tn$, a point if $b = -\frac{1}{4}n^Tn$ and $h$ does not intersect $U$ otherwise.
+    so the projection of the intersection is indeed a sphere if $b > -\frac{1}{4}n_{[d]}^Tn_{[d]}$, a point if $b = -\frac{1}{4}n_{[d]}^Tn_{[d]}$ and $h$ does not intersect $U$ otherwise.
 \end{proof}
 
 $\Pi(s)$ being the vertical projection of spheres to $U$ can also be used to compute the power of some point with respect to $s$.
 \begin{observation}
+    \label{obs:distances}
     Let $s = (z, r^2)$ be a sphere in $h_0$ and $x \in h_0$.
     Let $x^\prime$ and $x^{\prime\prime}$ denote the vertical projections of $x$ onto $U$ and $\Pi(s)$. It then holds that
     \begin{align}
-        \pow(x, s) = \dist(x, x^\prime) - \dist(x, x^{\prime\prime})
+        \pow(x_{[d]}, s) = \dist(x, x^\prime) - \dist(x, x^{\prime\prime})
     \end{align}
 \end{observation}
 \begin{proof}
-    Since the projections of $x$ did not change the first $d$ coordinates, it holds that $\dist(x, x^\prime) = x^Tx$ and $\dist(x, x^{\prime\prime}) = 2x^Tz - z^Tz + r^2$, with their difference being $(x - z)^T(x - z) - r^2 = \pow(x, s)$.
+    Since the projections of $x$ did not change the first $d$ coordinates, it holds that $\dist(x, x^\prime) = x_{[d]}^Tx_{[d]}$ and $\dist(x, x^{\prime\prime}) = 2x_{[d]}^Tz - z^Tz + r^2$, with their difference being $(x_{[d]} - z)^T(x_{[d]} - z) - r^2 = \pow(x_{[d]}, s)$.
 \end{proof}
 
 This directly implies the following lemma, which connects chordales to the newly formed hyperplanes by recognizing that the intersection of two hyperplanes in $\R^{d+1}$ contains projected points with the same power value for the respective spheres.
 
 \begin{lemma}
+    \label{lem:verticalprojection}
     Let $s$ and $t$ be non-cocentric spheres in $h_0$.
     Then $\chor(s, t)$ is the vertical projection of $\Pi(s) \cap \Pi(t)$ onto $h_0$.
 \end{lemma}
@@ -405,42 +409,74 @@ This directly implies the following lemma, which connects chordales to the newly
 
 \subsection{Duality of points and hyperplanes in $\R^{d+1}$}
 \label{sub:duality_of_points_and_hyperplanes}
-The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-faces defined by the intersection of hyperplanes and $(d-j)$-faces in this dual domain.
+The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of hyperplanes and $(d-j)$-flats in this dual domain.
 
 \begin{definition}[Polarity Function]
-    Let $n \in \R^{d}$ and $n_{d+1} \in \R$.
-    The \define{polarity function $\Delta$} maps the hyperplane $h = \left\{ (x, x_{d+1}) \in \R^{d+1} \mid x_{d+1} = n^Tx + n_{d+1} \right\}$ to the point
+    Let $a \in \R^{d}$ and $a_{d+1} \in \R$.
+    The \define{polarity function $\Delta$} maps the hyperplane $h = \left\{ x \in \R^{d+1} \mid x_{d+1} = a^Tx_{[d]} + a_{d+1} \right\}$ not parallel to the $x_{d+1}$ axis to the point
     \begin{align}
-        \Delta(h) &\coloneqq \left( \frac{1}{2} n, -n_{d+1} \right) \in \R^{d+1}
+        \Delta(h) &\coloneqq \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix}  \in \R^{d+1}
         \intertext{and any face $f \subseteq \R^{d+1}$ to}
-        \Delta(f) &\coloneqq \bigcup_{f \subseteq h} \Delta(h).
+        \Delta(f) &\coloneqq \bigcup_{\substack{f \subseteq h\\h \textnormal{ hyperplane}}} \Delta(h).
     \end{align}
 \end{definition}
 
 Let $h$ be a hyperplane in $\R^{d+1}$ and $p \in \R^{d+1}$. The images $\Delta(h)$ and $\Delta(p)$ are called \define{pole} and \define{polar hyperplane} respectively.
-The following lemma shows that the polarity function maps polyhedra to their duals.
+The following lemma shows a fundamental property of $\Delta$ on points and hyperplanes and connects flats of other dimensionality.
 \begin{lemma}
-    $\Delta$ is an involutory function and a bijection between $j$-faces and $(d-j)$-faces in $\R^{d+1}$ (for $0 \leq j \leq d$).
+    \label{lem:deltainvolutory}
+    $\Delta$ is an involutory function and a bijection between $j$-flats and $(d-j)$-flats in $\R^{d+1}$ (for $0 \leq j \leq d$).
 \end{lemma}
 \begin{proof}
-    \todo[inline]{Weil isso.}
+    Let $F = f + X \subset \R^{d+1}$ be some flat with $f \in \R^{d+1}$, $\dim(X) = j$ and
+    \begin{align}
+        X^\bot = \left\{ n \in \R^{d+1} \mid \forall x \in X. \scalar{n, x} = 0 \right\}
+    \end{align}
+    the set of all vectors perpendicular to $X$ for which $\dim(X^\bot) = d - j + 1$.
+    Then all hyperplanes containing $F$ have a normal vector which is in $X^\bot$.
+    Let $n \in X^\bot$ and
+    \begin{align}
+        h(n) &= \left\{x \in \R^{d+1} \mid \scalar{n, x - f} = 0\right\}\\
+        &= \left\{ x \in \R^{d+1} \mid n_{d+1} \cdot x_{d+1} = -n_{[d]}^Tx_{[d]} + n^Tf \right\}
+    \end{align}
+    its corresponding hyperplane containing $F$.
+    Then let \Wlog \todo{Was ist mir den senkrechten Ebenen?}$N = \left\{ n \in X^\bot \mid n_{d+1} = 1 \right\}$ the set of all possible normal vectors and
+    \begin{align}
+        \Delta(F) &= \Delta(h(N))\\
+        &= \bigcup_{n \in N} \Delta(h(n)) \\
+        &= \bigcup_{n \in N} \Delta \left( \left\{ x \in \R^{d+1} \mid x_{d+1} = -n_{[d]}^Tx_{[d]} + n^Tf \right\} \right) \\
+        &= \bigcup_{n \in N} \begin{pmatrix} \frac{1}{2} n_{[d]}\\ - n^T f \end{pmatrix}
+    \end{align}
+    $\Delta(F)$ is then a $(d - j)$-flat which is the result of removing the last dimension of the $(d - j + 1)$-flat $F$ and an affine transformation.
+    Is is defined by the affine hull of the polar points of $h(n_i)$ for any suitable basis $\left\{ n_1, \dots, n_{d - j + 1} \right\}$ of $X^\bot$.
+    It is surjective since any $(d - j$)-flat which is the affine hull of points $\left\{ f_1, \dots, f_{d - j + 1} \right\}$ one can find suitable $n_i$ to form a basis and $f$ to define a $j$-flat which is its preimage.
+
+    Suppose $F = p + \left\{ 0 \right\}$ is a $0$-flat.
+    Then $\left\{ 0 \right\}^\bot = \R^{d+1}$ and
+    \begin{align}
+        \Delta(F) &= \bigcup_{\substack{n \in \R^{d+1}\\n_{d+1} = 1}} \begin{pmatrix} \frac{1}{2} n_{[d]}\\ -n^T p \end{pmatrix} \\
+        &= \left\{ x \in \R^{d+1} \mid x_{d+1} = 2 \cdot p_{[d]}^Tx_{[d]} - p_{d+1} \right\}
+    \end{align}
+    is a hyperplane, for which $\Delta(\Delta(F)) = F$, which proves that $\Delta$ is involutory.
+    Together with the surjetiveness for faces, the bijectiveness of $\Delta$ follows.
 \end{proof}
 
 An additional property of $\Delta$ is its preservation of relative positions of points and hyperplanes.
 \begin{lemma}
+    \label{lem:relativepositions}
     Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
     Then $p$ is above, in or below $h$ iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
 \end{lemma}
 \begin{proof}
-    Let $(x, x_{d+1}),(n, n_{d+1}) \in \R^{d+1}$ and $h = \left\{ (y, y_{d+1}) \in \R^{d+1} \mid y_{d+1} = n^Ty + n_{d+1} \right\}$ a hyperplane in $\R^{d+1}$.
-    Then by definition
+    Let $x,n \in \R^{d+1}$ and $h = \left\{ y \in \R^{d+1} \mid y_{d+1} = n_{[d]}^Ty_{[d]} + n_{d+1} \right\}$ a hyperplane in $\R^{d+1}$.
+    Then by definition and \cref{lem:deltainvolutory}
     \begin{align}
-        \Delta(h) &= \left( \frac{1}{2}n, -n_{d+1} \right)\\
-        \Delta(p) &= \left\{ (y, y_{d+1}) \in \R^{d+1} \mid y_{d+1} = 2x^Ty - x_{d+1} \right\}\\
+        \Delta(h) &\coloneqq \begin{pmatrix} \frac{1}{2} n \\ -n_{d+1} \end{pmatrix}  \in \R^{d+1}\\
+        \Delta(p) &= \left\{ y \in \R^{d+1} \mid y_{d+1} = 2x_{[d]}^Ty_{[d]} - x_{d+1} \right\}\\
     \end{align}
-    Any point $(y, y_{d+1}) \in \R^{d+1}$ is above $\Delta{p}$ if
+    Any point $y \in \R^{d+1}$ is above $\Delta{p}$ if
     \begin{align}
-        2x^Ty - y_{d+1} - x_{d+1} > 0
+        2x_{[d]}^Ty_{[d]} - y_{d+1} - x_{d+1} > 0
     \end{align}
     and on or below the hyperplane when it is equal or smaller.
     Inserting $\Delta(h)$ into the equation yields
@@ -452,10 +488,40 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 
 \subsection{Power Diagrams and Polyhedra}
 \label{sub:power_diagrams_and_polyhedra}
-\todo[inline]{Main Theorem: For any $(d+1)$ intersection of upper halfspaces, there exists an affinely equivalent power diagram in $d$ dimensions in $h_0$.}
-\todo[inline]{A cell complex in $E^d$ is polytopal iff $C$ is a power diagram. (Why?)}
-\todo[inline]{For any finite $M \subset E^{d+1}$, there exists a set of spheres such that $PD(S)$ is dual to $CH_b(M)$ and vice versa.}
+Having established the bijectivity of $\Pr$ it can be shown that power diagrams in $\R^d$ can be identified with boundaries of $(d+1)$-polyhedra.
+\begin{theorem}
+    \label{thm:equivalentpolyhedron}
+    For any $(d+1)$-polyhedron P which is expressible as the intersection of upper halfspaces, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
+\end{theorem}
+\begin{proof}
+    Let $P = \bigcap_{i=1}^n h_i^+$ of hyperplanes $h_i$ with normal vectors with positive $(d+1)$st coordinates such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
+    Also assume that $h_i \cup U \neq h_i$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
 
+    \Cref{lem:pibijection} implies that there is a set $S = \left\{ s_1, \dots, s_n \right\}$ of spheres in $h_0$ such that $\Pi(s_i) = h_i$.
+    Using \cref{obs:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) exactly if $x \in \cell(s_i)$ is in $\PD(S)$.
+    This means that $\cell(s_i)$ is exactly the vertical projection of $f_i$ onto $h_0$ for all $1 \leq i \leq n$, giving that $\PD(S)$ is affinely equivalent to $P$.
+
+    Conversely, given any set of spheres $S$ in $h_0$ a corresponding polyhedron can be constructed by intersecting the upper halfspaces of the hyperplanes in $\Pi(S)$.
+\end{proof}
+To also describe polyhedra $P$ generated using the intersection of upper halfspaces, one can inspect the reflection of $P$ through $h_0$ as described in \cite{aurenhammer1987power}.
+
+Having established the existence of an affinely equivalent polyhedron for each set of spheres in $h_0$, the following theorem will show that using the polarity function $\Gamma$, it is possible to relate power diagrams to convex hulls.
+Remember that a convex hull splits into its top and bottom part given by the sign of the $(d+1)$st component of the normal vector, where vertical facets are assigned to neither parts.
+\begin{theorem}
+    For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
+\end{theorem}
+\begin{proof}
+    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa.
+    Let $M = \Delta(H)$ the set of all polars of the hyperplanes corresponding to all spheres, then $\CHb(M)$ will be dual to $P$.
+
+    Let $f_i$ be the facet associated with $h_i$ (see the proof of \cref{thm:equivalentpolyhedron}) and let $p_i = \Delta(h_i)$.
+    Let also $f_i$ and $f_j$ be adjacent in a $(d-1)$-face $g$ ($1 \leq i < j \leq n$).
+    Then every $x \in g$ is in $h_i \cap h_j$ and above each $h \in H \setminus \left\{ h_i, h_j \right\}$ via \cref{obs:distances}.
+
+    \Cref{lem:relativepositions} now implies that exactly then $p_i, p_j \in \Delta(x)$ and each other point $p \in M \setminus \left\{ p_i, p_j \right\}$ is above $\Delta(x)$.
+    The line defined by $p_i$ and $p_j$, which is $\Delta(g)$, therefore defines an edge of $\CHb(M)$.
+    Since a similar argument holds for all other $j$-faces, $P$ is dual to $\CHb(M)$ and therefore, $\PD(S)$ is, too.
+\end{proof}
 \section{Constructing Power Diagrams}
 \label{sec:constructing_power_diagrams}
 \subsection{Naive Algorithm}

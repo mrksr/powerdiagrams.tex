@@ -1,4 +1,4 @@
-\documentclass[abstract, english, parskip=half*]{scrartcl}
+\documentclass[abstract, english]{scrartcl}
 \addtokomafont{disposition}{\boldmath}
 
 \usepackage{polyglossia}
@@ -56,6 +56,9 @@
 \usepackage[pdftex, hypertexnames=false, unicode]{hyperref}
 \usepackage[nameinlink, noabbrev]{cleveref}
 
+\crefname{observation}{observation}{observations}
+\Crefname{observation}{Observation}{Observations}
+
 \usepackage{blindtext}
 
 \newcommand{\R}{\mathbb{R}}
@@ -67,12 +70,18 @@
 \DeclareMathOperator{\cell}{cell}
 \DeclareMathOperator{\chor}{chor}
 \DeclareMathOperator{\aff}{aff}
+\DeclareMathOperator{\CHb}{CH_b}
+\DeclareMathOperator{\ls}{ls}
 
 \newcommand{\abs}[1]{\left\vert #1 \right\vert}
 \newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\scalar}[1]{\left\langle #1 \right\rangle}
 \newcommand{\powerset}[1]{\mathcal{P}(#1)}
 
 \newcommand{\define}[1]{\emph{#1}}
+
+\newcommand{\Wlog}{w.\,l.\,o.\,g.\ }
+\newcommand{\WLOG}{W.\,l.\,o.\,g.\ }
 
 % From llncs.cls
 \def\squareforqed{\hbox{\rlap{$\sqcap$}$\sqcup$}}
