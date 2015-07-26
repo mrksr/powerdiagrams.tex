@@ -253,6 +253,7 @@ A power diagram for which all radii are equal is therefore equivalent to the Vor
 The normal vectors of the chordales of three spheres are given by the pairwise differences of their centers.
 Since any of these differences can be expressed through the other two, their intersection has higher dimensionality than a general intersection of three hyperplanes has.
 \begin{observation}
+    \label{obs:cellsarepolytopes}
     Let $s, t$ and $u$ be spheres in $\R^d$ with $d \geq 2$.
     If the spheres are not collinear, the intersection of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
     If they are collinear, the three chordales are parallel.
@@ -524,22 +525,72 @@ Remember that a convex hull splits into its top and bottom part given by the sig
     The line defined by $p_i$ and $p_j$, which is $\Delta(g)$, therefore defines an edge of $\CHb(M)$.
     Since a similar argument holds for all other $j$-faces, $P$ is dual to $\CHb(M)$ and therefore, $\PD(S)$ is, too.
 \end{proof}
+
 \section{Constructing Power Diagrams}
 \label{sec:constructing_power_diagrams}
-\subsection{Naive Algorithm}
-\label{sub:naive_algorithm}
-\todo[inline]{Combinatorical tries with brute force}
+The theoretical results of the previous sections will now be applied to the formulation of algorithms to construct the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions.
+\cref{obs:cellsarepolytopes} implies that the cells of those power diagrams are polytopes which share faces at their boundaries.
 
-\subsection{The Algorithm}
-\label{sub:the_algorithm}
-\todo[inline]{3-Step-Algorithm}
-\todo[inline]{Running Time (fairly trivial)}
-\todo[inline]{Convex Hulls?}
+To represent those boundaries (and therefore the power diagrams), a data structure called incidence lattices will be introduced.
+Also based on \cref{obs:cellsarepolytopes}, a naive algorithm to find $0$-faces can be formulated, which is based on the observation that every such faces is defined by at least $(d+1)$ spheres.
+Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_1_dimensions} and the known problem of constructing convex hulls will be presented and its running time analyzed.
 
 \subsection{Incidence Lattices}
 \label{sub:incidence_lattices}
 \todo[inline]{Model as Bidirectional Graph}
 \todo[inline]{Adding Faces to the Lattice is fun - Lubs and Groups}
+
+\subsection{Naive Algorithm}
+\label{sub:naive_algorithm}
+\todo[inline]{Combinatorical tries with brute force}
+\todo[inline]{Complexity $\approx \Oh(\binom{|S|}{d+1} \cdot \max(d^3, |S|))$}
+\todo[inline]{No easy way to get extremal edges}
+
+\subsection{Dual Algorithm}
+\label{sub:dual_algorithm}
+According to \cref{thm:equivalentconvexhull}, an incidence lattice which is equivalent to the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions can be obtained using the lower part of a certain convex hull in $\R^{d+1}$.
+\cite{seidel1981convex} describs an optimal algorithm to obtain convex hulls in even dimensions, while \cite{preparata1977convex} describes one which is optimal for $d \in \left\{ 2, 3 \right\}$.
+The implementation to this paper uses the quickhull algorithm described in \cite{barber1996quickhull}.
+Their results can be summarized as follows.
+\begin{lemma}
+    \label{lem:convexhulls}
+    Let $M$ be a set of $n$ points in $\R^d$.
+    The convex hull of $M$ can be determined in $\Oh(n \log n)$ time for $d = 3$ and in $\Oh(n \log n + n^{\left\lceil\frac{d}{2}\right\rceil})$ time for $d > 3$.
+    These bounds are optimal for $d = 3$ or $d$ even.
+\end{lemma}
+
+To construct a power diagram, it is now enough to follow the path of \cref{sec:embedding_in_d_1_dimensions} to transform it to $d+1$ dimensions, calculate the convex hull $\CHb$ of the polar points and project the results back to the original space.
+More formally, this can be described as follows.
+
+\begin{algorithm}[Power Diagram using Embedding in $d+1$ Dimensions]
+    \label{alg:embedding}
+    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions.
+    The computation of $\PD(S)$ requires three steps.
+    \begin{enumerate}[label=Step \arabic*.,ref=Step \arabic*,leftmargin=5em]
+        \item \label{alg:pd:step1} Compute the hyperplanes $\Pi(s_i)$ and their poles $p_i = \Delta(\Pi(s_i))$ for every sphere $1 \leq i \leq n$.
+        \item \label{alg:pd:step2} Determine the incidence structure $\IL_b$ of the polytope defined by the hyperplanes $\Pi(s_1), \dots, \Pi(s_n)$.
+            \begin{enumerate}[label*=\arabic*.,ref=\theenumi.\arabic*]
+                \item \label{alg:pd:step21} Construct the convex hull of $\left\{ p_1, \dots, p_n \right\}$ such that it is represented by the incidence lattice $\IL$.
+                \item \label{alg:pd:step22} Split $\IL$ into the top and bottom parts according to the slope of the hyperplanes containing the facets, obtaining $\IL_b$ representing $\CHb(\left\{ p_1, \dots, p_n \right\})$.
+                \item \label{alg:pd:step23} Replace each $j$-face in $\IL_b$ by a $(d - j)$-face for $0 \leq j \leq d$. For each vertex arising from a facet $f$, store the polar point $\Delta(h)$ of the hyperplane $h$ containing $f$.
+            \end{enumerate}
+        \item \label{alg:pd:step3} Project $\IL_b$ vertically onto $h_0$ by forgetting the $(d+1)$st coordinates of the vertices. This yields $\PD(S)$ in $h_0$.
+    \end{enumerate}
+\end{algorithm}
+
+The different steps of the algorithm allow for a straightforward analysis of its running time using the results of \cref{sub:incidence_lattices}.
+\begin{theorem}
+    Let $S$ be a set of $n$ spheres in $\R^d$ and denote the amount of time necessary to compute the convex hull of $n$ points in $\R^{d}$ as $\Time_d(n)$.
+    \Cref{alg:embedding} then constructs $\PD(S)$ in $\Oh(\Time_{d+1}(n))$ time.
+\end{theorem}
+\begin{proof}
+\ref{alg:pd:step1} and \ref{alg:pd:step3} can be performed in $\Oh(n)$ time.
+Let $\IL_b$ be the incidence lattice constructed by \ref{alg:pd:step21}.
+Then \ref{alg:pd:step22} and \ref{alg:pd:step23} are bounded by $\Oh(\abs{\IL_b})$, while depending on the implementation, \ref{alg:pd:step23} can be performed in $\Oh(1)$ time.
+Since \ref{alg:pd:step21} must take at least $\Omega(\abs{\IL_b})$ time, the construction of the convex hull of the polar points dominates the running time of the algorithm.
+\end{proof}
+
+Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithms and every other operation is in \cref{alg:embedding} is dominated by them, this is an optimal algorithm to construct power diagrams in $d$ dimensions for $d = 2$ or $d$ odd.
 
 \appendix
 \section{Building the Code}
@@ -547,6 +598,11 @@ Remember that a convex hull splits into its top and bottom part given by the sig
 \todo[inline]{Libraries}
 \todo[inline]{Make, CMake}
 \todo[inline]{Windows...}
+
+\section{Running the Code}
+\label{sec:running_the_code}
+\todo[inline]{Makefile \enquote{driver}}
+\todo[inline]{Some examples}
 
 \nocite{*}
 \bibliographystyle{alpha}
