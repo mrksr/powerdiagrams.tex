@@ -440,7 +440,7 @@ The following lemma shows a fundamental property of $\Delta$ on points and hyper
         &= \left\{ x \in \R^{d+1} \mid n_{d+1} \cdot x_{d+1} = -n_{[d]}^Tx_{[d]} + n^Tf \right\}
     \end{align}
     its corresponding hyperplane containing $F$.
-    Then let \Wlog \todo{Was ist mit den senkrechten Ebenen?}$N = \left\{ n \in X^\bot \mid n_{d+1} = 1 \right\}$ the set of all possible normal vectors and
+    Then let \Wlog \todo{Es gibt in der Argumentation Probleme mit senkrechten Ebenen (für die $\Delta$ nicht definiert ist) und mit dem Nullpunkt bzw $h_0$.}$N = \left\{ n \in X^\bot \mid n_{d+1} = 1 \right\}$ the set of all possible normal vectors and
     \begin{align}
         \Delta(F) &= \Delta(h(N))\\
         &= \bigcup_{n \in N} \Delta(h(n)) \\
@@ -490,7 +490,6 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 \subsection{Power Diagrams and Polyhedra}
 \label{sub:power_diagrams_and_polyhedra}
 Having established the bijectivity of $\Pi$ it can be shown that power diagrams in $\R^d$ can be identified with boundaries of $(d+1)$-polyhedra.
-\todo{Upper halfspaces?}
 \begin{theorem}
     \label{thm:equivalentpolyhedron}
     For any $(d+1)$-polyhedron P which is expressible as the intersection of halfspaces pointing upwards, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
@@ -510,7 +509,8 @@ To also describe polyhedra $P$ generated using the intersection of upper halfspa
 Having established the existence of an affinely equivalent polyhedron for each set of spheres in $h_0$, the following theorem will show that using the polarity function $\Gamma$, it is possible to relate power diagrams to convex hulls.
 Remember that a convex hull splits into its top and bottom part given by the sign of the $(d+1)$st component of the normal vector, where vertical facets are assigned to neither parts.
 \begin{theorem}
-    For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
+    \label{thm:equivalentconvexhull}
+    For \todo{Hier muss man glaube ich einschränken auf $M$ sodass $\Delta(M)$ nur Hyperebenen enthält, die $U$ schneiden.}any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
 \end{theorem}
 \begin{proof}
     By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa.
