@@ -68,8 +68,8 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
 \cref{fig:voronoi} shows an example of a Voronoi diagram in $d = 2$ dimensions.
 While obtaining the hyperplanes which potentially separate the regions is easy, it must identified which of them actually exist, since not every region is a neighbour of every other region.
 It can be shown \cite{aurenhammer1991voronoi} that there exists a dual relationship between Voronoi diagrams in two dimensions and Delaunay triangulations.
-A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points are connected iff the smallest circle containing all three points does not contain any other point in $M$.
-Two regions in the Voronoi diagram then are neighbours iff there exists an edge in the Delaunay triangulation between their corresponding points.
+A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points are connected exactly if the smallest circle containing all three points does not contain any other point in $M$.
+Two regions in the Voronoi diagram then are neighbours exactly if there exists an edge in the Delaunay triangulation between their corresponding points.
 
 This gives rise to efficient algorithms for constructing the diagrams, since the triangulations can be obtained in $\Oh(n \log n)$ time by incrementally inserting points in an existing triangulation.
 This algorithm was first described by Green and Sibson \cite{green1978computing} and is optimal, since one can reduce the sorting problem to finding triangulations \cite{aurenhammer1991voronoi}.
@@ -90,7 +90,7 @@ While other possible combinations of distance and weight have also been investig
 
 \begin{definition}[Power of a Point]
     \label{def:power}
-    The \define{power} of a point $x \in \R^d$ with respect to a sphere $s = (p, r)$ with center $p \in \R^d$ and radius $r \in \R$ is given by
+    The \define{power} of a point $x \in \R^d$ with respect to a sphere $s = (p, r^2)$ with center $p \in \R^d$ and radius $r \in \R$ is given by
     \begin{align}
         \pow(x, s) = \dist(x, p)^2 - r^2.
     \end{align}
@@ -162,7 +162,7 @@ The power function was for example mentioned at the beginning of the 19th centur
 A point has a negative power if inside, a positive power if outside and its power vanishes if it lies on the circle.
 Using the Pythagorean theorem, this function has a geometric interpretation shown in \cref{fig:power}.
 
-Using this definition, a pair $s = (p, \sqrt{w(p)})$ of a point and its weight is called a \define{site} of the power diagram, which can be interpreted as a sphere with a radius of $\sqrt{w(p)}$.
+Using this definition, a pair $s = (p, w(p))$ of a point and its weight is called a \define{site} of the power diagram, which can be interpreted as a sphere with a radius of $\sqrt{w(p)}$.
 Every such site gets assigned its partition of the space where there is no other site with lower power.
 \begin{figure}[tb]
     \centering
@@ -239,9 +239,9 @@ The boundaries of a power diagram are given by sets of points for which the powe
 Using the definition of the power function, it can be shown that these boundaries are hyperplanes.
 \begin{observation}
     \label{obs:chordale}
-    Let $s = (z_s, r_s)$ and $t = (z_t, r_t)$ be spheres in $\R^d$ with $z_s \neq z_t$. The points $x$ for which $\pow(x, s) = \pow(x, t)$ are called the \define{chordale} of $s$ and $t$ and form the hyperplane
+    Let $s = (z_s, r^2_s)$ and $t = (z_t, r^2_t)$ be spheres in $\R^d$ with $z_s \neq z_t$. The points $x$ for which $\pow(x, s) = \pow(x, t)$ are called the \define{chordale} of $s$ and $t$ and form the hyperplane
     \begin{align}
-        \chor(s, t) = \left\{ x \in \R^d \mid 2x(z_s - z_t) = r_t^2 - r_s^2 - z_t^Tz_t + z_s^Tz_s \right\}
+        \chor(s, t) = \left\{ x \in \R^d \mid 2(z_s - z_t)^Tx = r_t^2 - r_s^2 - z_t^Tz_t + z_s^Tz_s \right\}
     \end{align}
     which is perpendicular to the line connecting $z_s$ and $z_t$.
 \end{observation}
@@ -328,14 +328,14 @@ To derive an algorithm to efficiently compute the cells of power diagrams via th
 This will lead to a result identifying these power diagrams with polyhedra in $d+1$ dimensions which can be expressed as the intersection of upper halfspaces.
 Using this identity together with a duality mapping for polyhedra will finally connect power diagrams to convex hulls and will be the basis of the algorithm to calculate power diagrams.
 
-\subsection{The Transform to \texorpdfstring{$d+1$}{d+1} Dimensions}
+\subsection{The Transformation Function}
 \label{sub:the_transform}
 The embedding of power diagrams in an additional dimension relies on the fact that the power function of a sphere in $\R^d$ can be calculated using distances to a hyperplane in $\R^{d+1}$.
 
 Inspect the space $\R^{d+1}$ and let the original space $\R^d$ be identified with the hyperplane $h_0: x_{d+1} = 0$.
 Let $U$ denote the paraboloid $x_{d+1} = x_{[d]}^Tx_{[d]}$ with $x_{[d]} = \left( x_1, \dots, x_d \right)^T$.
 \begin{definition}[Transformation Function]
-    Let $s = (z, r^2)$ be a $d$-dimensional sphere with $z \in h_0$.
+    Let $s = (z, r^2)$ be a $d$-dimensional sphere.
     The \define{transformation function $\Pi$} maps this sphere to the hyperplane
     \begin{align}
         \Pi(s) &\coloneqq \left\{ x \in \R^{d+1} \mid x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 \right\}\\
@@ -407,7 +407,7 @@ This directly implies the following lemma, which connects chordales to the newly
 \end{lemma}
 \missingfigure{3D Figure showing the Paraboloid and Planes intersecting.}
 
-\subsection{Duality of points and hyperplanes in $\R^{d+1}$}
+\subsection{Duality of points and hyperplanes}
 \label{sub:duality_of_points_and_hyperplanes}
 The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of hyperplanes and $(d-j)$-flats in this dual domain.
 
@@ -466,7 +466,7 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 \begin{lemma}
     \label{lem:relativepositions}
     Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
-    Then $p$ is above, in or below $h$ iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
+    Then $p$ is above, in or below $h$ exactly if $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
 \end{lemma}
 \begin{proof}
     Let $x,n \in \R^{d+1}$ and $h = \left\{ y \in \R^{d+1} \mid y_{d+1} = n_{[d]}^Ty_{[d]} + n_{d+1} \right\}$ a hyperplane in $\R^{d+1}$.
@@ -484,7 +484,7 @@ An additional property of $\Delta$ is its preservation of relative positions of 
     \begin{align}
         2x_{[d]}^T \left( \frac{1}{2}n_{[d]} \right) + n_{d+1} - x_{d+1} = n_{[d]}^Tx_{[d]} - x_{d+1} + n_{d+1}
     \end{align}
-    which is equal to the expression determining the relative position of $(x, x_{d+1})$ to $h$.
+    which is equal to the expression determining the relative position of $x$ to $h$.
 \end{proof}
 
 \subsection{Power Diagrams and Polyhedra}
@@ -520,7 +520,7 @@ Remember that a convex hull splits into its top and bottom part given by the sig
     Let also $f_i$ and $f_j$ be adjacent in a $(d-1)$-face $g$ ($1 \leq i < j \leq n$).
     Then every $x \in g$ is in $h_i \cap h_j$ and above each $h \in H \setminus \left\{ h_i, h_j \right\}$ via \cref{obs:distances}.
 
-    \Cref{lem:relativepositions} now implies that exactly then $p_i, p_j \in \Delta(x)$ and each other point $p \in M \setminus \left\{ p_i, p_j \right\}$ is above $\Delta(x)$.
+    \Cref{lem:relativepositions} now implies that exactly then $p_i, p_j \in \Delta(x)$ and every other point $p \in M \setminus \left\{ p_i, p_j \right\}$ is above $\Delta(x)$.
     The line defined by $p_i$ and $p_j$, which is $\Delta(g)$, therefore defines an edge of $\CHb(M)$.
     Since a similar argument holds for all other $j$-faces, $P$ is dual to $\CHb(M)$ and therefore, $\PD(S)$ is, too.
 \end{proof}
