@@ -13,13 +13,22 @@
     \blindtext
 \end{abstract}
 
+\section{Introduction}
+\label{sec:introduction}
+\todo[inline]{Was sind Powerdiagramme}
+\todo[inline]{Wozu Powerdiagramme}
+\todo[inline]{Inzidenzstruktur}
+\todo[inline]{Clustering für hochdimensionale Daten}
+\todo[inline]{Metalllegierungen}
+\todo[inline]{http://www-m9.ma.tum.de/Allgemeines/AndreasAlpersPublications}
+
 \section{Power Diagrams}
 \label{sec:powerdiagrams}
 
 Power diagrams in $d$-dimensional Euclidean space $\R^d$ can be understood as a particular generalization of the more well known Voronoi diagrams.
-A \define{Voronoi diagram} is a partition of the space introduced by a finite set of points $M \subset \R^d$ and a metric $\dist(\cdot, \cdot)$.
+A \define{Voronoi diagram} is a cell decomposition of the space introduced by a finite set of points $M \subset \R^d$ and a metric $\dist(\cdot, \cdot)$.
 It assigns every point $p \in M$ its \define{region} of points for which $p$ is closer than all other points in $M$.
-Using the euclidean metric, these regions are guaranteed to be convex.
+Using the euclidean metric, these regions are guaranteed to be polyhedra.
 The normal vectors of the hyperplanes at the boundaries are given by the connecting line of neighbouring points with the hyperplane bisecting this line.
 \begin{figure}[Htb]
     \centering
@@ -210,19 +219,22 @@ Every such site gets assigned its partition of the space where there is no other
     \label{fig:garage}
 \end{figure}
 
+\todo[inline]{Cell Decompositions?}
 \begin{definition}[Power Diagram]
     \label{def:powerdiagram}
-    The \define{power diagram} $\PD(S)$ of a finite set of sites $S \subset \R^d \times \R$ is the collection of all \define{cells} corresponding to the sites.
+    The \define{power diagram} $\PD(S)$ of a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$ is a tuple of all \define{cells} corresponding to the sites.
     \begin{align}
-        \cell &: S \to \powerset{\R^d}\\
-        \cell(s) &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}. \pow(x, s) < \pow(x, t) \right\}\\
-        \PD(S) &\coloneqq \cell(S)
+        \cell_S &: \begin{cases}
+            S &\to \powerset{\R^d}\\
+            s &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}: \pow(x, s) < \pow(x, t) \right\}
+        \end{cases}\\
+        \PD(\left\{ s_1, \dots, s_n \right\}) &\coloneqq \left( \cell_S(s_1), \dots, \cell_S(s_n) \right)
     \end{align}
 \end{definition}
 
 \Cref{fig:garage} shows an example of a power diagram in two dimensions.
 After introducing some geometric notation, the remainder of this section will show some properties of power diagrams in $d$ dimensions.
-After this, a transform to $d + 1$ dimension will be used to both show a fundamental connection between power diagrams and polytopes and derive an algorithm to efficiently construct power diagrams of arbitrary dimension using convex hulls.
+After this, a transform to $d + 1$ dimension will be used to both show a fundamental connection between power diagrams and polyhedra and derive an algorithm to efficiently construct power diagrams of arbitrary dimension using convex hulls.
 
 \subsection{Geometric Notation}
 \label{sub:geometric_notation}
@@ -358,7 +370,7 @@ The intersection of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$
 The following proofs that this mapping is an identification of the two concepts.
 \begin{lemma}
     \label{lem:pibijection}
-    $\Pi$ is a bijection between spheres in $h_0$ and hyperplanes in $\R^{d+1}$ which are not parallel to the $x_{d+1}$ axis and intersect $U$.
+    $\Pi$ is a bijection from spheres in $h_0$ to hyperplanes in $\R^{d+1}$ which are not parallel to the $x_{d+1}$ axis and intersect $U$.
 \end{lemma}
 \begin{proof}
     $\Pi$ is clearly injective since $z$ directly influences the normal vector and for two concentric spheres to have the same offset, $r$ must be equal.
@@ -410,26 +422,36 @@ This directly implies the following lemma, which connects chordales to the newly
 
 \subsection{Duality of points and hyperplanes}
 \label{sub:duality_of_points_and_hyperplanes}
-The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of hyperplanes and $(d-j)$-flats in this dual domain.
+The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of these hyperplanes and $(d-j)$-flats in this dual domain.
 
 \begin{definition}[Polarity Function]
-    Let $a \in \R^{d}$ and $a_{d+1} \in \R$.
-    The \define{polarity function $\Delta$} maps the hyperplane $h = \left\{ x \in \R^{d+1} \mid x_{d+1} = a^Tx_{[d]} + a_{d+1} \right\}$ not parallel to the $x_{d+1}$ axis to the point
+    Let $\Ha$ be the set of all hyperplanes not parallel to the $x_{d+1}$ axis
     \begin{align}
-        \Delta(h) &\coloneqq \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix}  \in \R^{d+1}
-        \intertext{and any face $f \subseteq \R^{d+1}$ to}
-        \Delta(f) &\coloneqq \bigcup_{\substack{f \subseteq h\\h \textnormal{ hyperplane}}} \Delta(h).
+        \Ha &\coloneqq \left\{ h \subseteq \R^{d+1} \mid \exists a \in \R^d, a_{d+1} \in \R : x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1} \right\}
+        \intertext{and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis}
+        \F &\coloneqq \left\{ f \subseteq \R^{d+1}, f \textnormal{ flat} \;\middle|\;
+            \begin{aligned}
+                \MoveEqLeft\exists 1 \leq k \leq (d + 1) : \dim(f) = (d+1) - k\\
+                &\wedge \exists h_1, \dots, h_{k} \in \Ha : f = \bigcap_{i = 1}^{k} h_i
+            \end{aligned} \right\}.
+        \intertext{The \define{polarity function $\Delta$} then is a mapping in $\F$ given by}
+        \Delta &: \left\{ \begin{alignedat}{2}
+            \F &\to \F\\
+            h &\mapsto \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix} &&\qquad \textnormal{if } h \in \Ha \textnormal{ with } x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1}\\
+            f &\mapsto \bigcup_{\substack{f \subseteq h:\\h \in \Ha}} h &&\qquad \textnormal{if } \dim(f) < d\\
+        \end{alignedat}
+        \right..
     \end{align}
 \end{definition}
 
-Let $h$ be a hyperplane in $\R^{d+1}$ and $p \in \R^{d+1}$. The images $\Delta(h)$ and $\Delta(p)$ are called \define{pole} and \define{polar hyperplane} respectively.
+Let $h \in \Ha$ be a hyperplane and $p \in \R^{d+1}$. The images $\Delta(h)$ and $\Delta(p)$ are called \define{pole} and \define{polar hyperplane} respectively.
 The following lemma shows a fundamental property of $\Delta$ on points and hyperplanes and connects flats of other dimensionality.
 \begin{lemma}
     \label{lem:deltainvolutory}
-    $\Delta$ is an involutory function and a bijection between $j$-flats and $(d-j)$-flats in $\R^{d+1}$ (for $0 \leq j \leq d$).
+    $\Delta$ is an involutory function and a bijection from $j$-flats to $(d-j)$-flats in $\F$ for $0 \leq j \leq d$.
 \end{lemma}
 \begin{proof}
-    Let $F = f + X \subset \R^{d+1}$ be some flat with $f \in \R^{d+1}$, $\dim(X) = j$ ($0 \leq j \leq d$) and
+    Let $F = f + X \subset \R^{d+1} \in \F$ be some flat with $f \in \R^{d+1}$, $\dim(X) = j$ ($0 \leq j \leq d$) and
     \begin{align}
         X^\bot = \left\{ n \in \R^{d+1} \mid \forall x \in X. \scalar{n, x} = 0 \right\}
     \end{align}
@@ -441,29 +463,32 @@ The following lemma shows a fundamental property of $\Delta$ on points and hyper
         &= \left\{ x \in \R^{d+1} \mid n_{d+1} \cdot x_{d+1} = -n_{[d]}^Tx_{[d]} + n^Tf \right\}
     \end{align}
     its corresponding hyperplane containing $F$.
-    Then let \Wlog \todo{Es gibt in der Argumentation Probleme mit senkrechten Ebenen (für die $\Delta$ nicht definiert ist) und mit dem Nullpunkt bzw $h_0$.}$N = \left\{ n \in X^\bot \mid n_{d+1} = 1 \right\}$ the set of all possible normal vectors and
+    Note that by definition of $\F$, for all $n \in X^\bot$ it holds that $x_{d+1} \neq 0$.
+    Then let $N = \left\{ n \in X^\bot \mid n_{d+1} = 1 \right\}$ the set of all possible normalized normal vectors with $\dim(N) = d - j$ and
     \begin{align}
         \Delta(F) &= \Delta(h(N))\\
         &= \bigcup_{n \in N} \Delta(h(n)) \\
         &= \bigcup_{n \in N} \Delta \left( \left\{ x \in \R^{d+1} \mid x_{d+1} = -n_{[d]}^Tx_{[d]} + n^Tf \right\} \right) \\
-        &= \bigcup_{n \in N} \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n^T f \end{pmatrix}
+        &= \bigcup_{n \in N} \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n^T f \end{pmatrix} \\
+        &= \bigcup_{n \in N} \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n_{[d]}^T f_{[d]} - f_{d+1} \end{pmatrix}.
     \end{align}
-    $\Delta(F)$ is then a $(d - j)$-flat which is the result of removing the last dimension of the $(d - j + 1)$-flat $F$ and an affine transformation.
-    It is defined by the affine hull of the polar points of $h(n_i)$ for any suitable basis $\left\{ n_1, \dots, n_{d - j + 1} \right\}$ of $X^\bot$.
+    $\Delta(F)$ is then a $(d - j)$-flat which is the result of an affine transformation on $N$.
+    It is defined by the affine hull of the polar points of $h(n_i)$ for any basis $\left\{ n_1, \dots, n_{d - j + 1} \right\}$ of $N$.
 
-    $\Delta$ is surjective since for any $(d - j$)-flat which is the affine hull of points $\left\{ f_1, \dots, f_{d - j + 1} \right\}$ one can find suitable $n_i$ to form a basis of the orthogonal space and an $f$ to define a $j$-flat which is its preimage.
+    $\Delta$ is surjective since for any $(d - j$)-flat which is the affine hull of points $\left\{ f_1, \dots, f_{d - j + 1} \right\}$ not perpendicular to $h_0$ one can construct suitable $n_i$ to form a basis of the orthogonal space and an $f$ to define a $j$-flat which is its preimage.
 
     Suppose $F = p + \left\{ 0 \right\}$ is a $0$-flat.
-    Then $\left\{ 0 \right\}^\bot = \R^{d+1}$ and
+    Then \todo{Hier muss man wieder \enquote{schlechte} Vektoren ausschließen} $\left\{ 0 \right\}^\bot = \R^{d+1}$ and
     \begin{align}
         \Delta(F) &= \bigcup_{\substack{n \in \R^{d+1}\\n_{d+1} = 1}} \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ -n^T p \end{pmatrix} \\
         &= \left\{ x \in \R^{d+1} \mid x_{d+1} = 2 \cdot p_{[d]}^Tx_{[d]} - p_{d+1} \right\}
     \end{align}
-    is a hyperplane, for which $\Delta(\Delta(F)) = p$, which proves that $\Delta$ is involutory.
+    is a hyperplane, for which $\Delta(\Delta(p)) = p$, which proves that $\Delta$ is involutory.
     Together with the surjetiveness for faces, the bijectiveness of $\Delta$ follows.
 \end{proof}
 
 An additional property of $\Delta$ is its preservation of relative positions of points and hyperplanes.
+\todo[inline]{As a service to the reader!}
 \begin{lemma}
     \label{lem:relativepositions}
     Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
@@ -491,6 +516,8 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 \subsection{Power Diagrams and Polyhedra}
 \label{sub:power_diagrams_and_polyhedra}
 Having established the bijectivity of $\Pi$ it can be shown that power diagrams in $\R^d$ can be identified with boundaries of $(d+1)$-polyhedra.
+Since $\Pi$ provides a mapping to hyperplanes which intersect $U$, only polyhedra which are bounded by such hyperplanes can be considered.
+Any other polyhedron can however be converted to such a polyhedron by moving it up in $x_{d+1}$-direction, conserving their combinatorical structure.
 \begin{theorem}
     \label{thm:equivalentpolyhedron}
     For any $(d+1)$-polyhedron P which is expressible as the intersection of halfspaces pointing upwards, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
@@ -511,10 +538,10 @@ Having established the existence of an affinely equivalent polyhedron for each s
 Remember that a convex hull splits into its top and bottom part given by the sign of the $(d+1)$st component of the normal vector, where vertical facets are assigned to neither parts.
 \begin{theorem}
     \label{thm:equivalentconvexhull}
-    For \todo{Hier muss man glaube ich einschränken auf $M$ sodass $\Delta(M)$ nur Hyperebenen enthält, die $U$ schneiden.}any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
+    For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$ up to movement in $x_{d+1}$-direction.
 \end{theorem}
 \begin{proof}
-    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa.
+    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa, up to movement in $x_{d+1}$-direction.
     Let $M = \Delta(H)$ the set of all polars of the hyperplanes corresponding to all spheres, then $\CHb(M)$ will be dual to $P$.
 
     Let $f_i$ be the facet associated with $h_i$ (see the proof of \cref{thm:equivalentpolyhedron}) and let $p_i = \Delta(h_i)$.
@@ -590,7 +617,12 @@ Then \ref{alg:pd:step22} and \ref{alg:pd:step23} are bounded by $\Oh(\abs{\IL_b}
 Since \ref{alg:pd:step21} must take at least $\Omega(\abs{\IL_b})$ time, the construction of the convex hull of the polar points dominates the running time of the algorithm.
 \end{proof}
 
-Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithms and every other operation is in \cref{alg:embedding} is dominated by them, this is an optimal algorithm to construct power diagrams in $d$ dimensions for $d = 2$ or $d$ odd.
+Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithms and every other operation in \cref{alg:embedding} is dominated by them, this is an optimal algorithm to construct power diagrams in $d$ dimensions for $d = 2$ or $d$ odd.
+
+\section{Implementation}
+\label{sec:implementation}
+\todo[inline]{Modellierung}
+\todo[inline]{Herausforderungen}
 
 \appendix
 \section{Building the Code}
