@@ -219,7 +219,6 @@ Every such site gets assigned its partition of the space where there is no other
     \label{fig:garage}
 \end{figure}
 
-\todo[inline]{Cell Decompositions?}
 \begin{definition}[Power Diagram]
     \label{def:powerdiagram}
     The \define{power diagram} $\PD(S)$ of a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$ is a tuple of all \define{cells} corresponding to the sites.
@@ -244,6 +243,7 @@ After this, a transform to $d + 1$ dimension will be used to both show a fundame
 \todo[inline]{Polyhedra}
 \todo[inline]{Lineality Space}
 \todo[inline]{Dual Polyhedra}
+\todo[inline]{Cell Decomposition}
 
 \subsection{Properties of Power Diagrams}
 \label{sub:properties_of_power_diagrams}
@@ -265,7 +265,7 @@ A power diagram for which all radii are equal is therefore equivalent to the Vor
 The normal vectors of the chordales of three spheres are given by the pairwise differences of their centers.
 Since any of these differences can be expressed through the other two, their intersection has higher dimensionality than a general intersection of three hyperplanes has.
 \begin{observation}
-    \label{obs:cellsarepolytopes}
+    \label{obs:cellsarepolyhedra}
     Let $s, t$ and $u$ be spheres in $\R^d$ with $d \geq 2$.
     If the spheres are not collinear, the intersection of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
     If they are collinear, the three chordales are parallel.
@@ -556,10 +556,10 @@ Remember that a convex hull splits into its top and bottom part given by the sig
 \section{Constructing Power Diagrams}
 \label{sec:constructing_power_diagrams}
 The theoretical results of the previous sections will now be applied to the formulation of algorithms to construct the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions.
-\cref{obs:cellsarepolytopes} implies that the cells of those power diagrams are polytopes which share faces at their boundaries.
+\cref{obs:cellsarepolyhedra} implies that the cells of those power diagrams are polyhedra which share faces at their boundaries.
 
 To represent those boundaries (and therefore the power diagrams), a data structure called incidence lattices will be introduced.
-Also based on \cref{obs:cellsarepolytopes}, a naive algorithm to find $0$-faces can be formulated, which is based on the observation that every such faces is defined by at least $(d+1)$ spheres.
+Also based on \cref{obs:cellsarepolyhedra}, a naive algorithm to find $0$-faces can be formulated, which is based on the observation that every such faces is defined by at least $(d+1)$ spheres.
 Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_1_dimensions} and the known problem of constructing convex hulls will be presented and its running time analyzed.
 
 \subsection{Incidence Lattices}
@@ -595,7 +595,7 @@ More formally, this can be described as follows.
     The computation of $\PD(S)$ requires three steps.
     \begin{enumerate}[label=Step \arabic*.,ref=Step \arabic*,leftmargin=5em]
         \item \label{alg:pd:step1} Compute the hyperplanes $\Pi(s_i)$ and their poles $p_i = \Delta(\Pi(s_i))$ for every sphere $1 \leq i \leq n$.
-        \item \label{alg:pd:step2} Determine the incidence structure $\IL_b$ of the polytope defined by the hyperplanes $\Pi(s_1), \dots, \Pi(s_n)$.
+        \item \label{alg:pd:step2} Determine the incidence structure $\IL_b$ of the polyhedron defined by the hyperplanes $\Pi(s_1), \dots, \Pi(s_n)$.
             \begin{enumerate}[label*=\arabic*.,ref=\theenumi.\arabic*]
                 \item \label{alg:pd:step21} Construct the convex hull of $\left\{ p_1, \dots, p_n \right\}$ such that it is represented by the incidence lattice $\IL$.
                 \item \label{alg:pd:step22} Split $\IL$ into the top and bottom parts according to the slope of the hyperplanes containing the facets, obtaining $\IL_b$ representing $\CHb(\left\{ p_1, \dots, p_n \right\})$.
