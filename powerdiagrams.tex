@@ -440,11 +440,13 @@ The hyperplanes established with the mapping $\Pi$ will now be connected to spec
                 &\wedge \exists h_1, \dots, h_{k} \in \Ha : f = \bigcap_{i = 1}^{k} h_i
             \end{aligned} \right\}.
         \intertext{The \define{polarity function $\Delta$} then is a mapping in $\F$ given by}
-        \Delta &: \left\{ \begin{alignedat}{2}
+        \Delta &: \left\{ \begin{aligned}
             \F &\to \F\\
-            h &\mapsto \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix} &&\qquad \textnormal{if } h \in \Ha \textnormal{ with } x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1}\\
-            f &\mapsto \bigcup_{\substack{f \subseteq h:\\h \in \Ha}} h &&\qquad \textnormal{if } \dim(f) < d\\
-        \end{alignedat}
+            f &\mapsto \begin{dcases}
+                \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix} &\qquad \textnormal{if } h \in \Ha \textnormal{ with } x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1}\\
+                \bigcup_{\substack{f \subseteq h,\\h \in \Ha}} h &\qquad \textnormal{if } \dim(f) < d
+            \end{dcases}
+        \end{aligned}
         \right..
     \end{align}
 \end{definition}
