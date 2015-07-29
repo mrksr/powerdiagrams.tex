@@ -572,6 +572,90 @@ Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_
 \todo[inline]{Model as Bidirectional Graph}
 \todo[inline]{Adding Faces to the Lattice is fun - Lubs and Groups}
 
+\begin{figure}[tb]
+    \centering
+    \begin{tikzpicture}[font=\scriptsize]
+        \tikzstyle{corner} = [circle, fill, tumblue, minimum size=8pt, inner sep=0]
+        \tikzstyle{lattice} = [circle, fill, tumblue, minimum size=6pt, inner sep=0]
+        \tikzstyle{lattice edge} = [thick, arrows={-latex}, shorten >=4pt]
+
+        \coordinate (p1) at (-1, 0);
+        \coordinate (p2) at (1, 0);
+        \coordinate (p3) at (1, 2);
+        \coordinate (p4) at (-1, 2);
+
+        \draw[fill=tumgreen!40]
+        (p1) -- (p2) -- (p3) -- (p4) -- (p1);
+
+        \draw[black, very thick]
+        (p1) -- (p2) -- (p3) -- (p4) -- (p1);
+
+        \draw
+        (p1) node[corner, label={below:$v_1$}] {}
+        (p2) node[corner, label={below:$v_2$}] {}
+        (p3) node[corner, label={above:$v_3$}] {}
+        (p4) node[corner, label={above:$v_4$}] {};
+
+        \coordinate (d1) at (3.5, -0.5);
+        \coordinate (d2) at (5, -0.5);
+        \coordinate (d3) at (6.5, -0.5);
+        \coordinate (d4) at (8, -0.5);
+        \coordinate (d12) at (3.5, 1);
+        \coordinate (d23) at (5, 1);
+        \coordinate (d34) at (6.5, 1);
+        \coordinate (d14) at (8, 1);
+        \coordinate (d1234) at (5.75, 2.5);
+
+        \draw[lattice edge] (d1) to (d12);
+        \draw[lattice edge] (d1) to[bend right=15] (d14);
+        \draw[lattice edge] (d2) to (d12);
+        \draw[lattice edge] (d2) to (d23);
+        \draw[lattice edge] (d3) to (d23);
+        \draw[lattice edge] (d3) to (d34);
+        \draw[lattice edge] (d4) to (d14);
+        \draw[lattice edge] (d4) to (d34);
+        \draw[lattice edge] (d12) to (d1234);
+        \draw[lattice edge] (d23) to (d1234);
+        \draw[lattice edge] (d34) to (d1234);
+        \draw[lattice edge] (d14) to (d1234);
+
+        \draw
+        (d1) node[lattice, label={below:$1$}] {}
+        (d2) node[lattice, label={below:$2$}] {}
+        (d3) node[lattice, label={below:$3$}] {}
+        (d4) node[lattice, label={below:$4$}] {}
+        (d12) node[lattice, black, label={left:$\left\{ 1, 2 \right\}$}] {}
+        (d23) node[lattice, black, label={left:$\left\{ 2, 3 \right\}$}] {}
+        (d34) node[lattice, black, label={right:$\left\{ 3, 4 \right\}$}] {}
+        (d14) node[lattice, black, label={right:$\left\{ 1, 4 \right\}$}] {}
+        (d1234) node[lattice, tumgreen, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
+
+        \coordinate (s1) at (11, 0);
+        \coordinate (s2) at (13, 0);
+        \coordinate (s3) at (13, 2);
+        \coordinate (s4) at (11, 2);
+        \coordinate (v1) at (12, 1);
+
+        \draw[black, very thick]
+        (v1) -- ($(v1) + (1.5, 0)$)
+        (v1) -- ($(v1) + (-1.5, 0)$)
+        (v1) -- ($(v1) + (0, 1.5)$)
+        (v1) -- ($(v1) + (0, -1.5)$);
+
+        \draw
+        (s1) node[corner, label={below:$s_1$}] {}
+        (s2) node[corner, label={below:$s_2$}] {}
+        (s3) node[corner, label={above:$s_3$}] {}
+        (s4) node[corner, label={above:$s_4$}] {}
+        (v1) node[corner, tumgreen] {};
+    \end{tikzpicture}
+    \caption{This figure shows a polytope on the left defined by the convex hull of the vertices $\left\{ v_1, \dots, v_4 \right\}$ which has four $0$-faces (the $v_i$), four $1$-faces connecting the vertices and one $2$-face, the complete polytope, which is incident to all the $1$-faces.
+    This combinatorical structure is reflected in its incidence lattice which can be seen in the center.
+    It is a DAG with the $v_i$ as the minimal nodes and the $2$-faces as maximal nodes.
+    The same incidence lattice also describes the faces shared by the spheres $\left\{ s_1, \dots, s_4 \right\}$ in the Voronoi diagram on the right.}
+    \label{fig:incidencelattice}
+\end{figure}
+
 \subsection{Naive Algorithm}
 \label{sub:naive_algorithm}
 \todo[inline]{Combinatorical tries with brute force}
