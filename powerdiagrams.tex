@@ -433,17 +433,14 @@ The hyperplanes established with the mapping $\Pi$ will now be connected to spec
 \begin{definition}[Polarity Function]
     Let $\Ha$ be the set of all hyperplanes not parallel to the $x_{d+1}$ axis and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis
     \begin{align}
-        \F &\coloneqq \left\{ f \subseteq \R^{d+1}, f \textnormal{ flat} \;\middle|\;
-            \begin{aligned}
-                \MoveEqLeft\exists 1 \leq k \leq (d + 1) : \dim(f) = (d+1) - k\\
-                &\wedge \exists h_1, \dots, h_{k} \in \Ha : f = \bigcap_{i = 1}^{k} h_i
-            \end{aligned} \right\}.
+        \F &\coloneqq \left\{ f \subseteq \R^{d+1} \mid
+                \exists 1 \leq k \leq d + 1: \exists h_1, \dots, h_{k} \in \Ha : \varnothing \neq f = \bigcap_{i = 1}^{k} h_i\right\}.
         \intertext{The \define{polarity function $\Delta$} then is a mapping in $\F$ given by}
         \Delta &: \left\{ \begin{aligned}
             \F &\to \F\\
             f &\mapsto \begin{dcases}
-                \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix} &\qquad \textnormal{if } h \in \Ha \textnormal{ with } x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1}\\
-                \bigcup_{\substack{f \subseteq h,\\h \in \Ha}} h &\qquad \textnormal{if } \dim(f) < d
+                \left\{ \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix} \right\} &\qquad \textnormal{if } h \in \Ha \textnormal{ with } x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1}\\
+                \bigcup_{\substack{h \in \Ha:\\f \subseteq h}} h &\qquad \textnormal{if } \dim(f) < d
             \end{dcases}
         \end{aligned}
         \right..
@@ -475,22 +472,35 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
         \Delta(F) &= \Delta(h(N))\\
         &= \bigcup_{n \in N} \Delta(h(n)) \\
         &= \bigcup_{n \in N} \Delta \left( \left\{ x \in \R^{d+1} \mid x_{d+1} = -n_{[d]}^Tx_{[d]} + n^Tf \right\} \right) \\
-        &= \bigcup_{n \in N} \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n^T f \end{pmatrix} \\
-        &= \bigcup_{n \in N} \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n_{[d]}^T f_{[d]} - f_{d+1} \end{pmatrix}.
+        &= \bigcup_{n \in N} \left\{ \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n^T f \end{pmatrix} \right\} \\
+        &= \bigcup_{n \in N} \left\{ \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n_{[d]}^T f_{[d]} - f_{d+1} \end{pmatrix} \right\}.
     \end{align}
-    $\Delta(F)$ is then a $(d - j)$-flat which is the result of an affine transformation on $N$.
-    It is defined by the affine hull of the polar points of $h(n_i)$ for any basis $\left\{ n_1, \dots, n_{d - j + 1} \right\}$ of $N$.
+    $\Delta(F)$ is therefore a $(d - j)$-flat which is the result of an affine transformation on $N$.
 
-    $\Delta$ is surjective since for any $(d - j$)-flat which is the affine hull of points $\left\{ f_1, \dots, f_{d - j + 1} \right\}$ not perpendicular to $h_0$ one can construct suitable $n_i$ to form a basis of the orthogonal space and an $f$ to define a $j$-flat which is its preimage.
+    Now assume $\Delta(F) \not\in \F$.
+    Then $\Delta(F)$ is not expressible as the intersection of hyperplanes not parallel to the $x_{d+1}$-axis and therefore, there exist two different $d^{(1)}, d^{(2)} \in \Delta(F)$ with $d_{[d]}^{(1)} - d_{[d]}^{(2)} = 0$.
 
-    Suppose that $F = p + \left\{ 0 \right\}$ is a $0$-flat.
-    Then $\left\{ 0 \right\}^\bot = \R^{d+1}$ and \Wlog $\Delta(F)$ can be computed as
+    Let $n^{(1)}, n^{(2)} \in N$ with $\Delta(h(n^{(1)})) = \left\{ d^{(1)} \right\}$ and $\Delta(h(n^{(2)})) = \left\{ d^{(2)} \right\}$.
+    Then
     \begin{align}
-        \Delta(F) &= \bigcup_{\substack{n \in \R^{d+1}\\n_{d+1} = 1}} \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ -n^T p \end{pmatrix} \\
-        &= \left\{ x \in \R^{d+1} \mid x_{d+1} = 2 \cdot p_{[d]}^Tx_{[d]} - p_{d+1} \right\}.
+        0 &= d_{[d]}^{(1)} - d_{[d]}^{(2)}\\
+        &= \Delta(h(n^{(1)}))_{[d]} - \Delta(h(n^{(2)}))_{[d]}\\
+        &= -\frac{1}{2} n^{(1)}_{[d]} + \frac{1}{2} n^{(2)}_{[d]}
     \end{align}
-    This is a hyperplane for which $\Delta(\Delta(p)) = p$, which proves that $\Delta$ is involutory.
-    Together with the surjetiveness for faces, the bijectiveness of $\Delta$ follows.
+    and $n^{(1)}_{[d]} = n^{(2)}_{[d]}$.
+    But since $n^{(1)}_{d+1} = n^{(2)}_{d+1} = 1$ it follows that $n^{(1)} = n^{(2)}$ and therefore $d^{(1)} = d^{(2)}$ which is a contradiction, so $\Delta(F) \in \F$.
+    This proofs the well-definedness of $\Delta$.
+
+    The last step is to show that $\Delta$ is involutory.
+    \begin{alignat}{2}
+        &x^\ast \in \Delta(\Delta(F)) &&= \bigcup_{\substack{h \in \Ha:\\ \Delta(F) \subseteq h}} \Delta(h)\\
+        &\Leftrightarrow \exists h \in \Ha &&: \Delta(F) \subseteq h \wedge x^\ast \in \Delta(h)\\
+        &\Leftrightarrow \forall x \in \Delta(F) &&: x_{d+1} = 2 x_{[d]}^\ast^T x_{[d]} - x_{d+1}^\ast\\
+        &\Leftrightarrow \forall n \in N &&: -n^Tf = -2 x_{[d]}^\ast^T \cdot \frac{1}{2}n_{[d]} - x_{d+1}^\ast\\
+        &\Leftrightarrow \forall n \in N &&: x^\ast \in h(n)\\
+        &\Leftrightarrow x^\ast \in F
+    \end{alignat}
+    so $\Delta(\Delta(F)) = F$ for any face $F$.
 \end{proof}
 
 An additional property of $\Delta$ is its preservation of relative positions of points and hyperplanes.
