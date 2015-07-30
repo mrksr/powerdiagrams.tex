@@ -314,6 +314,7 @@ To describe all existing non-extremal faces, one can find all $0$-faces and reme
 To justify this approach, the following lemma shows that for power diagrams which have $0$-faces, this approach does not miss non-extremal faces.
 
 \begin{lemma}
+    \label{lem:zerofaces}
     Let $S \subset \R^d$ be a finite set of spheres.
     If any cell of $\PD(S)$ is bounded by a $0$-face, then every cell in $\PD(S)$ is bounded by a $0$-face.
 \end{lemma}
@@ -569,8 +570,32 @@ Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_
 
 \subsection{Incidence Lattices}
 \label{sub:incidence_lattices}
-\todo[inline]{Model as Bidirectional Graph}
-\todo[inline]{Adding Faces to the Lattice is fun - Lubs and Groups}
+\Cref{thm:equivalentpolyhedron} establishes that for every power diagram in $d$ dimensions there is a $(d+1)$-polyhedron which is affinely equivalent.
+This means that all chordales which exist in the power diagram and their intersections which form flats of lower dimensionality are represented as faces in this polyhedron as can be seen from \cref{lem:verticalprojection}.
+To represent all faces which are boundaries of cells in the power diagram, one can therefore choose a data structure which represents the faces of the equivalent polyhedron.
+
+Grünbaum~\cite{grunbaum2003convex} observes that by creating a partial order on faces of a polytope induced by set inclusion of the points in the faces, one can obtain the so called incidence lattice of the polyhedron.
+It is also described in more detail in \cite{edelsbrunner1986constructing} for the two-dimensional case.
+After the following definition, an important result about the size of these lattices will be presented.
+
+\begin{definition}[Incidence Lattice]
+    Let $P$ be a polyhedron whose set of non-empty faces is denoted by $F$.
+    The \define{incidence lattice} of $P$ is a directed graph
+    \begin{align}
+        \IL(P) &\coloneqq (F, E)
+    \end{align}
+    with the set of edges $E$ given by
+    \begin{align}
+        E &\coloneqq \left\{ (f_1, f_2) \in F^2 \middle| f_1 \subsetneq f_2 \wedge \nexists f_3 \in F : f_1 \subsetneq f_3 \subsetneq f_2 \right\} \subseteq F^2.
+    \end{align}
+\end{definition}
+
+The minimal vertices of an incidence lattices are the faces of lowest dimension in the polyhedron, while the single maximal node is the polyhedron itself.
+
+\Cref{lem:deltainvolutory} implies that a dual polyhedron obtained using the polarity function $\Delta$ has a very similar combinatorical structure compared to the original polyhedron.
+Since every $j$-face has been replaced by a $(d-j)$-face, the subset-relationship between two faces are reversed, i.e.~if $f_1 \subsetneq f_2$, then $\Delta(f_1) \supsetneq \Delta(f_2)$.
+This directly yields that the incidence lattice of this dual polyhedron is isomorphic to the graph created by reverting all edges in the original incidence lattice.
+Together with \cref{thm:equivalentpolyhedron} it follows that the incidence lattice describing the boundaries of a power diagram can be obtained from an incidence lattice of the lower part of a convex hull by reverting all edges in the lattice.
 
 \begin{figure}[tb]
     \centering
@@ -628,7 +653,7 @@ Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_
         (d23) node[lattice, black, label={left:$\left\{ 2, 3 \right\}$}] {}
         (d34) node[lattice, black, label={right:$\left\{ 3, 4 \right\}$}] {}
         (d14) node[lattice, black, label={right:$\left\{ 1, 4 \right\}$}] {}
-        (d1234) node[lattice, tumgreen, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
+        (d1234) node[lattice, tumgreen, rectangle, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
 
         \coordinate (s1) at (11, 0);
         \coordinate (s2) at (13, 0);
@@ -647,20 +672,68 @@ Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_
         (s2) node[corner, label={below:$s_2$}] {}
         (s3) node[corner, label={above:$s_3$}] {}
         (s4) node[corner, label={above:$s_4$}] {}
-        (v1) node[corner, tumgreen] {};
+        (v1) node[corner, tumgreen, rectangle] {};
     \end{tikzpicture}
-    \caption{This figure shows a polytope on the left defined by the convex hull of the vertices $\left\{ v_1, \dots, v_4 \right\}$ which has four $0$-faces (the $v_i$), four $1$-faces connecting the vertices and one $2$-face, the complete polytope, which is incident to all the $1$-faces.
-    This combinatorical structure is reflected in its incidence lattice which can be seen in the center.
-    It is a DAG with the $v_i$ as the minimal nodes and the $2$-faces as maximal nodes.
-    The same incidence lattice also describes the faces shared by the spheres $\left\{ s_1, \dots, s_4 \right\}$ in the Voronoi diagram on the right.}
+    \caption{The polytope on the left is given as the convex hull of $\left\{ v_1, \dots, v_4 \right\}$.
+    The minimal nodes of the incidence lattice are the four vertices, while the maximal node is the complete polytope. The $1$-faces (edges) form the middle layer of the lattice.
+    The dual power diagram is a Voronoi diagram which can be seen on the right side which has an incidence structure described by the same lattice with reversed edges.}
     \label{fig:incidencelattice}
 \end{figure}
+\Cref{fig:incidencelattice} shows an example of this relationship.
+A square defined by four vertices can be interpreted as a degenerated lower convex hull in three dimensions. It is then dual to a Voronoi diagram in two dimensions whose incidence structure is described by the same incidence lattice with reverted edges.
+
+Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by Bronsted \cite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressable as intersections of upwards pointing halfspaces).
+
+\begin{lemma}
+    \label{lem:latticesexponential}
+    Let $S$ be a set of $n$ spheres in $\R^d$ with $n > d > 0$ and let $f_j$ denote the maximal number of $j$-faces of a $(d + 1)$ polyhedron with $n$ facets. Then $f_j \in \Oh(n^{\left\lceil d/2 \right\rceil})$ and $\PD(S)$ contains at most $n$ cells, $f_j$ $j$-faces for $1 \leq j \leq d-1$ and $f_0 - 1$ vertices.
+\end{lemma}
+
+A direct consequence of this lemma is that any algorithm constructing the complete incidence lattice of some power diagram will have a running time in $\Omega(n^{\left\lceil d/2 \right\rceil})$ for $n$ spheres in $d$ dimensions.
+To lessen the impact of higher dimensions somewhat, the implementation presented here will only create shallow incidence lattices which only contain $0$-faces (vertices), $1$-faces (edges) and $d$-faces (cells) of a power diagram.
 
 \subsection{Naive Algorithm}
 \label{sub:naive_algorithm}
-\todo[inline]{Combinatorical tries with brute force}
-\todo[inline]{Complexity $\approx \Oh(\binom{|S|}{d+1} \cdot \max(d^3, |S|))$}
-\todo[inline]{No easy way to get extremal edges}
+For any power diagram which contains a cell bounded by a $0$-face, every cell is bounded by a $0$-face, as stated by \cref{lem:zerofaces}.
+The proof of the lemma yields that the existance of a $0$-face in a power diagram is guaranteed if there are at least $d+1$ linearly independent spheres, which also is a necessary condition.
+
+Faces are called internal faces of a power diagram if they can be expressed as the convex hull of $0$-faces, i.e.~if they are polytopal.
+The naive algorithm presented here uses the observations of the lemma to find those $0$-faces.
+Starting from the set of all existing $0$-faces together with the spheres which define them, it is possible to reconstruct all internal faces inductively.
+
+Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorithm iterates over all groups of $d+1$ spheres and checks whether they define a $0$-face.
+\begin{algorithm}[$0$-faces of Power Diagrams]
+    \label{alg:zerofaces}
+    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
+
+    \begin{enumerate}[label=Step \arabic*.,ref=Step \arabic*,leftmargin=5em]
+        \item \label{alg:0f:step1} Create an empty incidence lattice $\IL$.
+        \item \label{alg:0f:step2} Find the set of all possible groups $\Ge = \binom{S}{d + 1}$.
+        \item \label{alg:0f:step3} For every $G \in \Ge$, check if it is a $0$-face.
+            \begin{enumerate}[label*=\arabic*.,ref=\theenumi.\arabic*]
+                \item \label{alg:0f:step31} Try to find the point $p \in \R^d^$ of intersection of all chordals of pairs of spheres in $G$.
+                \item \label{alg:0f:step32} If $p$ exists, ensure that for all $o \in S \setminus G$ it holds that $\pow(p, o) > \pow(p, g)$ for any $g \in G$.
+                \item \label{alg:0f:step33} If $p$ is a $0$-face, add $p$ and all $g \in G$ to the incidence lattice $\IL$, add edges $(g, p)$ to $\IL$ for all $g \in G$.
+            \end{enumerate}
+        \item \label{alg:0f:step4} Merge $0$-faces $p_1, p_2 \in \R^{d}$ defined by $G_1, G_2 \in \Ge$ if $p_1 = p_2$. Remove $p_2$ from $\IL$ and add edges $(g, p_1)$ to $\IL$ for all $g \in G_2$.
+    \end{enumerate}
+\end{algorithm}
+To analyze the running time, the different steps are analyzed seperately and lead to a bound derived from the combinatorical structure of $\Ge$.
+\begin{lemma}
+    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
+    \cref{alg:zerofaces} then finds the $0$-faces of $\PD(S)$ in $\Oh(\binom{n}{d + 1} \cdot \max(d^3, n))$ time.
+\end{lemma}
+\begin{proof}
+    \ref{alg:0f:step1} is in $\Oh(1)$, \ref{alg:0f:step2} is in $\Oh(\abs{\Ge} \cdot d)$ and \ref{alg:0f:step4} can be achieved in $\Oh(\abs{\Ge} \cdot d)$, where the factor comes from adding the edges from $G_2$ to the incidence lattice, assuming that adding an edge to the lattice can be done in $\Oh(1)$.
+    Finding the point $p$ in \ref{alg:0f:step31} amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
+    \ref{alg:0f:step32} needs to check every sphere in $S$ which is not in $G$ and therefore can be bounded by $\Oh(n)$, while \ref{alg:0f:step33} only operates on the spheres in $G$ and therefore only takes $\Oh(d)$ time.
+    The running time of this algorithm is therefore clearly dominated by \ref{alg:0f:step3} since \ref{alg:0f:step31} and \ref{alg:0f:step32} both have to be performed $\abs{\Ge} = \binom{\abs{S}}{d + 1} = \binom{n}{d + 1}$ times.
+    This leads to the desired bound.
+\end{proof}
+
+If one assumes $d \ll n$, this running time can be approximated as $\Oh(n^{d+2})$.
+To construct the complete incidence lattice of the power diagram, this shallow representation has to be filled by adding the internal $j$-faces for $1 \leq j \leq d -1$ and extremal faces would need to be found.
+Since this naive algorithm is not applicable in practice due to its running time, these questions were not explored further and it was only used as a test implementation for the efficient algorithm presented in the next subsection.
 
 \subsection{Dual Algorithm}
 \label{sub:dual_algorithm}
@@ -671,7 +744,7 @@ Their results can be summarized as follows.
 \begin{lemma}
     \label{lem:convexhulls}
     Let $M$ be a set of $n$ points in $\R^d$.
-    The convex hull of $M$ can be determined in $\Oh(n \log n)$ time for $d = 3$ and in $\Oh(n \log n + n^{\left\lceil\frac{d}{2}\right\rceil})$ time for $d > 3$.
+    The convex hull of $M$ can be determined in $\Oh(n \log n)$ time for $d = 3$ and in $\Oh(n \log n + n^{\left\lceil d/2\right\rceil})$ time for $d > 3$.
     These bounds are optimal for $d = 3$ or $d$ even.
 \end{lemma}
 
@@ -694,7 +767,7 @@ More formally, this can be described as follows.
     \end{enumerate}
 \end{algorithm}
 
-The different steps of the algorithm allow for a straightforward analysis of its running time using the results of \cref{sub:incidence_lattices}.
+The different steps of the algorithm allow for a straightforward analysis of its running time.
 \begin{theorem}
     Let $S$ be a set of $n$ spheres in $\R^d$ and denote the amount of time necessary to compute the convex hull of $n$ points in $\R^{d}$ as $\Time_d(n)$.
     \Cref{alg:embedding} then constructs $\PD(S)$ in $\Oh(\Time_{d+1}(n))$ time.
