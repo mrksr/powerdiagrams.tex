@@ -237,11 +237,30 @@ After this, a transform to $d + 1$ dimensions will be used to both show a fundam
 
 \subsection{Geometric Notation}
 \label{sub:geometric_notation}
-\todo[inline]{Convex Hull, $\CHb$}
-\todo[inline]{Flats}
-\todo[inline]{Lineality Space}
-\todo[inline]{Dual Polyhedra}
-\todo[inline]{Cell Decomposition}
+Like Voronoi diagrams, power diagrams will be shown to consist of polyhedral regions, which share faces at their boundaries.
+An extensive introduction into polyhedra can be found in \cite{grunbaum2003convex} by Grünbaum and an introduction into convex analysis is given by Gritzmann in \cite{gritzmann2013grundlagen}.
+The following will repeat some notations of \cite{aurenhammer1987power}.
+
+Let $n \in \R^d$ with $n \neq 0$ and let $b \in \R$.
+Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^+ = \left\{ x \in \R^d \mid n^T x \geq b \right\}$ is an \define{(closed) upper halfspace} in $\R^d$.
+A $j$-flat $f$ is a a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
+It is an affine subspace of $\R^d$ with dimensionality $j$ and is expressible as the affine hull of $j + 1$ linearly independent points in $f$.
+
+A set $P \subseteq R^d$ is called a \define{polyhedron} exactly if it is expressible as the intersection of a finite number of halfspaces.
+$P$ is a \define{$j$-polyhedron} if there is a $j$-flat, but no $(j-1)$-flat that contains $P$.
+The boundary of $P$ consists of a finite number of $i$-polyhedra with $0 \leq i < j \leq d$, which are called the \define{$i$-faces} of $P$.
+$0$-, $1-$ and $(j - 1)$-faces are called \define{vertex}, \define{edge} and \define{facet} respectively.
+$P$ is called a \define{polytope} if it is bounded and can then also be expressed as the \define{convex hull $\CH$} of its $0$-faces.
+
+Two $d$-polyhedra $P$ and $Q$ are called \define{(combinatorically) dual} if there is a bijection $\varphi$ from the $j$-faces of $P$ and the $(d-j-1)$-faces of $Q$ for $0 \leq j \leq d  -1$ such that $f \subseteq g$ for any two faces $f$ and $g$ of $P$ exactly if $\varphi(f) \supseteq \varphi(g)$.
+
+A convex hull can be separated into the upper and lower part with respect to some vector $v \neq 0$.
+A facet of the convex hull with normal vector $n$ is part of the \define{lower convex hull $\CHb$} if $\scalar{n, v} < 0$ and part of the \define{upper convex hull $\CHt$} if $\scalar{n, v} > 0$.
+All other facets are not part of either.
+Any other face is in the lower or upper convex hull if it is contained in a facet which is in $\CHb$ or $\CHt$ repsectively.
+
+A \define{cell decomposition $C$} of $\R^d$ is a finite family of polytopes for which every face of a polytope in $C$ is itself a member of $C$ and for which a non-empty intersection of any two members of $C$ is a face of each of them, together with $\bigcup_{f \in C} f = \R^d$.
+$C$ and a $(d+1)$-polyhedron $P$ are called \define{affinely equivalent} if there exists a central or parallel projection $\varphi$ such that for every face $f \in C$, $f = \varphi(g)$ holds for some face $g$ of $P$.
 
 \subsection{Properties of Power Diagrams}
 \label{sub:properties_of_power_diagrams}
@@ -479,7 +498,6 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
 
     Now assume $\Delta(F) \not\in \F$.
     Then $\Delta(F)$ is not expressible as the intersection of hyperplanes not parallel to the $x_{d+1}$-axis and therefore, there exist two different $d^{(1)}, d^{(2)} \in \Delta(F)$ with $d_{[d]}^{(1)} - d_{[d]}^{(2)} = 0$.
-
     Let $n^{(1)}, n^{(2)} \in N$ with $\Delta(h(n^{(1)})) = \left\{ d^{(1)} \right\}$ and $\Delta(h(n^{(2)})) = \left\{ d^{(2)} \right\}$.
     Then
     \begin{align}
@@ -498,9 +516,9 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
         &\Leftrightarrow \forall x \in \Delta(F) &&: x_{d+1} = 2 x_{[d]}^\ast^T x_{[d]} - x_{d+1}^\ast\\
         &\Leftrightarrow \forall n \in N &&: -n^Tf = -2 x_{[d]}^\ast^T \cdot \frac{1}{2}n_{[d]} - x_{d+1}^\ast\\
         &\Leftrightarrow \forall n \in N &&: x^\ast \in h(n)\\
-        &\Leftrightarrow x^\ast \in F
+        &\Leftrightarrow x^\ast \in F,
     \end{alignat}
-    so $\Delta(\Delta(F)) = F$ for any face $F$.
+    so $\Delta(\Delta(F)) = F$ for any face $F \in \F$.
 \end{proof}
 
 An additional property of $\Delta$ is its preservation of relative positions of points and hyperplanes.
