@@ -731,33 +731,48 @@ Faces are called internal faces of a power diagram if they can be expressed as t
 The naive algorithm presented here uses the observations of the lemma to find those $0$-faces.
 Starting from the set of all existing $0$-faces together with the spheres which define them, it is possible to reconstruct all internal faces inductively.
 
-Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorithm iterates over all groups of $d+1$ spheres and checks whether they define a $0$-face.
-\begin{Algorithm}[$0$-faces of Power Diagrams]
-    \label{alg:zerofaces}
+Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorithm iterates over all groups of $d+1$ spheres and checks whether they define a $0$-face as described in \cref{alg:zerofaces}.
+\begin{algorithm}
     Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
 
-    \begin{enumerate}[label=Step \arabic*.,ref=Step \arabic*,leftmargin=5em]
-        \item \label{alg:0f:step1} Create an empty incidence lattice $\IL$.
-        \item \label{alg:0f:step2} Find the set of all possible groups $\Ge = \binom{S}{d + 1}$.
-        \item \label{alg:0f:step3} For every $G \in \Ge$, check if it is a $0$-face.
-            \begin{enumerate}[label*=\arabic*.,ref=\theenumi.\arabic*]
-                \item \label{alg:0f:step31} Try to find the point $p \in \R^d$ of intersection of all chordales of pairs of spheres in $G$.
-                \item \label{alg:0f:step32} If $p$ exists, ensure that for all $o \in S \setminus G$ it holds that $\pow(p, o) > \pow(p, g)$ for any $g \in G$.
-                \item \label{alg:0f:step33} If $p$ is a $0$-face, add $p$ and all $g \in G$ to the incidence lattice $\IL$, add edges $(g, p)$ to $\IL$ for all $g \in G$.
-            \end{enumerate}
-        \item \label{alg:0f:step4} Merge $0$-faces $p_1, p_2 \in \R^{d}$ defined by $G_1, G_2 \in \Ge$ if $p_1 = p_2$. Remove $p_2$ from $\IL$ and add edges $(g, p_1)$ to $\IL$ for all $g \in G_2$.
-    \end{enumerate}
-\end{Algorithm}
+    \begin{algorithmic}[1]
+        \Function{FindZeroFaces}{$S$}
+            \State $\IL \gets \varnothing$\Comment{Create empty incidence lattice}
+            \State $\Ge \gets \binom{S}{d + 1}$\Comment{Find the set of all possible groups}
+            \Statex
+            \For{$G$ \textbf{in} $\Ge$}\Comment{Find $0$-faces}
+                \State \label{alg:0f:step31}$P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find intersection of all pairs of spheres in $G$}.
+                \If{$P = \left\{ p \right\}$}\Comment{$P$ is a single point}
+                    \State Choose $g \in G$
+                    \If{$\forall o \in S \setminus G : \pow(p, o) > \pow(p, g)$}\Comment{$p$ is a $0$-face}
+                        \State $\IL \gets \IL +\; G + \left\{ p \right\} + \left\{ (g, p) \mid g \in G \right\}$\Comment{Add $0$-face to $\IL$}
+                    \EndIf
+                \EndIf
+            \EndFor
+            \Statex
+            \For{$0$-faces $p_1, p_2 \in \IL$}\Comment{Merge overdefined $0$-faces}
+                \If{$p_1 = p_2$}\Comment{Merge $p_1$ and $p_2$}
+                    \State Find $G_2$ corresponding to $p_2$
+                    \State $\IL \gets \IL - p_2$\Comment{Remove $p_2$ from $\IL$}
+                    \State $\IL \gets \IL + \left\{ (g_2, p_1) \mid g_2 \in G_2 \right\}$
+                \EndIf
+            \EndFor
+            \State \Return $\IL$
+        \EndFunction
+    \end{algorithmic}
+    \caption{$0$-faces of Power Diagrams}
+    \label{alg:zerofaces}
+\end{algorithm}
 To analyze the running time, the different steps are analyzed seperately and lead to a bound derived from the combinatorical structure of $\Ge$.
 \begin{theorem}
     Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d + 1$ spheres linearly independent.
     \cref{alg:zerofaces} then finds the $0$-faces of $\PD(S)$ in $\Oh(\binom{n}{d + 1} \cdot \max(d^3, n))$ time.
 \end{theorem}
 \begin{proof}
-    \ref{alg:0f:step1} is in $\Oh(1)$, \ref{alg:0f:step2} is in $\Oh(\abs{\Ge} \cdot d)$ and \ref{alg:0f:step4} can be achieved in $\Oh(\abs{\Ge} \cdot d)$, where the factor comes from adding the edges from $G_2$ to the incidence lattice, assuming that adding an edge to the lattice can be done in $\Oh(1)$.
-    Finding the point $p$ in \ref{alg:0f:step31} amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
-    \ref{alg:0f:step32} needs to check every sphere in $S$ which is not in $G$ and therefore can be bounded by $\Oh(n)$, while \ref{alg:0f:step33} only operates on the spheres in $G$ and therefore only takes $\Oh(d)$ time.
-    The running time of this algorithm is therefore clearly dominated by \ref{alg:0f:step3} since \ref{alg:0f:step31} and \ref{alg:0f:step32} both have to be performed $\abs{\Ge} = \binom{\abs{S}}{d + 1} = \binom{n}{d + 1}$ times.
+    Line~2 is in $\Oh(1)$, line~3 in $\Oh(\abs{\Ge} \cdot d)$ and the merge phase starting in line 10 can be achieved in $\Oh(\abs{\Ge} \cdot d)$, where the factor comes from adding the edges from $G_2$ to the incidence lattice, assuming that adding an edge to the lattice can be done in $\Oh(1)$.
+    Finding the intersection $p$ in line~5 amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
+    Line~8 needs to check every sphere in $S$ which is not in $G$ and therefore can be bounded by $\Oh(n)$, while line~9 only operates on the spheres in $G$ and therefore only takes $\Oh(d)$ time.
+    The running time of this algorithm is therefore clearly dominated by the first loop since lines 5 and 7 could both have to be performed $\abs{\Ge} = \binom{\abs{S}}{d + 1} = \binom{n}{d + 1}$ times.
     This leads to the desired bound.
 \end{proof}
 
@@ -779,34 +794,46 @@ Their results can be summarized as follows.
 \end{lemma}
 
 To construct a power diagram, it is now enough to follow the path of \cref{sec:embedding_in_d_1_dimensions} to transform it to $d+1$ dimensions, calculate the convex hull $\CHb$ of the polar points and project the results back to the original space.
-More formally, this can be described as follows.
-
-\begin{Algorithm}[Power Diagram using Embedding in $d+1$ Dimensions]
-    \label{alg:embedding}
-    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions.
-    The computation of $\PD(S)$ requires three steps.
-    \begin{enumerate}[label=Step \arabic*.,ref=Step \arabic*,leftmargin=5em]
-        \item \label{alg:pd:step1} Compute the hyperplanes $\Pi(s_i)$ and their poles $p_i = \Delta(\Pi(s_i))$ for every sphere $1 \leq i \leq n$.
-        \item \label{alg:pd:step2} Determine the incidence structure $\IL_b$ of the polyhedron defined by the hyperplanes $\Pi(s_1), \dots, \Pi(s_n)$.
-            \begin{enumerate}[label*=\arabic*.,ref=\theenumi.\arabic*]
-                \item \label{alg:pd:step21} Construct the convex hull of $\left\{ p_1, \dots, p_n \right\}$ such that it is represented by the incidence lattice $\IL$.
-                \item \label{alg:pd:step22} Split $\IL$ into the top and bottom parts according to the slope of the hyperplanes containing the facets, obtaining $\IL_b$ representing $\CHb(\left\{ p_1, \dots, p_n \right\})$.
-                \item \label{alg:pd:step23} Replace each $j$-face in $\IL_b$ by a $(d - j)$-face for $0 \leq j \leq d$. For each vertex arising from a facet $f$, store the polar point $\Delta(h)$ of the hyperplane $h$ containing $f$.
-            \end{enumerate}
-        \item \label{alg:pd:step3} Project $\IL_b$ vertically onto $h_0$ by forgetting the $(d+1)$st coordinates of the vertices. This yields $\PD(S)$ in $h_0$.
-    \end{enumerate}
-\end{Algorithm}
-
+A more formal description can be found in \cref{alg:embedding}.
 The different steps of the algorithm allow for a straightforward analysis of its running time.
+\begin{algorithm}[tb]
+    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions.
+
+    \begin{algorithmic}[1]
+        \Function{PowerDiagram}{$S$}
+            \State $H \gets \Pi(S)$\Comment{Compute hyperplanes of spheres}
+            \State $P \gets \Delta(H)$\Comment{Compute poles of the hyperplanes}
+            \Statex
+            \State $\IL \gets \CH(P)$\Comment{Construct convex hull of $P$}
+            \State $(\IL_b, \IL_t) \gets$ Split $\IL$ into top and bottom parts\Comment{$\IL_b$ represents $\CHb(P)$}
+            \For{face $f$ \textbf{in} $\IL_b$}\Comment{Dualize $\IL_b$}
+                \If{$f$ \textbf{is a} facet}
+                    \State Find hyperplane $h$ containing $f$
+                    \State Replace $f$ by the polar point $\Delta(h)$
+                \Else
+                    \State Replace $j$-face $f$ by a $(d-j)$-face\Comment{$0 \leq j < d$}
+                \EndIf
+            \EndFor
+            \Statex
+            \For{vertex $v$ \textbf{in} $\IL_b$}
+                \State Project $v$ vertically onto $h_0$.\Comment{Forget $(d+1)$st coordinates}
+            \EndFor
+            \State \Return $\IL_b$
+        \EndFunction
+    \end{algorithmic}
+    \caption{$0$-faces of Power Diagrams}
+    \label{alg:embedding}
+\end{algorithm}
+
 \begin{theorem}
     Let $S$ be a set of $n$ spheres in $\R^d$ and denote the amount of time necessary to compute the convex hull of $n$ points in $\R^{d}$ as $\Time_d(n)$.
     \Cref{alg:embedding} then constructs $\PD(S)$ in $\Oh(\Time_{d+1}(n))$ time.
 \end{theorem}
 \begin{proof}
-\ref{alg:pd:step1} and \ref{alg:pd:step3} can be performed in $\Oh(n)$ time.
-Let $\IL_b$ be the incidence lattice constructed by \ref{alg:pd:step21}.
-Then \ref{alg:pd:step22} and \ref{alg:pd:step23} are bounded by $\Oh(\abs{\IL_b})$, while depending on the implementation, \ref{alg:pd:step23} can be performed in $\Oh(1)$ time.
-Since \ref{alg:pd:step21} must take at least $\Omega(\abs{\IL_b})$ time, the construction of the convex hull of the polar points dominates the running time of the algorithm.
+Lines 1 and 2 can be performed in $\Oh(n)$ time.
+Let $\IL$ be the incidence lattice constructed by line~4.
+Then line~5 and the loop at line~6 are bounded by $\Oh(\abs{\IL})$.
+Since line~4 must take at least $\Omega(\abs{\IL})$ time, the construction of the convex hull of the polar points dominates the running time of the algorithm.
 \end{proof}
 
 Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithms and every other operation in \cref{alg:embedding} is dominated by them, this is an optimal algorithm to construct power diagrams in $d$ dimensions for $d = 2$ or $d$ odd.
@@ -907,22 +934,34 @@ To improve readability, code presented in this paper will not be pseudo code rat
     }
     \label{fig:addingfaces}
 \end{figure}
-Blargh!
 \begin{algorithm}[tb]
 \begin{algorithmic}[1]
-    \Procedure{f}{$s_0^\prime, a, b$}
-    \State $s_0 \gets u(g_0)$
-    \For{$i$ \textbf{in} $[1, t(n)]$}
-        \State $(s_i^\prime, o_i^\prime) \gets h(s_{i - 1})$
-        \State $s_i \gets u(s_i^\prime)$
-        \State $o_i \gets u(o_i^\prime)$
-    \EndFor
-    \State \Return $(o_1, \dots, o_{t(n)})$
-    \EndProcedure
+    \Function{findNodesBFS}{$\IL, v_0, \pred{filter}, \pred{cont}, \pred{next}$}
+    \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
+    \State $V_{\textnormal{tovisit}} \gets ( v_0 )$
+    \State $V_{\textnormal{found}} \gets \left\{  \right\}$
+
+    \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
+        \State $(v, V_{\textnormal{tovisit}}) \gets V_{\textnormal{tovisit}}$ \Comment{Pop the first element of $V_{\textnormal{tovisit}}$}
+
+        \If{$\pred{cont}(v)$}
+            \For{$n$ \textbf{in} $\pred{next}(\IL, v)$}
+                \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
+                    \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
+                    \State $V_{\textnormal{tovisit}} \gets (V_{\textnormal{tovisit}}, n)$ \Comment{Append $n$ to $V_{\textnormal{tovisit}}$}
+                \EndIf
+            \EndFor
+        \EndIf
+
+        \If{$\pred{filter}(v)$}
+            \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
+        \EndIf
+    \EndWhile
+    \State \Return $V_{\textnormal{found}}$
+    \EndFunction
 \end{algorithmic}
 \caption{Hallo!}
 \end{algorithm}
-Blurgh
 
 \subsection{Dual Algorithm}
 \label{sub:impl_dual_algorithm}
