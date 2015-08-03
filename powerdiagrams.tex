@@ -31,7 +31,7 @@ A \define{Voronoi diagram} is a cell decomposition of the space introduced by a 
 It assigns every point $p \in M$ its \define{region} of points for which there is no point closer than $p$ in $M$.
 Using the euclidean metric, these regions are guaranteed to be polyhedra.
 The normal vectors of the hyperplanes at the boundaries are given by the connecting line of neighbouring points with the hyperplane bisecting this line.
-\begin{figure}[Htb]
+\begin{figure}[tb]
     \centering
     \begin{tikzpicture}
         \path[clip, use as bounding box] (-3, 0) rectangle (7, 4);
@@ -732,7 +732,7 @@ The naive algorithm presented here uses the observations of the lemma to find th
 Starting from the set of all existing $0$-faces together with the spheres which define them, it is possible to reconstruct all internal faces inductively.
 
 Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorithm iterates over all groups of $d+1$ spheres and checks whether they define a $0$-face.
-\begin{algorithm}[$0$-faces of Power Diagrams]
+\begin{Algorithm}[$0$-faces of Power Diagrams]
     \label{alg:zerofaces}
     Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
 
@@ -741,13 +741,13 @@ Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorit
         \item \label{alg:0f:step2} Find the set of all possible groups $\Ge = \binom{S}{d + 1}$.
         \item \label{alg:0f:step3} For every $G \in \Ge$, check if it is a $0$-face.
             \begin{enumerate}[label*=\arabic*.,ref=\theenumi.\arabic*]
-                \item \label{alg:0f:step31} Try to find the point $p \in \R^d$ of intersection of all chordals of pairs of spheres in $G$.
+                \item \label{alg:0f:step31} Try to find the point $p \in \R^d$ of intersection of all chordales of pairs of spheres in $G$.
                 \item \label{alg:0f:step32} If $p$ exists, ensure that for all $o \in S \setminus G$ it holds that $\pow(p, o) > \pow(p, g)$ for any $g \in G$.
                 \item \label{alg:0f:step33} If $p$ is a $0$-face, add $p$ and all $g \in G$ to the incidence lattice $\IL$, add edges $(g, p)$ to $\IL$ for all $g \in G$.
             \end{enumerate}
         \item \label{alg:0f:step4} Merge $0$-faces $p_1, p_2 \in \R^{d}$ defined by $G_1, G_2 \in \Ge$ if $p_1 = p_2$. Remove $p_2$ from $\IL$ and add edges $(g, p_1)$ to $\IL$ for all $g \in G_2$.
     \end{enumerate}
-\end{algorithm}
+\end{Algorithm}
 To analyze the running time, the different steps are analyzed seperately and lead to a bound derived from the combinatorical structure of $\Ge$.
 \begin{theorem}
     Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d + 1$ spheres linearly independent.
@@ -781,7 +781,7 @@ Their results can be summarized as follows.
 To construct a power diagram, it is now enough to follow the path of \cref{sec:embedding_in_d_1_dimensions} to transform it to $d+1$ dimensions, calculate the convex hull $\CHb$ of the polar points and project the results back to the original space.
 More formally, this can be described as follows.
 
-\begin{algorithm}[Power Diagram using Embedding in $d+1$ Dimensions]
+\begin{Algorithm}[Power Diagram using Embedding in $d+1$ Dimensions]
     \label{alg:embedding}
     Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions.
     The computation of $\PD(S)$ requires three steps.
@@ -795,7 +795,7 @@ More formally, this can be described as follows.
             \end{enumerate}
         \item \label{alg:pd:step3} Project $\IL_b$ vertically onto $h_0$ by forgetting the $(d+1)$st coordinates of the vertices. This yields $\PD(S)$ in $h_0$.
     \end{enumerate}
-\end{algorithm}
+\end{Algorithm}
 
 The different steps of the algorithm allow for a straightforward analysis of its running time.
 \begin{theorem}
@@ -813,8 +813,13 @@ Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithm
 
 \section{Implementation}
 \label{sec:implementation}
+In the following, an implementation of the data structure and algorithms described in \cref{sec:constructing_power_diagrams} will be described.
+The implementation was written in \CC, making heavy use of features introduced by the \CC11 standard which introduces a more functional and generic style into the language.
+References for these features can be found in the newer editions of \cite{stroustrup1986c++} and \cite{stroustrup2014programming} and also in \cite{meyers2014effective}.
+To improve readability, code presented in this paper will not be pseudo code rather than concrete \CC.
+
 \subsection{Incidence Lattice}
-\label{sub:incidence_lattice}
+\label{sub:impl_incidence_lattice}
 \begin{figure}[tb]
     \centering
     \begin{tikzpicture}[font=\scriptsize]
@@ -855,7 +860,7 @@ Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithm
                 (d3) node[lattice, label={below:$3$}] {}
                 (d4) node[lattice, label={below:$4$}] {}
                 (d12) node[lattice, label={left:$\left\{ 1, 2 \right\}$}] {}
-                (d1234) node[lattice, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {}
+                (d1234) node[lattice, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
             \end{tikzpicture}
         };
 
@@ -894,17 +899,33 @@ Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithm
                 (d123) node[lattice, marked, label={left:$\left\{ 1, 2, 3 \right\}$}] {}
                 (d1234) node[lattice, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
             \end{tikzpicture}
-        }
+        };
     \end{tikzpicture}
     \caption{The left figure shows part of an incidence lattice in the process of being filled before the insertion of the new face $\left\{ 1,2,3 \right\}$. To identifiy the red dashed edges which need to be bisected by the new face, lower and upper boundaries have to be found.
         The face $\left\{ 1, 2 \right\}$ is a largest subset of the new face and therefore all outgoing edges have to be replaced.
         The face $\left\{ 1, 2, 3, 4 \right\}$ is a (smallest) superset of the new face and therefore, the new face has to point to it.
     }
-    \label{fig:incidencelattice}
+    \label{fig:addingfaces}
 \end{figure}
+Blargh!
+\begin{algorithm}[tb]
+\begin{algorithmic}[1]
+    \Procedure{f}{$s_0^\prime, a, b$}
+    \State $s_0 \gets u(g_0)$
+    \For{$i$ \textbf{in} $[1, t(n)]$}
+        \State $(s_i^\prime, o_i^\prime) \gets h(s_{i - 1})$
+        \State $s_i \gets u(s_i^\prime)$
+        \State $o_i \gets u(o_i^\prime)$
+    \EndFor
+    \State \Return $(o_1, \dots, o_{t(n)})$
+    \EndProcedure
+\end{algorithmic}
+\caption{Hallo!}
+\end{algorithm}
+Blurgh
 
 \subsection{Dual Algorithm}
-\label{sub:dual_algorithm}
+\label{sub:impl_dual_algorithm}
 
 \appendix
 \section{Building the Code}
