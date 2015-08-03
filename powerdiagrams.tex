@@ -749,10 +749,10 @@ Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorit
     \end{enumerate}
 \end{algorithm}
 To analyze the running time, the different steps are analyzed seperately and lead to a bound derived from the combinatorical structure of $\Ge$.
-\begin{lemma}
-    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
+\begin{theorem}
+    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d + 1$ spheres linearly independent.
     \cref{alg:zerofaces} then finds the $0$-faces of $\PD(S)$ in $\Oh(\binom{n}{d + 1} \cdot \max(d^3, n))$ time.
-\end{lemma}
+\end{theorem}
 \begin{proof}
     \ref{alg:0f:step1} is in $\Oh(1)$, \ref{alg:0f:step2} is in $\Oh(\abs{\Ge} \cdot d)$ and \ref{alg:0f:step4} can be achieved in $\Oh(\abs{\Ge} \cdot d)$, where the factor comes from adding the edges from $G_2$ to the incidence lattice, assuming that adding an edge to the lattice can be done in $\Oh(1)$.
     Finding the point $p$ in \ref{alg:0f:step31} amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
