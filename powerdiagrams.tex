@@ -813,8 +813,98 @@ Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithm
 
 \section{Implementation}
 \label{sec:implementation}
-\todo[inline]{Modellierung}
-\todo[inline]{Herausforderungen}
+\subsection{Incidence Lattice}
+\label{sub:incidence_lattice}
+\begin{figure}[tb]
+    \centering
+    \begin{tikzpicture}[font=\scriptsize]
+        \tikzstyle{corner} = [circle, fill, tumblue, minimum size=8pt, inner sep=0]
+        \tikzstyle{lattice} = [circle, fill, tumblue, minimum size=6pt, inner sep=0]
+        \tikzstyle{lattice edge} = [thick, arrows={-latex}, shorten >=4pt]
+        \tikzstyle{noend} = [dotted, arrows={-}, shorten >=8em]
+        \tikzstyle{marked} = [tumred, densely dashed, very thick, rectangle]
+
+        \node at (0, 0) {
+            \begin{tikzpicture}
+                \coordinate (d1) at (0, 0);
+                \coordinate (d2) at (1.5, 0);
+                \coordinate (d3) at (3, 0);
+                \coordinate (d4) at (4.5, 0);
+                \coordinate (d5) at (6, 0);
+                \coordinate (d12) at (0.75, 1.5);
+                \coordinate (d23) at (2.25, 1.5);
+                \coordinate (d34) at (3.75, 1.5);
+                \coordinate (d45) at (5.25, 1.5);
+                \coordinate (d123) at (1.5, 3);
+                \coordinate (d234) at (3, 3);
+                \coordinate (d1234) at (1.5, 4.5);
+                \coordinate (d2345) at (4.5, 4.5);
+
+                \draw[lattice edge] (d1) to (d12);
+                \draw[lattice edge] (d2) to (d12);
+                \draw[lattice edge] (d4) to (d1234);
+                \draw[lattice edge, noend] (d2) to (d2345);
+                \draw[lattice edge, noend] (d3) to (d2345);
+                \draw[lattice edge, noend] (d4) to (d2345);
+                \draw[lattice edge, marked] (d12) to (d1234);
+                \draw[lattice edge, marked] (d3) to (d1234);
+
+                \draw
+                (d1) node[lattice, label={below:$1$}] {}
+                (d2) node[lattice, label={below:$2$}] {}
+                (d3) node[lattice, label={below:$3$}] {}
+                (d4) node[lattice, label={below:$4$}] {}
+                (d12) node[lattice, label={left:$\left\{ 1, 2 \right\}$}] {}
+                (d1234) node[lattice, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {}
+            \end{tikzpicture}
+        };
+
+        \node at (7, 0) {
+            \begin{tikzpicture}
+                \coordinate (d1) at (0, 0);
+                \coordinate (d2) at (1.5, 0);
+                \coordinate (d3) at (3, 0);
+                \coordinate (d4) at (4.5, 0);
+                \coordinate (d5) at (6, 0);
+                \coordinate (d12) at (0.75, 1.5);
+                \coordinate (d23) at (2.25, 1.5);
+                \coordinate (d34) at (3.75, 1.5);
+                \coordinate (d45) at (5.25, 1.5);
+                \coordinate (d123) at (1.5, 3);
+                \coordinate (d234) at (3, 3);
+                \coordinate (d1234) at (1.5, 4.5);
+                \coordinate (d2345) at (4.5, 4.5);
+
+                \draw[lattice edge] (d1) to (d12);
+                \draw[lattice edge] (d2) to (d12);
+                \draw[lattice edge] (d4) to (d1234);
+                \draw[lattice edge, noend] (d2) to (d2345);
+                \draw[lattice edge, noend] (d3) to (d2345);
+                \draw[lattice edge, noend] (d4) to (d2345);
+                \draw[lattice edge, marked] (d12) to (d123);
+                \draw[lattice edge, marked] (d123) to (d1234);
+                \draw[lattice edge, marked] (d3) to (d123);
+
+                \draw
+                (d1) node[lattice, label={below:$1$}] {}
+                (d2) node[lattice, label={below:$2$}] {}
+                (d3) node[lattice, label={below:$3$}] {}
+                (d4) node[lattice, label={below:$4$}] {}
+                (d12) node[lattice, label={left:$\left\{ 1, 2 \right\}$}] {}
+                (d123) node[lattice, marked, label={left:$\left\{ 1, 2, 3 \right\}$}] {}
+                (d1234) node[lattice, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
+            \end{tikzpicture}
+        }
+    \end{tikzpicture}
+    \caption{The left figure shows part of an incidence lattice in the process of being filled before the insertion of the new face $\left\{ 1,2,3 \right\}$. To identifiy the red dashed edges which need to be bisected by the new face, lower and upper boundaries have to be found.
+        The face $\left\{ 1, 2 \right\}$ is a largest subset of the new face and therefore all outgoing edges have to be replaced.
+        The face $\left\{ 1, 2, 3, 4 \right\}$ is a (smallest) superset of the new face and therefore, the new face has to point to it.
+    }
+    \label{fig:incidencelattice}
+\end{figure}
+
+\subsection{Dual Algorithm}
+\label{sub:dual_algorithm}
 
 \appendix
 \section{Building the Code}
