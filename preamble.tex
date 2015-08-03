@@ -1,18 +1,26 @@
 \documentclass[abstract, english]{scrartcl}
 \addtokomafont{disposition}{\boldmath}
 
-\usepackage{polyglossia}
-\setmainlanguage{english}
+% LuaLatex
+% \usepackage{polyglossia}
+% \setmainlanguage{english}
 
-\usepackage{fontspec}
-\setmainfont[
-    Ligatures=TeX,
-    SmallCapsFont={Latin Modern Roman Caps},
-    SlantedFont={* Slanted},
-    ItalicFeatures  = {
-        SmallCapsFont = {LMRomanCaps10-Oblique}
-    },
-    ]{Latin Modern Roman}
+% \usepackage{fontspec}
+% \setmainfont[
+%     Ligatures=TeX,
+%     SmallCapsFont={Latin Modern Roman Caps},
+%     SlantedFont={* Slanted},
+%     ItalicFeatures  = {
+%         SmallCapsFont = {LMRomanCaps10-Oblique}
+%     },
+%     ]{Latin Modern Roman}
+
+% pdflatex
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
 \usepackage{microtype}
 
 \usepackage{todonotes}
