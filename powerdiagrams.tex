@@ -260,7 +260,8 @@ A facet of the convex hull with normal vector $n$ is part of the \define{lower c
 All other facets are not part of either.
 Any other face is in the lower or upper convex hull if it is contained in a facet which is in $\CHb$ or $\CHt$ repsectively.
 
-A \define{cell decomposition $C$} of $\R^d$ is a finite family of polytopes for which every face of a polytope in $C$ is itself a member of $C$ and for which a non-empty intersection of any two members of $C$ is a face of each of them, together with $\bigcup_{f \in C} f = \R^d$.
+A \define{cell decomposition $C$} of $\R^d$ is a finite family of polyhedra for which every face of a polytope in $C$ is itself a member of $C$ and for which a non-empty intersection of any two members of $C$ is a face of each of them, together with $\bigcup_{f \in C} f = \R^d$.
+$d$-faces of $C$ are called \define{cells}.
 $C$ and a $(d+1)$-polyhedron $P$ are called \define{affinely equivalent} if there exists a central or parallel projection $\varphi$ such that for every face $f \in C$, $f = \varphi(g)$ holds for some face $g$ of $P$.
 
 \subsection{Properties of Power Diagrams}
@@ -292,7 +293,7 @@ Since any of these differences can be expressed through the other two, their int
 
 Let $S$ be a finite set of $n$ spheres in $\R^d$ whose centers have an affine dimension of $d$.
 Since the cell of every sphere $s \in S$ is bounded by $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the intersection of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
-$\PD(S)$ therefore is a cell complex in $\R^d$.
+Together with the fact that every $x \in \R^d$ is part of some cell of $\PD(S)$ by definition, this shows that $\PD(S)$ is a cell decomposition of $\R^d$.
 
 \begin{figure}[tb]
     \centering
@@ -513,10 +514,10 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
     The last step is to show that $\Delta$ is involutory.
     \begin{alignat}{2}
         &x^\ast \in \Delta(\Delta(F)) &&= \bigcup_{\substack{h \in \Ha:\\ \Delta(F) \subseteq h}} \Delta(h)\\
-        &\Leftrightarrow \exists h \in \Ha &&: \Delta(F) \subseteq h \wedge x^\ast \in \Delta(h)\\
-        &\Leftrightarrow \forall x \in \Delta(F) &&: x_{d+1} = 2 x_{[d]}^\ast^T x_{[d]} - x_{d+1}^\ast\\
-        &\Leftrightarrow \forall n \in N &&: -n^Tf = -2 x_{[d]}^\ast^T \cdot \frac{1}{2}n_{[d]} - x_{d+1}^\ast\\
-        &\Leftrightarrow \forall n \in N &&: x^\ast \in h(n)\\
+        &\Leftrightarrow \exists h \in \Ha &&{}: \Delta(F) \subseteq h \wedge x^\ast \in \Delta(h)\\
+        &\Leftrightarrow \forall x \in \Delta(F) &&{}: x_{d+1} = 2 \left( x_{[d]}^\ast \right)^T x_{[d]} - x_{d+1}^\ast\\
+        &\Leftrightarrow \forall n \in N &&{}: -n^Tf = -2 \left( x_{[d]}^\ast \right)^T \cdot \frac{1}{2}n_{[d]} - x_{d+1}^\ast\\
+        &\Leftrightarrow \forall n \in N &&{}: x^\ast \in h(n)\\
         &\Leftrightarrow x^\ast \in F,
     \end{alignat}
     so $\Delta(\Delta(F)) = F$ for any face $F \in \F$.
@@ -591,7 +592,7 @@ Remember that a convex hull splits into its top and bottom part given by the sig
 \section{Constructing Power Diagrams}
 \label{sec:constructing_power_diagrams}
 The theoretical results of the previous sections will now be applied to the formulation of algorithms to construct the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions.
-\cref{obs:cellsarepolyhedra} implies that the cells of those power diagrams are polyhedra which share faces at their boundaries.
+\Cref{obs:cellsarepolyhedra} implies that the cells of those power diagrams are polyhedra which share faces at their boundaries.
 
 To represent those boundaries (and therefore the power diagrams), a data structure called incidence lattices will be introduced.
 Also based on \cref{obs:cellsarepolyhedra}, a naive algorithm to find $0$-faces can be formulated, which is based on the observation that every such faces is defined by at least $(d+1)$ spheres.
@@ -740,7 +741,7 @@ Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorit
         \item \label{alg:0f:step2} Find the set of all possible groups $\Ge = \binom{S}{d + 1}$.
         \item \label{alg:0f:step3} For every $G \in \Ge$, check if it is a $0$-face.
             \begin{enumerate}[label*=\arabic*.,ref=\theenumi.\arabic*]
-                \item \label{alg:0f:step31} Try to find the point $p \in \R^d^$ of intersection of all chordals of pairs of spheres in $G$.
+                \item \label{alg:0f:step31} Try to find the point $p \in \R^d$ of intersection of all chordals of pairs of spheres in $G$.
                 \item \label{alg:0f:step32} If $p$ exists, ensure that for all $o \in S \setminus G$ it holds that $\pow(p, o) > \pow(p, g)$ for any $g \in G$.
                 \item \label{alg:0f:step33} If $p$ is a $0$-face, add $p$ and all $g \in G$ to the incidence lattice $\IL$, add edges $(g, p)$ to $\IL$ for all $g \in G$.
             \end{enumerate}
