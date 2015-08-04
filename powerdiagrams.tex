@@ -609,6 +609,7 @@ It is also described in more detail in \cite{edelsbrunner1986constructing} for t
 After the following definition, an important result about the size of these lattices will be presented.
 
 \begin{definition}[Incidence Lattice]
+    \label{def:incidencelattice}
     Let $P$ be a polyhedron whose set of non-empty faces is denoted by $F$.
     The \define{incidence lattice} of $P$ is a directed graph
     \begin{align}
@@ -760,13 +761,13 @@ Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorit
             \State \Return $\IL$
         \EndFunction
     \end{algorithmic}
-    \caption{$0$-faces of Power Diagrams}
+    \caption{Naive approach to find $0$-faces of Power Diagrams}
     \label{alg:zerofaces}
 \end{algorithm}
 To analyze the running time, the different steps are analyzed seperately and lead to a bound derived from the combinatorical structure of $\Ge$.
 \begin{theorem}
     Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d + 1$ spheres linearly independent.
-    \cref{alg:zerofaces} then finds the $0$-faces of $\PD(S)$ in $\Oh(\binom{n}{d + 1} \cdot \max(d^3, n))$ time.
+    \Cref{alg:zerofaces} then finds the $0$-faces of $\PD(S)$ in $\Oh(\binom{n}{d + 1} \cdot \max(d^3, n))$ time.
 \end{theorem}
 \begin{proof}
     Line~2 is in $\Oh(1)$, line~3 in $\Oh(\abs{\Ge} \cdot d)$ and the merge phase starting in line 10 can be achieved in $\Oh(\abs{\Ge} \cdot d)$, where the factor comes from adding the edges from $G_2$ to the incidence lattice, assuming that adding an edge to the lattice can be done in $\Oh(1)$.
@@ -843,10 +844,89 @@ Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithm
 In the following, an implementation of the data structure and algorithms described in \cref{sec:constructing_power_diagrams} will be described.
 The implementation was written in \CC, making heavy use of features introduced by the \CC11 standard which introduces a more functional and generic style into the language.
 References for these features can be found in the newer editions of \cite{stroustrup1986c++} and \cite{stroustrup2014programming} and also in \cite{meyers2014effective}.
-To improve readability, code presented in this paper will not be pseudo code rather than concrete \CC.
+To improve readability, code presented in this paper will be pseudo code rather than concrete \CC.
 
 \subsection{Incidence Lattice}
 \label{sub:impl_incidence_lattice}
+The incidence lattices described in \cref{sub:incidence_lattices} and \cite{edelsbrunner1986constructing} can be used to represent the subset-relationships between different faces of a polyhedron.
+Since it was shown in \cref{thm:equivalentpolyhedron} that a power diagram in $d$ dimensions can be represented by a polyhedron in $(d+1)$ dimensions, incidence lattices can also be used to represent the cells of power diagrams via their shared boundaries.
+
+According to \cref{def:incidencelattice}, incidence lattices are graphs where every face is a vertex and two faces are connected with a directed edge if the source is a true subset of the sink with no faces in between.
+To avoid confusion with $0$-faces, the vertices of these graphs will in the following be called \define{nodes}.
+The implementation of these lattices in \src{IncidenceLattice.hpp} therefore uses the graph datastructure in \src{BidirectionalGraph.hpp} as an internal representation.
+These graphs represent finite graphs with directed edges.
+They are called bidirectional since it is possible to traverse the edges in both direction in $\Oh(1)$ time.
+
+To achieve this, every node is identified by some unique (numeric) identifier.
+The graph is then modelled as a hash-map from those identifiers to entries which are tuples of two incidence lists and some value the node holds, which in the case of incidence lattices is used to store normal vectors or points.
+Element access of the graph map has an amortized cost of $\Oh(1)$.
+The incidence lists for every node hold both all successors and predecessors, allowing for the direct access.
+Maintaining both incidence lists increases the work necessary to insert and delete both nodes and edges, but both operations remain at $\Oh(1)$ cost.
+
+Incidence lattices are Hasse diagrams and therefore directed acyclic graphs.
+A node in such a graph is called \define{minimal} if it does not have a predecessor and \define{maximal} if it does not have a successor.
+Internal faces in the incidence lattice can be described as the convex hull of their vertices.
+Since there are no non-empty faces which are true subsets of vertices, finding the vertices which define such a face translates to finding the minimal nodes in the graph which are connected to the face.
+For extremal faces, the minimal nodes connected to it also represent all adjacent vertices.
+Their convex hull does not produce the face however, since it contains rays.
+
+\begin{algorithm}[tbp]
+    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices which should be combined to a face and \pred{filter}, \pred{cont} and \pred{next} predicates mapping from nodes to boolean truth values.
+    \begin{algorithmic}[1]
+        \Function{FindNodesBFS}{$\IL, v_0, \pred{filter}, \pred{cont}, \pred{next}$}
+            \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
+            \State $V_{\textnormal{tovisit}} \gets ( v_0 )$
+            \State $V_{\textnormal{found}} \gets \left\{  \right\}$
+
+            \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
+                \State $(v, V_{\textnormal{tovisit}}) \gets V_{\textnormal{tovisit}}$ \Comment{Pop the first element of $V_{\textnormal{tovisit}}$}
+
+                \If{$\pred{cont}(v)$}
+                    \For{$n$ \textbf{in} $\pred{next}(\IL, v)$}
+                        \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
+                            \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
+                            \State $V_{\textnormal{tovisit}} \gets (V_{\textnormal{tovisit}}, n)$ \Comment{Append $n$ to $V_{\textnormal{tovisit}}$}
+                        \EndIf
+                    \EndFor
+                \EndIf
+
+                \If{$\pred{filter}(v)$}
+                    \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
+                \EndIf
+            \EndWhile
+            \State \Return $V_{\textnormal{found}}$
+        \EndFunction
+        \Statex
+        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal existing subfaces of $V_{\textnormal{minimals}}$}
+            \State $\pred{isGroup} \gets (\lambda f \to \Call{MinimalsOf}{$\IL, f$} \subseteq V_{\textnormal{minimals}})$
+            \State $V_{\textnormal{groups}} \gets \left\{  \right\}$
+            \For{$v \in V_{\textnormal{minimals}}$}
+                \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL, \cdot)}$
+                \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose Maximal Nodes in $G$}
+                \State $V_{\textnormal{groups}} \gets V_{\textnormal{groups}} \cup G$
+            \EndFor
+            \State \Return $V_{\textnormal{groups}}$
+        \EndFunction
+        \Statex
+        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal existing superfaces of $V_{\textnormal{minimals}}$}
+            \State Choose $v_0 \in V_{\textnormal{minimals}}$
+            \State $\pred{isUb} \gets (\lambda f \to V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f})$
+            \State $\pred{isNotUb} \gets (\lambda f \to \textbf{not } \Call{isUb}{f})$
+            \State \Return \Call{FindNodesBFS}{$\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL, \cdot)$}
+        \EndFunction
+        \Statex
+        \Procedure{AddFace}{$\IL, V_{\textnormal{minimals}}$}
+            \State $V_{\textnormal{below}} \gets \Call{FindGroups}{\IL, V_{\textnormal{minimals}}}$
+            \State $V_{\textnormal{above}} \gets \Call{FindLUBs}{\IL, V_{\textnormal{minimals}}}$
+            \Statex
+            \State $\IL \gets \IL - \left\{ (a, b) \mid a \in V_{\textnormal{above}}, b \in V_{\textnormal{below}} \right\}$\Comment{Remove old edges}
+            \State $\IL \gets \IL + \left\{ V_{\textnormal{minimals}} \right\}$\Comment{Add new face}
+            \State $\IL \gets \IL + \left\{ (b, V_{\textnormal{minimals}}) \mid b \in V_{\textnormal{below}} \right\}$\Comment{Add new edges}
+        \EndProcedure
+    \end{algorithmic}
+    \caption{Adding faces to an incidence lattice}
+    \label{alg:addface}
+\end{algorithm}
 \begin{figure}[tb]
     \centering
     \begin{tikzpicture}[font=\scriptsize]
@@ -934,63 +1014,13 @@ To improve readability, code presented in this paper will not be pseudo code rat
     }
     \label{fig:addingfaces}
 \end{figure}
-\begin{algorithm}[tb]
-    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices which should be combined to a face and \pred{filter}, \pred{cont} and \pred{next} predicates mapping from nodes to boolean truth values.
-    \begin{algorithmic}[1]
-        \Function{FindNodesBFS}{$\IL, v_0, \pred{filter}, \pred{cont}, \pred{next}$}
-            \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
-            \State $V_{\textnormal{tovisit}} \gets ( v_0 )$
-            \State $V_{\textnormal{found}} \gets \left\{  \right\}$
+While constructing power diagrams, an empty incidence lattice has to be filled using the information generated by some convex hull algorithm.
+During this process, the lattice is usually \define{shallow} in the sense that it contains minimal nodes (the vertices) and some maximal nodes (the $d$-dimensional facets), but it does not contain $j$-faces for $1 \leq j < d$.
+Adding a face which is not minimal requires finding existing edges in the lattice which get cut when inserting the new face, an example of which can be seen in \cref{fig:addingfaces}.
 
-            \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
-                \State $(v, V_{\textnormal{tovisit}}) \gets V_{\textnormal{tovisit}}$ \Comment{Pop the first element of $V_{\textnormal{tovisit}}$}
-
-                \If{$\pred{cont}(v)$}
-                    \For{$n$ \textbf{in} $\pred{next}(\IL, v)$}
-                        \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
-                            \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
-                            \State $V_{\textnormal{tovisit}} \gets (V_{\textnormal{tovisit}}, n)$ \Comment{Append $n$ to $V_{\textnormal{tovisit}}$}
-                        \EndIf
-                    \EndFor
-                \EndIf
-
-                \If{$\pred{filter}(v)$}
-                    \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
-                \EndIf
-            \EndWhile
-            \State \Return $V_{\textnormal{found}}$
-        \EndFunction
-        \Statex
-        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal existing subfaces of $V_{\textnormal{minimals}}$}
-            \State $\pred{isGroup} \gets (\lambda f \to \Call{MinimalsOf}{$\IL, f$} \subseteq V_{\textnormal{minimals}})$
-            \State $V_{\textnormal{groups}} \gets \left\{  \right\}$
-            \For{$v \in V_{\textnormal{minimals}}$}
-                \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL)}$
-                \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose Maximal Nodes in $G$}
-                \State $V_{\textnormal{groups}} \gets V_{\textnormal{groups}} \cup G$
-            \EndFor
-            \State \Return $V_{\textnormal{groups}}$
-        \EndFunction
-        \Statex
-        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal existing superfaces of $V_{\textnormal{minimals}}$}
-            \State Choose $v_0 \in V_{\textnormal{minimals}}$
-            \State $\pred{isUb} \gets (\lambda f \to V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f})$
-            \State $\pred{isNotUb} \gets (\lambda f \to \textbf{not } \Call{isUb}{f})$
-            \State \Return \Call{FindNodesBFS}{$\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL)$}
-        \EndFunction
-        \Statex
-        \Procedure{AddFace}{$\IL, V_{\textnormal{minimals}}$}
-            \State $V_{\textnormal{below}} \gets \Call{FindGroups}{\IL, V_{\textnormal{minimals}}}$
-            \State $V_{\textnormal{above}} \gets \Call{FindLUBs}{\IL, V_{\textnormal{minimals}}}$
-            \Statex
-            \State $\IL \gets \IL - \left\{ (a, b) \mid a \in V_{\textnormal{above}}, b \in V_{\textnormal{below}} \right\}$\Comment{Remove old edges}
-            \State $\IL \gets \IL + \left\{ V_{\textnormal{minimals}} \right\}$\Comment{Add new face}
-            \State $\IL \gets \IL + \left\{ (b, V_{\textnormal{minimals}}) \mid b \in V_{\textnormal{below}} \right\}$\Comment{Add new edges}
-        \EndProcedure
-    \end{algorithmic}
-    \caption{Adding faces to an incidence lattice}
-    \label{alg:addface}
-\end{algorithm}
+Every face which is not minimal needs to (not necessarily directly) be connected to the minimal faces it contains, which in non-degenerate cases are vertices.
+Similarly, it also needs to be connected to faces of higher dimensionality it is a subset of.
+Since the lattice should not contain transitive edges, it is necessary to identify the maximal subfaces (which in the code are called \define{groups}) and minimal superfaces (which in the code are called \define{lubs}) which are exactly the edges whose edges have to be modified.
 
 \subsection{Dual Algorithm}
 \label{sub:impl_dual_algorithm}
