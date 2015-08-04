@@ -898,7 +898,7 @@ Their convex hull does not produce the face however, since it contains rays.
         \EndFunction
         \Statex
         \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal existing subfaces of $V_{\textnormal{minimals}}$}
-            \State $\pred{isGroup} \gets (\lambda f \to \Call{MinimalsOf}{$\IL, f$} \subseteq V_{\textnormal{minimals}})$
+            \State $\pred{isGroup} \gets (\lambda f \to \Call{MinimalsOf}{\IL, f} \subseteq V_{\textnormal{minimals}})$
             \State $V_{\textnormal{groups}} \gets \left\{  \right\}$
             \For{$v \in V_{\textnormal{minimals}}$}
                 \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL, \cdot)}$
@@ -1055,12 +1055,63 @@ Those do not have to be considered in later iterations.
 Quickhull is a variant of the Beneath-Beyond Algorithm described in \cite{grunbaum1963measures} and \cite{clarkson1989applications}.
 An alternative implementation of convex hulls in general dimensions can be found in the CGAL library \cite{cgal:eb-15a}.
 
+\begin{algorithm}[tbp]
+    Let $\IL$ be the incidence lattice of the convex hull of polar points.
+    \begin{algorithmic}[1]
+        \Procedure{RestrictToBottomHull}{$\IL$}
+            \State $V_{\textnormal{bottoms}} \gets \left\{  \right\}$
+            \For{$f$ \textbf{in} \Call{MaximalNodes}{$\IL$}}\Comment{$f$ is a dual facet}
+            \State $V_{\textnormal{minimals}} \gets \Call{MinimalsOf}{f}$\Comment{$V_{\textnormal{minimals}}$ contains dual vertices}
+                \State $n \gets \Call{OutwardsNormalToAffineSpace}{V_{\textnormal{minimals}}}$
+
+                \If{$n_{d+1} < 0$}\Comment{$n$ points downwards}
+                    \State $V_{\textnormal{bottoms}} \gets V_{\textnormal{bottoms}} \cup \left\{ f \right\}$
+                \EndIf
+            \EndFor
+            \For{$f$ \textbf{in} $\IL$}
+                \If{$\Call{MaximalsOf}{f} \cap V_{\textnormal{bottoms}} = \varnothing$}
+                    \State \Call{RemoveFace}{$\IL, f$}
+                \EndIf
+            \EndFor
+        \EndProcedure
+        \Statex
+        \Procedure{DualizeLattice}{$\IL$}
+            \For{$f$ \textbf{in} \Call{MaximalNodes}{$\IL$}}
+                \State Find the hyperplane $h$ containing $f$
+                \State Replace $f$ by $\Delta(h)$
+            \EndFor
+            \Statex\Comment{No replacement of other faces necessary}
+        \EndProcedure
+    \end{algorithmic}
+    \caption{Find $\IL_b$ and dualize it}
+    \label{alg:dual_lattice}
+\end{algorithm}
 After obtaining the shallow incidence lattice of the convex hull of the polar points, this lattice needs to be split into the top and bottom parts as described in \cref{alg:embedding}.
 Since only the bottom lattice is needed to construct the power diagram, all faces which are not contained in a bottom-facing facet are removed from the incidence lattice.
 To dualize the incidence lattice, the only non-trivial operation is to replace facets with polar points of hyperplanes containing the facet.
 Replacing $j$-faces by $(d-j)$-faces can be achieved by reversing all edges in the lattice or, equivalently, by interpreting minimal nodes as maximal ones and considering predecessors instead of successors.
 See \cref{alg:dual_lattice} for a more formal description of this part of the algorithm.
 
+\begin{algorithm}[tbp]
+    Let $\IL$ be the incidence lattice of a power diagram, let $f$ be an extremal $1$-face and $v$ a $0$-face with $v \subset f$.
+    \begin{algorithmic}[1]
+        \Function{FindDirectionOfExtremalEdge}{$\IL, f, v$}
+        \State $V_{\textnormal{edge}} \gets \Call{MinimalsOf}{f}$\Comment{$V_{\textnormal{edge}}$ contains primal spheres}
+            \State $V_{\textnormal{vertex}} \gets \Call{MinimalsOf}{v}$
+            \State Choose $s_{\textnormal{active}} \in V_{\textnormal{edge}}$
+            \State Choose $s_{\textnormal{inactive}} \in V_{\textnormal{vertex}} \setminus V_{\textnormal{edge}}$
+            \Statex
+            \State $d \gets \Call{NormalToAffineSpace}{V_{\textnormal{edge}}}$\Comment{Possible direction}
+            \State $t \gets v + d$\Comment{Test point}
+            \If{$\pow(t, s_{\textnormal{inactive}}) < \pow(t, s_{\textnormal{active}})$}
+                \State $d \gets (-1) \cdot d$
+            \EndIf
+            \State \Return $d$
+        \EndFunction
+    \end{algorithmic}
+    \caption{Find direction of extremal ray}
+    \label{alg:ridges}
+\end{algorithm}
 If the convex hull algorithm returned a shallow incidence lattice which, besides the vertices and facets, only contained ridges, the dualized lattice then only contains edges ($1$-faces) of the power diagram.
 To facilitate the output of these edges, an additional step of the algorithm is the calculation of their directions.
 For internal edges, the direction can be calculated as the difference of the two vertices which define the edge via their convex hull.
