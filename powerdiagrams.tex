@@ -898,7 +898,9 @@ Their convex hull does not produce the face however, since it contains rays.
         \EndFunction
         \Statex
         \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal existing subfaces of $V_{\textnormal{minimals}}$}
-            \State $\pred{isGroup} \gets (\lambda f \to \Call{MinimalsOf}{\IL, f} \subseteq V_{\textnormal{minimals}})$
+            \Function{isGroup}{$f$}
+                \State \Return $\Call{MinimalsOf}{\IL, f} \subseteq V_{\textnormal{minimals}}$
+            \EndFunction
             \State $V_{\textnormal{groups}} \gets \left\{  \right\}$
             \For{$v \in V_{\textnormal{minimals}}$}
                 \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL, \cdot)}$
@@ -909,9 +911,13 @@ Their convex hull does not produce the face however, since it contains rays.
         \EndFunction
         \Statex
         \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal existing superfaces of $V_{\textnormal{minimals}}$}
+            \Function{isUB}{$f$}
+                \State \Return $V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f}$
+            \EndFunction
+            \Function{isNotUb}{$f$}
+                \State \Return \textbf{not} \Call{isUB}{$f$}
+            \EndFunction
             \State Choose $v_0 \in V_{\textnormal{minimals}}$
-            \State $\pred{isUb} \gets (\lambda f \to V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f})$
-            \State $\pred{isNotUb} \gets (\lambda f \to \textbf{not } \Call{isUb}{f})$
             \State \Return \Call{FindNodesBFS}{$\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL, \cdot)$}
         \EndFunction
         \Statex
@@ -1025,7 +1031,6 @@ Since the lattice should not contain transitive edges, it is necessary to identi
 The algorithm to find those maximal and minimal relevant faces can be found in \cref{alg:addface}.
 Finding minimal nodes connected to a face and finding the relevant faces can all be achieved using breadth first search.
 The graph data structure therefore contains a generalized search which can be called using function parameters.
-Those function parameters are denote using lambda-notation in the pseudo-code, where $(\lambda x \to x^2)$ describes the function taking one parameter and returning its square.
 All these searches have a worst-case running time of $\Oh(n)$ with $n$ being the number of faces and therefore nodes in the graph.
 To speed up the program, the incidence lattices cache the minimal nodes, speeding up the $\pred{MinimalsOf}$-function to $\Oh(1)$.
 
