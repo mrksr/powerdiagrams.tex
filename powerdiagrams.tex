@@ -822,7 +822,7 @@ The different steps of the algorithm allow for a straightforward analysis of its
             \State \Return $\IL_b$
         \EndFunction
     \end{algorithmic}
-    \caption{$0$-faces of Power Diagrams}
+    \caption{Power Diagrams using Embedding in $d+1$ dimensions}
     \label{alg:embedding}
 \end{algorithm}
 
@@ -1034,6 +1034,43 @@ Since the implementation of the naive algorithm in \src{PowerDiagramNaive.cpp} f
 
 \subsection{Dual Algorithm}
 \label{sub:impl_dual_algorithm}
+The dual algorithm can be found in \src{PowerDiagramDual.cpp}.
+The main challenge in its implementation is the construction of the convex hull of the polar points, which are obtained by applying the functions $\Pi$ and $\Delta$ to the input spheres.
+Since the creation of a convex hull is a known geometrical problem, this implementation uses libraries to perform the task.
+
+While there exists a multitude of algorithms to construct convex hulls in both the two and three-dimensional cases, there are surprisingly few alternatives available for the general $d$-dimensional case.
+To make it possible to easily switch the algorithm used, the concrete convex hull algorithms are encapsulated and are required to implement a simple interface which takes a set of points and returns an incidence lattice.
+Since these lattices are of exponential size in general, the lattices returned are expected to be shallow and only contain vertices, facets and ridges ($(d-2)$-faces).
+
+This implementation uses the generalization of the quickhull algorithm for arbitrary dimensions, a description of which can be found in \cite{barber1996quickhull}.
+Quickhull assumes that the input is fully dimensional.
+It starts by creating a simplex from $d + 1$ points and then iteratively adds the remaining points to the convex hull.
+It does so by inspecting the facets of the current convex hull and finding all points in the upper halfspace of a hyperplane containing the facet with a normal vector which points to the outside of the convex hull.
+If a point is above a facet in this sense, the facet is called \define{visible} from this point.
+Out of the visible points for some facet the one with maximal distance to it gets chosen.
+It gets added to the convex hull by creating new simplices using horizontal ridges.
+A ridge is called \define{horizontal} for a point if it connects two facets out of which one is visible to the point and one is not.
+For well-behaved inputs, this operation should also add some of the points closer to the facet to the convex hull.
+Those do not have to be considered in later iterations.
+Quickhull is a variant of the Beneath-Beyond Algorithm described in \cite{grunbaum1963measures} and \cite{clarkson1989applications}.
+An alternative implementation of convex hulls in general dimensions can be found in the CGAL library \cite{cgal:eb-15a}.
+
+After obtaining the shallow incidence lattice of the convex hull of the polar points, this lattice needs to be split into the top and bottom parts as described in \cref{alg:embedding}.
+Since only the bottom lattice is needed to construct the power diagram, all faces which are not contained in a bottom-facing facet are removed from the incidence lattice.
+To dualize the incidence lattice, the only non-trivial operation is to replace facets with polar points of hyperplanes containing the facet.
+Replacing $j$-faces by $(d-j)$-faces can be achieved by reversing all edges in the lattice or, equivalently, by interpreting minimal nodes as maximal ones and considering predecessors instead of successors.
+See \cref{alg:dual_lattice} for a more formal description of this part of the algorithm.
+
+If the convex hull algorithm returned a shallow incidence lattice which, besides the vertices and facets, only contained ridges, the dualized lattice then only contains edges ($1$-faces) of the power diagram.
+To facilitate the output of these edges, an additional step of the algorithm is the calculation of their directions.
+For internal edges, the direction can be calculated as the difference of the two vertices which define the edge via their convex hull.
+For extremal edges, the direction must be contained in the chordales of all pairs of spheres defining the edge (i.e. the minimal nodes of the node representing the edge in the lattice).
+Assuming there is a $0$-face in the power diagram, the extremal edge is a ray starting from some vertex (see \cref{lem:zerofaces}).
+Since a vector orthogonal to all chordales could point both inwards and outwards, the correct direction can be established by testing the power of one point as described in \cref{alg:ridges}.
+
+\subsection{Interfaces}
+\label{sub:interfaces}
+\todo[inline]{I/O}
 
 \appendix
 \section{Building the Code}
