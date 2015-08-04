@@ -78,8 +78,8 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
 \cref{fig:voronoi} shows an example of a Voronoi diagram in $d = 2$ dimensions.
 While obtaining the hyperplanes which potentially separate the regions is easy, it must identified which of them actually exist, since not every region is a neighbour of every other region.
 It can be shown \cite{aurenhammer1991voronoi} that there exists a dual relationship between Voronoi diagrams in two dimensions and Delaunay triangulations.
-A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points are connected exactly if the smallest circle containing all three points does not contain any other point in $M$.
-Two regions in the Voronoi diagram then are neighbours exactly if there exists an edge in the Delaunay triangulation between their corresponding points.
+A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points are connected iff the smallest circle containing all three points does not contain any other point in $M$.
+Two regions in the Voronoi diagram then are neighbours iff there exists an edge in the Delaunay triangulation between their corresponding points.
 
 This gives rise to efficient algorithms for constructing the diagrams, since the triangulations can be obtained in $\Oh(n \log n)$ time by incrementally inserting points in an existing triangulation.
 This algorithm was first described by Green and Sibson \cite{green1978computing} and is optimal, since one can reduce the sorting problem to finding triangulations \cite{aurenhammer1991voronoi}.
@@ -247,13 +247,13 @@ Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} a
 A $j$-flat $f$ is a a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
 It is an affine subspace of $\R^d$ with dimensionality $j$ and is expressible as the affine hull of $j + 1$ linearly independent points in $f$.
 
-A set $P \subseteq R^d$ is called a \define{polyhedron} exactly if it is expressible as the intersection of a finite number of halfspaces.
+A set $P \subseteq R^d$ is called a \define{polyhedron} iff it is expressible as the intersection of a finite number of halfspaces.
 $P$ is a \define{$j$-polyhedron} if there is a $j$-flat, but no $(j-1)$-flat that contains $P$.
 The boundary of $P$ consists of a finite number of $i$-polyhedra with $0 \leq i < j \leq d$, which are called the \define{$i$-faces} of $P$.
 $0$-, $1-$ and $(j - 1)$-faces are called \define{vertex}, \define{edge} and \define{facet} respectively.
 $P$ is called a \define{polytope} if it is bounded and can then also be expressed as the \define{convex hull $\CH$} of its $0$-faces.
 
-Two $d$-polyhedra $P$ and $Q$ are called \define{(combinatorically) dual} if there is a bijection $\varphi$ from the $j$-faces of $P$ and the $(d-j-1)$-faces of $Q$ for $0 \leq j \leq d  -1$ such that $f \subseteq g$ for any two faces $f$ and $g$ of $P$ exactly if $\varphi(f) \supseteq \varphi(g)$.
+Two $d$-polyhedra $P$ and $Q$ are called \define{(combinatorically) dual} if there is a bijection $\varphi$ from the $j$-faces of $P$ and the $(d-j-1)$-faces of $Q$ for $0 \leq j \leq d  -1$ such that $f \subseteq g$ for any two faces $f$ and $g$ of $P$ iff $\varphi(f) \supseteq \varphi(g)$.
 
 A convex hull can be separated into the upper and lower part with respect to some vector $v \neq 0$.
 A facet of the convex hull with normal vector $n$ is part of the \define{lower convex hull $\CHb$} if $\scalar{n, v} < 0$ and part of the \define{upper convex hull $\CHt$} if $\scalar{n, v} > 0$.
@@ -336,11 +336,11 @@ To justify this approach, the following lemma shows that for power diagrams whic
 
 \begin{lemma}
     \label{lem:zerofaces}
-    Let $S \subset \R^d$ be a finite set of spheres.
+    Let $S \subset \R^d \times \R$ be a finite set of spheres.
     If any cell of $\PD(S)$ is bounded by a $0$-face, then every cell in $\PD(S)$ is bounded by a $0$-face.
 \end{lemma}
 \begin{proof}
-    Let $S \subset \R^d$ be a finite set of spheres $s_i = (z_i, r_i^2)$ with $\abs{S} \geq d+2$ and $s_1, \dots, s_d, s_{d+1}, s_{d+2} \in S$ such that (the cell of) $s_{d+1}$ shares a $0$-face with $s_1, \dots, s_d$ in $\PD(S)$.
+    Let $S \subset \R^d \times \R$ be a finite set of spheres $s_i = (z_i, r_i^2)$ with $\abs{S} \geq d+2$ and $s_1, \dots, s_d, s_{d+1}, s_{d+2} \in S$ such that (the cell of) $s_{d+1}$ shares a $0$-face with $s_1, \dots, s_d$ in $\PD(S)$.
     Since the chordales of $z_{d+1}$ with these sites intersect in a $0$-face, their $d$ normal vectors $\left\{  z_i - z_{d+1} \mid 1 \leq i \leq d\right\}$ must be linearly independent, or equivalently, $\dim(\aff(\left\{ z_1, z_2, \dots, z_{d+1} \right\})) = d$.
 
     Suppose that $z_{d+2}$ is not bounded by a $0$-face.
@@ -528,7 +528,7 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 \begin{lemma}
     \label{lem:relativepositions}
     Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
-    Then $p$ is above, in or below $h$ exactly if $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
+    Then $p$ is above, in or below $h$ iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
 \end{lemma}
 \begin{proof}
     Let $x,n \in \R^{d+1}$ and $h = \left\{ y \in \R^{d+1} \mid y_{d+1} = n_{[d]}^Ty_{[d]} + n_{d+1} \right\}$ a hyperplane in $\R^{d+1}$.
@@ -563,7 +563,7 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
     Also assume that $h_i \cup U \neq h_i$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
 
     \Cref{lem:pibijection} implies that there is a set $S = \left\{ s_1, \dots, s_n \right\}$ of spheres in $h_0$ such that $\Pi(s_i) = h_i$.
-    Using \cref{obs:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) exactly if $x \in \cell(s_i)$ is in $\PD(S)$.
+    Using \cref{obs:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) iff $x \in \cell(s_i)$ is in $\PD(S)$.
     This means that $\cell(s_i)$ is exactly the vertical projection of $f_i$ onto $h_0$ for all $1 \leq i \leq n$, giving that $\PD(S)$ is affinely equivalent to $P$.
 
     Conversely, given any set of spheres $S$ in $h_0$ a corresponding polyhedron can be constructed by intersecting the upper halfspaces of the hyperplanes in $\Pi(S)$.
@@ -733,7 +733,7 @@ Starting from the set of all existing $0$-faces together with the spheres which 
 
 Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorithm iterates over all groups of $d+1$ spheres and checks whether they define a $0$-face as described in \cref{alg:zerofaces}.
 \begin{algorithm}
-    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
+    Let $S = \left\{ s_1, \dots, s_n \right\}$ be a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
 
     \begin{algorithmic}[1]
         \Function{FindZeroFaces}{$S$}
@@ -797,7 +797,7 @@ To construct a power diagram, it is now enough to follow the path of \cref{sec:e
 A more formal description can be found in \cref{alg:embedding}.
 The different steps of the algorithm allow for a straightforward analysis of its running time.
 \begin{algorithm}[tb]
-    Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions.
+    Let $S = \left\{ s_1, \dots, s_n \right\}$ be a set of spheres in $d$ dimensions.
 
     \begin{algorithmic}[1]
         \Function{PowerDiagram}{$S$}
@@ -808,7 +808,7 @@ The different steps of the algorithm allow for a straightforward analysis of its
             \State $(\IL_b, \IL_t) \gets$ Split $\IL$ into top and bottom parts\Comment{$\IL_b$ represents $\CHb(P)$}
             \For{face $f$ \textbf{in} $\IL_b$}\Comment{Dualize $\IL_b$}
                 \If{$f$ \textbf{is a} facet}
-                    \State Find hyperplane $h$ containing $f$
+                    \State Find the hyperplane $h$ containing $f$
                     \State Replace $f$ by the polar point $\Delta(h)$
                 \Else
                     \State Replace $j$-face $f$ by a $(d-j)$-face\Comment{$0 \leq j < d$}
@@ -913,9 +913,9 @@ To improve readability, code presented in this paper will not be pseudo code rat
                 \draw[lattice edge, noend] (d2) to (d2345);
                 \draw[lattice edge, noend] (d3) to (d2345);
                 \draw[lattice edge, noend] (d4) to (d2345);
-                \draw[lattice edge, marked] (d12) to (d123);
-                \draw[lattice edge, marked] (d123) to (d1234);
-                \draw[lattice edge, marked] (d3) to (d123);
+                \draw[lattice edge, marked, tumgreen] (d12) to (d123);
+                \draw[lattice edge, marked, tumgreen] (d123) to (d1234);
+                \draw[lattice edge, marked, tumgreen] (d3) to (d123);
 
                 \draw
                 (d1) node[lattice, label={below:$1$}] {}
@@ -923,7 +923,7 @@ To improve readability, code presented in this paper will not be pseudo code rat
                 (d3) node[lattice, label={below:$3$}] {}
                 (d4) node[lattice, label={below:$4$}] {}
                 (d12) node[lattice, label={left:$\left\{ 1, 2 \right\}$}] {}
-                (d123) node[lattice, marked, label={left:$\left\{ 1, 2, 3 \right\}$}] {}
+                (d123) node[lattice, marked, tumgreen, label={left:$\left\{ 1, 2, 3 \right\}$}] {}
                 (d1234) node[lattice, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
             \end{tikzpicture}
         };
