@@ -935,32 +935,61 @@ To improve readability, code presented in this paper will not be pseudo code rat
     \label{fig:addingfaces}
 \end{figure}
 \begin{algorithm}[tb]
-\begin{algorithmic}[1]
-    \Function{findNodesBFS}{$\IL, v_0, \pred{filter}, \pred{cont}, \pred{next}$}
-    \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
-    \State $V_{\textnormal{tovisit}} \gets ( v_0 )$
-    \State $V_{\textnormal{found}} \gets \left\{  \right\}$
+    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices which should be combined to a face and \pred{filter}, \pred{cont} and \pred{next} predicates mapping from nodes to boolean truth values.
+    \begin{algorithmic}[1]
+        \Function{FindNodesBFS}{$\IL, v_0, \pred{filter}, \pred{cont}, \pred{next}$}
+            \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
+            \State $V_{\textnormal{tovisit}} \gets ( v_0 )$
+            \State $V_{\textnormal{found}} \gets \left\{  \right\}$
 
-    \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
-        \State $(v, V_{\textnormal{tovisit}}) \gets V_{\textnormal{tovisit}}$ \Comment{Pop the first element of $V_{\textnormal{tovisit}}$}
+            \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
+                \State $(v, V_{\textnormal{tovisit}}) \gets V_{\textnormal{tovisit}}$ \Comment{Pop the first element of $V_{\textnormal{tovisit}}$}
 
-        \If{$\pred{cont}(v)$}
-            \For{$n$ \textbf{in} $\pred{next}(\IL, v)$}
-                \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
-                    \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
-                    \State $V_{\textnormal{tovisit}} \gets (V_{\textnormal{tovisit}}, n)$ \Comment{Append $n$ to $V_{\textnormal{tovisit}}$}
+                \If{$\pred{cont}(v)$}
+                    \For{$n$ \textbf{in} $\pred{next}(\IL, v)$}
+                        \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
+                            \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
+                            \State $V_{\textnormal{tovisit}} \gets (V_{\textnormal{tovisit}}, n)$ \Comment{Append $n$ to $V_{\textnormal{tovisit}}$}
+                        \EndIf
+                    \EndFor
                 \EndIf
-            \EndFor
-        \EndIf
 
-        \If{$\pred{filter}(v)$}
-            \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
-        \EndIf
-    \EndWhile
-    \State \Return $V_{\textnormal{found}}$
-    \EndFunction
-\end{algorithmic}
-\caption{Hallo!}
+                \If{$\pred{filter}(v)$}
+                    \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
+                \EndIf
+            \EndWhile
+            \State \Return $V_{\textnormal{found}}$
+        \EndFunction
+        \Statex
+        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal existing subfaces of $V_{\textnormal{minimals}}$}
+            \State $\pred{isGroup} \gets (\lambda f \to \Call{MinimalsOf}{$\IL, f$} \subseteq V_{\textnormal{minimals}})$
+            \State $V_{\textnormal{groups}} \gets \left\{  \right\}$
+            \For{$v \in V_{\textnormal{minimals}}$}
+                \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL)}$
+                \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose Maximal Nodes in $G$}
+                \State $V_{\textnormal{groups}} \gets V_{\textnormal{groups}} \cup G$
+            \EndFor
+            \State \Return $V_{\textnormal{groups}}$
+        \EndFunction
+        \Statex
+        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal existing superfaces of $V_{\textnormal{minimals}}$}
+            \State Choose $v_0 \in V_{\textnormal{minimals}}$
+            \State $\pred{isUb} \gets (\lambda f \to V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f})$
+            \State $\pred{isNotUb} \gets (\lambda f \to \textbf{not } \Call{isUb}{f})$
+            \State \Return \Call{FindNodesBFS}{$\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL)$}
+        \EndFunction
+        \Statex
+        \Procedure{AddFace}{$\IL, V_{\textnormal{minimals}}$}
+            \State $V_{\textnormal{below}} \gets \Call{FindGroups}{\IL, V_{\textnormal{minimals}}}$
+            \State $V_{\textnormal{above}} \gets \Call{FindLUBs}{\IL, V_{\textnormal{minimals}}}$
+            \Statex
+            \State $\IL \gets \IL - \left\{ (a, b) \mid a \in V_{\textnormal{above}}, b \in V_{\textnormal{below}} \right\}$\Comment{Remove old edges}
+            \State $\IL \gets \IL + \left\{ V_{\textnormal{minimals}} \right\}$\Comment{Add new face}
+            \State $\IL \gets \IL + \left\{ (b, V_{\textnormal{minimals}}) \mid b \in V_{\textnormal{below}} \right\}$\Comment{Add new edges}
+        \EndProcedure
+    \end{algorithmic}
+    \caption{Adding faces to an incidence lattice}
+    \label{alg:addface}
 \end{algorithm}
 
 \subsection{Dual Algorithm}
