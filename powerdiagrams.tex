@@ -742,7 +742,7 @@ Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorit
             \State $\Ge \gets \binom{S}{d + 1}$\Comment{Find the set of all possible groups}
             \Statex
             \For{$G$ \textbf{in} $\Ge$}\Comment{Find $0$-faces}
-                \State \label{alg:0f:step31}$P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find intersection of all pairs of spheres in $G$}.
+                \State $P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find intersection of all pairs of spheres in $G$}.
                 \If{$P = \left\{ p \right\}$}\Comment{$P$ is a single point}
                     \State Choose $g \in G$
                     \If{$\forall o \in S \setminus G : \pow(p, o) > \pow(p, g)$}\Comment{$p$ is a $0$-face}
@@ -846,8 +846,8 @@ The implementation was written in \CC, making heavy use of features introduced b
 References for these features can be found in the newer editions of \cite{stroustrup1986c++} and \cite{stroustrup2014programming} and also in \cite{meyers2014effective}.
 To improve readability, code presented in this paper will be pseudo code rather than concrete \CC.
 
-\subsection{Incidence Lattice}
-\label{sub:impl_incidence_lattice}
+\subsection{Incidence Lattices}
+\label{sub:impl_incidence_lattices}
 The incidence lattices described in \cref{sub:incidence_lattices} and \cite{edelsbrunner1986constructing} can be used to represent the subset-relationships between different faces of a polyhedron.
 Since it was shown in \cref{thm:equivalentpolyhedron} that a power diagram in $d$ dimensions can be represented by a polyhedron in $(d+1)$ dimensions, incidence lattices can also be used to represent the cells of power diagrams via their shared boundaries.
 
@@ -1020,7 +1020,17 @@ Adding a face which is not minimal requires finding existing edges in the lattic
 
 Every face which is not minimal needs to (not necessarily directly) be connected to the minimal faces it contains, which in non-degenerate cases are vertices.
 Similarly, it also needs to be connected to faces of higher dimensionality it is a subset of.
-Since the lattice should not contain transitive edges, it is necessary to identify the maximal subfaces (which in the code are called \define{groups}) and minimal superfaces (which in the code are called \define{lubs}) which are exactly the edges whose edges have to be modified.
+Since the lattice should not contain transitive edges, it is necessary to identify the maximal subfaces (which in the code are called \define{groups}) and minimal superfaces (which in the code are called \define{lubs}) which are exactly the nodes whose edges have to be modified.
+
+The algorithm to find those maximal and minimal relevant faces can be found in \cref{alg:addface}.
+Finding minimal nodes connected to a face and finding the relevant faces can all be achieved using breadth first search.
+The graph data structure therefore contains a generalized search which can be called using function parameters.
+Those function parameters are denote using lambda-notation in the pseudo-code, where $(\lambda x \to x^2)$ describes the function taking one parameter and returning its square.
+All these searches have a worst-case running time of $\Oh(n)$ with $n$ being the number of faces and therefore nodes in the graph.
+To speed up the program, the incidence lattices cache the minimal nodes, speeding up the $\pred{MinimalsOf}$-function to $\Oh(1)$.
+
+This data structure forms the basis for both the naive algorithm and the efficient algorithm using the convex hull of polar points.
+Since the implementation of the naive algorithm in \src{PowerDiagramNaive.cpp} follows \cref{alg:zerofaces} rather directly, the following subsection will describe the implementation of the efficient algorithm.
 
 \subsection{Dual Algorithm}
 \label{sub:impl_dual_algorithm}
