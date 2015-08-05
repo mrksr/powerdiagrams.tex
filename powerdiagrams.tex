@@ -394,6 +394,7 @@ where it holds that
     &\Leftrightarrow\quad& x_{[d]} &\in s.
 \end{alignat}
 The intersection of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
+A visualization of this can be seen in \cref{fig:projection}.
 The following proofs that this mapping is an identification of the two concepts.
 \begin{lemma}
     \label{lem:pibijection}
@@ -426,6 +427,195 @@ The following proofs that this mapping is an identification of the two concepts.
 \end{proof}
 
 $\Pi(s)$ being the vertical projection of spheres to $U$ can also be used to compute the power of some point with respect to $s$.
+\begin{figure}[tb]
+    \centering
+    \begin{tikzpicture}[y=0.80pt, x=0.80pt, yscale=-1, xscale=1, inner sep=0pt, outer sep=0pt,font=\scriptsize]
+        \begin{scope}[cm={{1.25,0.0,0.0,-1.25,(0.0,900.0)}}]
+            % Paraboloid
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (212.3294,187.2000) .. controls (217.7922,182.5589)
+            and (223.8195,178.2548) .. (230.5412,175.7647) .. controls (231.5379,175.3954)
+            and (232.5544,175.0498) .. (233.5853,174.7367)(193.2706,208.8000) .. controls
+            (198.8151,200.9605) and (205.0117,193.4170) ..
+            (212.3294,187.2000)(174.6353,242.2588) .. controls (180.4241,230.8806) and
+            (185.8991,219.2228) .. (193.2706,208.8000)(156.4235,281.6471) .. controls
+            (156.4235,281.6471) and (168.0762,255.1511) ..
+            (174.6353,242.2588)(164.3483,275.2060) .. controls (161.8204,276.4974) and
+            (159.0551,277.8363) .. (157.4186,280.1557)(180.3289,269.8319) .. controls
+            (174.8947,271.2652) and (169.3529,272.6491) ..
+            (164.3483,275.2060)(207.3404,264.5994) .. controls (198.2234,265.5950) and
+            (189.1968,267.4930) .. (180.3289,269.8319)(239.7259,263.7508) .. controls
+            (228.9290,263.5424) and (218.0754,263.4271) ..
+            (207.3404,264.5994)(276.7783,266.1550) .. controls (264.4832,264.7351) and
+            (252.1003,263.9897) .. (239.7259,263.7508)(281.1507,266.6821) .. controls
+            (279.6937,266.4945) and (278.2348,266.3232) ..
+            (276.7783,266.1550)(312.1336,300.9447) .. controls (313.2517,300.4916) and
+            (314.4024,300.0643) .. (315.5357,299.6013)(306.1939,302.7831) .. controls
+            (308.1905,302.2270) and (310.2127,301.7230) ..
+            (312.1336,300.9447)(288.5162,307.1672) .. controls (294.4892,306.0805) and
+            (300.3454,304.4120) .. (306.1939,302.7831)(258.3935,310.7027) .. controls
+            (268.4813,310.0354) and (278.5696,308.9768) ..
+            (288.5162,307.1672)(239.8673,310.9856) .. controls (246.0434,310.9786) and
+            (252.2308,311.1104) .. (258.3935,310.7027)(229.1192,310.8441) .. controls
+            (232.6966,311.0448) and (236.2843,310.9893) ..
+            (239.8673,310.9856)(210.5930,309.0057) .. controls (216.7204,309.9886) and
+            (222.9233,310.4966) .. (229.1192,310.8441)(183.2987,302.9245) .. controls
+            (192.1948,305.7073) and (201.3895,307.5292) ..
+            (210.5930,309.0057)(164.9139,295.4292) .. controls (170.4128,299.1116) and
+            (176.9825,300.9488) .. (183.2987,302.9245)(155.7216,286.0954) .. controls
+            (156.8008,290.3267) and (161.2856,292.9994) ..
+            (164.9139,295.4292)(157.4186,280.1557) .. controls (156.2316,281.8382) and
+            (155.2127,284.1001) .. (155.7216,286.0954);
+            \path[draw=black,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+            cap=butt,miter limit=4.00,even odd rule]
+            (317.7882,269.3647) .. controls (319.1527,272.7162) and (320.6622,277.9665) ..
+            (322.6234,282.0431) .. controls (323.2589,283.3640) and (323.8203,284.8492) ..
+            (324.2378,285.9741)(303.8118,237.6000) .. controls (309.0582,247.9097) and
+            (313.4263,258.6508) .. (317.7882,269.3647)(290.2588,214.3059) .. controls
+            (295.1243,221.8575) and (299.7375,229.5937) ..
+            (303.8118,237.6000)(278.8235,198.2118) .. controls (283.1211,203.1958) and
+            (286.6945,208.7737) .. (290.2588,214.3059)(257.2235,177.4588) .. controls
+            (265.5326,182.9953) and (272.3033,190.6500) ..
+            (278.8235,198.2118)(247.4823,173.2235) .. controls (250.9929,173.6847) and
+            (254.2770,175.4955) .. (257.2235,177.4588)(233.5852,174.7367) .. controls
+            (238.0924,173.3674) and (242.8746,172.6182) ..
+            (247.4823,173.2235)(292.9003,268.8420) .. controls (289.0511,267.8226) and
+            (285.1075,267.1918) .. (281.1507,266.6821)(310.5779,275.3474) .. controls
+            (304.9808,272.5020) and (298.9699,270.4494) ..
+            (292.9003,268.8420)(321.1845,282.4185) .. controls (318.2566,279.3390) and
+            (314.3658,277.2730) .. (310.5779,275.3474)(325.5686,289.7724) .. controls
+            (325.6261,286.9191) and (323.1510,284.4866) ..
+            (321.1845,282.4185)(321.3260,296.2777) .. controls (323.2528,294.5487) and
+            (325.5164,292.3607) .. (325.5686,289.7724)(315.5357,299.6013) .. controls
+            (317.6307,298.7453) and (319.6662,297.7671) .. (321.3260,296.2777);
+
+            % Intersection lines
+            \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule, very thick] (197.6000,66.9429) -- (285.6023,132.8780);
+            \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule, very thick] (226.1189,145.9960) -- (344.9903,252.5778);
+
+            % x1-x2-plane
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (197.6000,66.9429) -- (104.1428,66.9429);
+            \path[draw=black, arrows={-latex}, line join=miter,line cap=butt,miter
+            limit=4.00,even odd rule]
+            (141.6447,131.7009) -- (104.1428,66.9429) node[label={left:$x_1$}]{};
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (141.6447,131.7009) -- (191.7098,132.1344);
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (191.7098,132.1344) -- (222.6000,132.4019);
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (367.4572,133.4572) -- (388.2572,66.9429);
+            \path[draw=back,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (388.2572,66.9429) -- (197.6000,66.9429);
+            \path[draw=black, arrows={-latex},line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (285.6023,132.8780) -- (367.4572,133.4572) node[label={[label distance=.25em]right:$x_2$}]{};
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (285.6023,132.8780) -- (257.7040,132.6452);
+
+            % x_3 axis
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,nonzero
+            rule] (243.1343,101.4316) -- (242.9474,122.0474);
+            \path[draw=black,dash pattern=on 4.99pt off 1.25pt on 0.62pt off 1.25pt,line
+            join=miter,line cap=butt,miter limit=4.00,nonzero rule]
+            (242.9474,122.0473) -- (241.6657,263.4320);
+            \path[draw=black,line join=miter,line cap=round,miter limit=4.00,nonzero
+            rule,arrows={-latex}] (241.7391,263.9741) -- (241.6638,343.1295) node[label={above:$x_3$}]{};
+
+            % Circles and projections
+            \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+            cap=butt,miter limit=4.00,nonzero rule] (195.3017,251.2001)
+            -- (195.1641,107.6757);
+            \path[draw=tumblue,line join=miter,line cap=round,miter limit=4.00,nonzero
+            rule] (195.1641,107.6757) .. controls (195.1476,111.7672)
+            and (204.0558,115.0899) .. (215.0665,115.0991) .. controls (226.0773,115.1081)
+            and (235.0258,111.8006) .. (235.0589,107.7091)(215.1265,100.2745) .. controls
+            (204.1157,100.2715) and (195.1806,103.5841) ..
+            (195.1641,107.6757)(235.0589,107.6868) .. controls (235.0589,103.5952) and
+            (226.1373,100.2775) .. (215.1265,100.2745);
+            \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+            cap=butt,miter limit=4.00,nonzero rule] (235.0589,107.7091)
+            -- (234.7192,219.6998);
+            \path[draw=tumblue,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+            cap=butt,miter limit=4.00,nonzero rule] (234.7192,219.6998)
+            .. controls (234.6688,226.2075) and (232.1661,234.6090) ..
+            (227.3925,242.8227)(227.3925,242.8227) .. controls (218.9241,257.3941) and
+            (206.5155,265.8568) .. (199.6773,261.7247) .. controls (196.7369,259.9479) and
+            (195.3057,256.1317) .. (195.3017,251.2001)(195.3017,251.2001) .. controls
+            (195.2967,244.6625) and (197.8020,236.1647) .. (202.6291,227.8589) .. controls
+            (211.0976,213.2875) and (223.5061,204.8248) .. (230.3443,208.9569) .. controls
+            (233.3279,210.7598) and (234.7582,214.6625) .. (234.7192,219.6998);
+            \path[draw=tumblue,line join=miter,line cap=round,miter limit=4.00,nonzero
+            rule] (248.1028,85.9943) .. controls (248.0787,92.5248) and
+            (262.1904,97.6159) .. (278.2344,97.6306) .. controls (294.2784,97.6453) and
+            (305.8324,92.6134) .. (305.8806,86.0830)(305.8807,86.0298) .. controls
+            (305.8807,79.4994) and (294.3658,73.9743) .. (278.3218,73.9694) .. controls
+            (262.2777,73.9645) and (248.1250,79.4557) .. (248.1009,85.9861);
+            \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+            cap=round,miter limit=4.00,nonzero rule] (305.8806,86.0830)
+            -- (306.0247,258.7995);
+            \path[draw=tumblue,line join=miter,line cap=round,miter limit=4.00,nonzero
+            rule] (306.0247,258.7996) .. controls (306.0083,260.9460)
+            and (305.5164,262.6311) .. (304.5000,263.7327) .. controls (299.3848,269.2763)
+            and (282.9214,257.9415) .. (267.7278,238.4156) .. controls (255.8617,223.1661)
+            and (248.2796,207.4304) .. (247.9645,198.6286)(306.0247,258.7996) .. controls
+            (306.0909,250.1440) and (298.4260,233.9864) .. (286.2515,218.3406) .. controls
+            (271.0580,198.8148) and (254.5946,187.4799) .. (249.4794,193.0235) .. controls
+            (248.3591,194.2376) and (247.8761,196.1605) .. (247.9645,198.6286);
+            \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+            cap=butt,miter limit=4.00,nonzero rule] (247.9645,198.6286)
+            -- (248.1028,85.9943);
+
+            % Pi planes
+            \path[draw=black,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+            cap=butt,miter limit=4.00,even odd rule]
+            (287.8263,176.7128) -- (238.0560,129.0592)(337.5966,224.3664) --
+            (287.8263,176.7128)(344.9903,252.5778) -- (337.5966,224.3664);
+            \path[draw=black,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+            cap=butt,miter limit=4.00,even odd rule]
+            (313.3697,297.4475) -- (344.9903,252.5778);
+            \path[draw=black,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+            cap=butt,miter limit=4.00,even odd rule]
+            (169.1107,253.7846) -- (238.0256,310.9489);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (257.7040,132.6452) -- (243.7156,121.0292);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (226.1189,145.9960) -- (157.1446,243.8588);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (157.1446,243.8588) -- (169.1107,253.7846);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (238.0256,310.9489) -- (279.5673,345.4074);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (238.0560,129.0592) -- (235.5971,132.5480);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (235.5971,132.5480) -- (226.1189,145.9960);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (279.5673,345.4074) -- (313.3697,297.4475);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (344.9903,252.5778) -- (366.1384,222.5777);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (366.1384,222.5777) -- (257.7040,132.6452);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (243.7156,121.0292) -- (238.0560,129.0592);
+            \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+            rule] (216.1980,108.1336) --
+            (249.8835,236.6651)(371.2821,352.8979) --
+            (344.9903,252.5778)(249.8835,236.6651) --
+            (371.2821,352.8979)(238.0560,129.0592) -- (216.1980,108.1336);
+
+            \node at (200, 95) {$s_1$};
+            \node at (250, 75) {$s_2$};
+            \node at (375, 285) {$\Pi(s_1)$};
+            \node at (165, 200) {$\Pi(s_2)$};
+            \node at (165, 305) {$U$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{The projection function $\Pi$ maps the spheres $s_1$ and $s_2$ to hyperplanes in $d+1$ dimensions.
+    The intersection of the projections $\Pi(s_i)$ and the paraboloid $U$ are the orthogonal projections of $s_i$ onto the paraboloid.
+    The orthogonal projection of the intersection of the two hyperplanes is the chordale of the two spheres.}
+    \label{fig:projection}
+\end{figure}
 \begin{observation}
     \label{obs:distances}
     Let $s = (z, r^2)$ be a sphere in $h_0$ and $x \in h_0$.
@@ -445,7 +635,6 @@ This directly implies the following lemma, which connects chordales to the newly
     Let $s$ and $t$ be non-cocentric spheres in $h_0$.
     Then $\chor(s, t)$ is the vertical projection of $\Pi(s) \cap \Pi(t)$ onto $h_0$.
 \end{lemma}
-\missingfigure{3D Figure showing the Paraboloid and Planes intersecting.}
 
 \subsection{Duality of points and hyperplanes}
 \label{sub:duality_of_points_and_hyperplanes}
