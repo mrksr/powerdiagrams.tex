@@ -10,18 +10,32 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-    \blindtext
+    Power diagrams are a generalization of Voronoi diagrams which define a cell decomposition of an euclidean space based on a finite set of spheres, assigning every sphere a polyhedral cell for which it minimizes the power function of the points with respect to all spheres.
+    This paper gives a formal definition of power diagrams together with some fundamental results.
+    It continues with the investigation of the close relationship of power diagrams in $d$ dimensions to arrangements of hyperplanes in $d+1$ dimensions and the convex hull of points obtained via their polarization.
+    This connection gives rise to an efficient algorithm for computing the power diagram, for which both a formal definition and the description of an implementation is presented.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
-\todo[inline]{Was sind Powerdiagramme}
-\todo[inline]{Wozu Powerdiagramme}
-\todo[inline]{Inzidenzstruktur}
-\todo[inline]{Clustering für hochdimensionale Daten}
-\todo[inline]{Metalllegierungen}
-\todo[inline]{http://www-m9.ma.tum.de/Allgemeines/AndreasAlpersPublications}
-\todo[inline]{Hinweis auf Aurenhammer}
+Power diagrams define a cell decomposition of the euclidean space $\R^d$ into cells defined by a finite set of spheres.
+A point is part of the cell of some sphere if there is no other sphere for which the power of the point with respect to the sphere is lower.
+They can be understood as a generalization of Voronoi diagrams with a different metric of distance to the sphere centers.
+
+Power diagrams can be used to solve geometric problems like finding the volume of a union of spheres \cite{avis1988computing} or to solve packing problems with spheres \cite{toth2013lagerungen}.
+Applications outside of geometry include the solution of weighted balanced clusterings \cite{brieden2012optimal} and the description of the internal structure of polycrytals \cite{alpers2015generalized}.
+
+A way of describing a power diagram is via the adjacency structure of the different cells.
+Two cells are adjacent if they share points which have the same minimizing power with respect to both spheres.
+In this case, they share a polyhedron which is incident to both cells.
+This interdisciplinary project is concerned with describing power diagrams formally, describing algorithms to construct such incidence structures and implementing them in \CC.
+The theoretical parts of this paper are guided by a paper by Aurenhammer \cite{aurenhammer1987power} which is be complemented with some additional proofs.
+
+The first section of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
+Using a transformation from spheres to hyperplanes, the next section shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
+This equivalency is used to also show a dual relationship between power diagrams and the convex hull of a set of points, which can be exploited to give an efficient algorithm to construct incidence structures of power diagrams.
+With incidence lattices, a data structure to store these structures is introduced.
+In the last section of the paper, the implementation of both the algorithms and the data structure accompanying this paper is described.
 
 \section{Power Diagrams}
 \label{sec:powerdiagrams}
