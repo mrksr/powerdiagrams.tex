@@ -733,7 +733,8 @@ The naive algorithm presented here uses the observations of the lemma to find th
 Starting from the set of all existing $0$-faces together with the spheres which define them, it is possible to reconstruct all internal faces inductively.
 
 Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorithm iterates over all groups of $d+1$ spheres and checks whether they define a $0$-face as described in \cref{alg:zerofaces}.
-\begin{algorithm}
+Operations of the incidence lattice are denoted using addition and subtraction of nodes or edges to simplify the notation.
+\begin{algorithm}[tb]
     Let $S = \left\{ s_1, \dots, s_n \right\}$ be a set of spheres in $d$ dimensions with $n > d$ and at least $d+1$ spheres linearly independent.
 
     \begin{algorithmic}[1]
@@ -754,8 +755,8 @@ Since all $0$-faces must be defined by at least $d+1$ spheres, the naive algorit
             \For{$0$-faces $p_1, p_2 \in \IL$}\Comment{Merge overdefined $0$-faces}
                 \If{$p_1 = p_2$}\Comment{Merge $p_1$ and $p_2$}
                     \State Find $G_2$ corresponding to $p_2$
-                    \State $\IL \gets \IL - p_2$\Comment{Remove $p_2$ from $\IL$}
-                    \State $\IL \gets \IL + \left\{ (g_2, p_1) \mid g_2 \in G_2 \right\}$
+                    \State $\IL \gets \IL{} - \left\{ p_2 \right\}$\Comment{Remove $p_2$ from $\IL$}
+                    \State $\IL \gets \IL + \left\{ (g_2, p_1) \mid g_2 \in G_2 \right\}$\Comment{Add edges from $G_2$ to $p_1$}
                 \EndIf
             \EndFor
             \State \Return $\IL$
@@ -841,10 +842,11 @@ Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithm
 
 \section{Implementation}
 \label{sec:implementation}
-In the following, an implementation of the data structure and algorithms described in \cref{sec:constructing_power_diagrams} will be described.
-The implementation was written in \CC, making heavy use of features introduced by the \CC11 standard which introduces a more functional and generic style into the language.
+In addition to the theoretical description of the data structure and algorithms presented in \cref{sec:constructing_power_diagrams}, they were also implemented as part of this project.
+The implementation is written in \CC, making heavy use of features in the \CCe standard which introduces a more functional and generic style to the language.
 References for these features can be found in the newer editions of \cite{stroustrup1986c++} and \cite{stroustrup2014programming} and also in \cite{meyers2014effective}.
 To improve readability, code presented in this paper will be pseudo code rather than concrete \CC.
+This section first introduces a concrete implementation of incidence lattices based on directed graphs and then describes how it can be used to implement the dual algorithm.
 
 \subsection{Incidence Lattices}
 \label{sub:impl_incidence_lattices}
@@ -853,15 +855,15 @@ Since it was shown in \cref{thm:equivalentpolyhedron} that a power diagram in $d
 
 According to \cref{def:incidencelattice}, incidence lattices are graphs where every face is a vertex and two faces are connected with a directed edge if the source is a true subset of the sink with no faces in between.
 To avoid confusion with $0$-faces, the vertices of these graphs will in the following be called \define{nodes}.
-The implementation of these lattices in \src{IncidenceLattice.hpp} therefore uses the graph datastructure in \src{BidirectionalGraph.hpp} as an internal representation.
+The implementation of these lattices in \src{IncidenceLattice.hpp} uses the graph data structure in \src{BidirectionalGraph.hpp} as an internal representation.
 These graphs represent finite graphs with directed edges.
-They are called bidirectional since it is possible to traverse the edges in both direction in $\Oh(1)$ time.
+They are called bidirectional since it is possible to traverse the edges in both directions in $\Oh(1)$ time.
 
 To achieve this, every node is identified by some unique (numeric) identifier.
 The graph is then modelled as a hash-map from those identifiers to entries which are tuples of two incidence lists and some value the node holds, which in the case of incidence lattices is used to store normal vectors or points.
 Element access of the graph map has an amortized cost of $\Oh(1)$.
-The incidence lists for every node hold both all successors and predecessors, allowing for the direct access.
-Maintaining both incidence lists increases the work necessary to insert and delete both nodes and edges, but both operations remain at $\Oh(1)$ cost.
+The incidence lists for every node hold both all successors and predecessors, allowing for the direct access in either direction.
+Maintaining both incidence lists increases the work necessary to insert and delete both nodes and edges in terms of constant factors, but no in terms of complexity, which is in $\Oh(n)$ with $n$ the number of nodes for deletion of nodes and in $\Oh(1)$ for the other operations.
 
 Incidence lattices are Hasse diagrams and therefore directed acyclic graphs.
 A node in such a graph is called \define{minimal} if it does not have a predecessor and \define{maximal} if it does not have a successor.
@@ -873,44 +875,44 @@ Their convex hull does not produce the face however, since it contains rays.
 \begin{algorithm}[tbp]
     Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices which should be combined to a face and \pred{filter}, \pred{cont} and \pred{next} predicates mapping from nodes to boolean truth values.
     \begin{algorithmic}[1]
-        \Function{FindNodesBFS}{$\IL, v_0, \pred{filter}, \pred{cont}, \pred{next}$}
+        \Function{FindNodesBFS}{$v_0, \pred{filter}, \pred{continue}, \pred{nextNodes}$}
             \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
-            \State $V_{\textnormal{tovisit}} \gets ( v_0 )$
+            \State $V_{\textnormal{tovisit}} \gets$ Queue containing only $v_0$
             \State $V_{\textnormal{found}} \gets \left\{  \right\}$
 
             \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
-                \State $(v, V_{\textnormal{tovisit}}) \gets V_{\textnormal{tovisit}}$ \Comment{Pop the first element of $V_{\textnormal{tovisit}}$}
+                \State $v \gets$ Pop the first element of $V_{\textnormal{tovisit}}$
 
-                \If{$\pred{cont}(v)$}
-                    \For{$n$ \textbf{in} $\pred{next}(\IL, v)$}
+                \If{$\Call{continue}{v}$}
+                    \For{$n$ \textbf{in} $\Call{nextNodes}{v}$}
                         \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
                             \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
-                            \State $V_{\textnormal{tovisit}} \gets (V_{\textnormal{tovisit}}, n)$ \Comment{Append $n$ to $V_{\textnormal{tovisit}}$}
+                            \State Append $n$ to $V_{\textnormal{tovisit}}$
                         \EndIf
                     \EndFor
                 \EndIf
 
-                \If{$\pred{filter}(v)$}
+                \If{$\Call{filter}{v}$}
                     \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
                 \EndIf
             \EndWhile
             \State \Return $V_{\textnormal{found}}$
         \EndFunction
         \Statex
-        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal existing subfaces of $V_{\textnormal{minimals}}$}
+        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal subfaces of $V_{\textnormal{minimals}}$}
             \Function{isGroup}{$f$}
                 \State \Return $\Call{MinimalsOf}{\IL, f} \subseteq V_{\textnormal{minimals}}$
             \EndFunction
-            \State $V_{\textnormal{groups}} \gets \left\{  \right\}$
+            \State $\Ge \gets \left\{  \right\}$
             \For{$v \in V_{\textnormal{minimals}}$}
                 \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL, \cdot)}$
                 \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose Maximal Nodes in $G$}
-                \State $V_{\textnormal{groups}} \gets V_{\textnormal{groups}} \cup G$
+                \State $\Ge \gets \Ge \cup G$
             \EndFor
-            \State \Return $V_{\textnormal{groups}}$
+            \State \Return $\Ge$
         \EndFunction
         \Statex
-        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal existing superfaces of $V_{\textnormal{minimals}}$}
+        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal superfaces of $V_{\textnormal{minimals}}$}
             \Function{isUB}{$f$}
                 \State \Return $V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f}$
             \EndFunction
@@ -1015,24 +1017,25 @@ Their convex hull does not produce the face however, since it contains rays.
         };
     \end{tikzpicture}
     \caption{The left figure shows part of an incidence lattice in the process of being filled before the insertion of the new face $\left\{ 1,2,3 \right\}$. To identifiy the red dashed edges which need to be bisected by the new face, lower and upper boundaries have to be found.
-        The face $\left\{ 1, 2 \right\}$ is a largest subset of the new face and therefore all outgoing edges have to be replaced.
-        The face $\left\{ 1, 2, 3, 4 \right\}$ is a (smallest) superset of the new face and therefore, the new face has to point to it.
+        The face $\left\{ 1, 2 \right\}$ is a largest subset of the new face and therefore an outgoing edge needs to be replaced.
+        The face $\left\{ 1, 2, 3, 4 \right\}$ is a smallest superset of the new face and therefore, the new face has to point to it.
     }
     \label{fig:addingfaces}
 \end{figure}
 While constructing power diagrams, an empty incidence lattice has to be filled using the information generated by some convex hull algorithm.
-During this process, the lattice is usually \define{shallow} in the sense that it contains minimal nodes (the vertices) and some maximal nodes (the $d$-dimensional facets), but it does not contain $j$-faces for $1 \leq j < d$.
+During this process, the lattice is usually \define{shallow} in the sense that it contains minimal nodes (the vertices) and maximal nodes (the $d$-dimensional facets), but it does not yet contain all $j$-faces for $1 \leq j < d$.
 Adding a face which is not minimal requires finding existing edges in the lattice which get cut when inserting the new face, an example of which can be seen in \cref{fig:addingfaces}.
 
 Every face which is not minimal needs to (not necessarily directly) be connected to the minimal faces it contains, which in non-degenerate cases are vertices.
 Similarly, it also needs to be connected to faces of higher dimensionality it is a subset of.
 Since the lattice should not contain transitive edges, it is necessary to identify the maximal subfaces (which in the code are called \define{groups}) and minimal superfaces (which in the code are called \define{lubs}) which are exactly the nodes whose edges have to be modified.
 
-The algorithm to find those maximal and minimal relevant faces can be found in \cref{alg:addface}.
+The algorithm for finding those maximal and minimal relevant faces can be seen in \cref{alg:addface}.
 Finding minimal nodes connected to a face and finding the relevant faces can all be achieved using breadth first search.
 The graph data structure therefore contains a generalized search which can be called using function parameters.
-All these searches have a worst-case running time of $\Oh(n)$ with $n$ being the number of faces and therefore nodes in the graph.
-To speed up the program, the incidence lattices cache the minimal nodes, speeding up the $\pred{MinimalsOf}$-function to $\Oh(1)$.
+All these searches have a worst-case running time of $\Oh(n^2)$ with $n$ being the number of faces and therefore nodes in the graph.
+To speed up the program, the incidence lattices cache the minimal nodes of every node they contain, speeding up the $\pred{MinimalsOf}$-function to $\Oh(1)$.
+This is possible since it is not necessary to remove faces besides the restriction operations.
 
 This data structure forms the basis for both the naive algorithm and the efficient algorithm using the convex hull of polar points.
 Since the implementation of the naive algorithm in \src{PowerDiagramNaive.cpp} follows \cref{alg:zerofaces} rather directly, the following subsection will describe the implementation of the efficient algorithm.
@@ -1047,13 +1050,13 @@ While there exists a multitude of algorithms to construct convex hulls in both t
 To make it possible to easily switch the algorithm used, the concrete convex hull algorithms are encapsulated and are required to implement a simple interface which takes a set of points and returns an incidence lattice.
 Since these lattices are of exponential size in general, the lattices returned are expected to be shallow and only contain vertices, facets and ridges ($(d-2)$-faces).
 
-This implementation uses the generalization of the quickhull algorithm for arbitrary dimensions, a description of which can be found in \cite{barber1996quickhull}.
+This implementation uses the generalization of the quickhull algorithm for arbitrary dimensions, a description of which can be found in \cite{barber1996quickhull} and an interface to which is implemented in \src{ConvexHullQhull.cpp}.
 Quickhull assumes that the input is fully dimensional.
 It starts by creating a simplex from $d + 1$ points and then iteratively adds the remaining points to the convex hull.
 It does so by inspecting the facets of the current convex hull and finding all points in the upper halfspace of a hyperplane containing the facet with a normal vector which points to the outside of the convex hull.
 If a point is above a facet in this sense, the facet is called \define{visible} from this point.
 Out of the visible points for some facet the one with maximal distance to it gets chosen.
-It gets added to the convex hull by creating new simplices using horizontal ridges.
+It is added to the convex hull by creating new simplices using horizontal ridges.
 A ridge is called \define{horizontal} for a point if it connects two facets out of which one is visible to the point and one is not.
 For well-behaved inputs, this operation should also add some of the points closer to the facet to the convex hull.
 Those do not have to be considered in later iterations.
@@ -1114,7 +1117,7 @@ See \cref{alg:dual_lattice} for a more formal description of this part of the al
             \State \Return $d$
         \EndFunction
     \end{algorithmic}
-    \caption{Find direction of extremal ray}
+    \caption{Find direction of an extremal ray}
     \label{alg:ridges}
 \end{algorithm}
 If the convex hull algorithm returned a shallow incidence lattice which, besides the vertices and facets, only contained ridges, the dualized lattice then only contains edges ($1$-faces) of the power diagram.
@@ -1124,9 +1127,21 @@ For extremal edges, the direction must be contained in the chordales of all pair
 Assuming there is a $0$-face in the power diagram, the extremal edge is a ray starting from some vertex (see \cref{lem:zerofaces}).
 Since a vector orthogonal to all chordales could point both inwards and outwards, the correct direction can be established by testing the power of one point as described in \cref{alg:ridges}.
 
-\subsection{Interfaces}
-\label{sub:interfaces}
-\todo[inline]{I/O}
+Adding the directions of edges is the last step in constructing a (shallow) incidence lattice describing the power diagram.
+This lattice can be used to extract information about the power diagram like finding spheres whose cells are non-empty or identifying adjacency relationships between spheres.
+\Cref{sec:running_the_code} describes how the implementation can be used to generate output which can be transformed to a tikz-picture like \cref{fig:garage} or \cref{fig:emptycells}.
+
+\section{Conclusion}
+\label{sec:conclusion}
+This paper introduced power diagrams which are an generalization of Voronoi diagrams.
+This generalization adds the notion of a real weight to every site of the diagram and introduces a new distance function, the power of a point with respect to a site, which also gives rise to a geometric interpretation which identifies the site centers and weights with spheres.
+The power diagram of a set of spheres is then a collection of polyhedral cells where each cell generated by a sphere which minimizes the power function for every point in the cell.
+
+After introducing some general properties of power diagrams, the main focus of the project lies on the affine equivalency of power diagrams in $d$ dimensions and polyhedra in $d+1$ dimensions which can be described as the intersection of half spaces which point upwards in $x_{d+1}$ direction.
+Using a polarity function which maps these polyhedra to combinatorically dual ones, a dual relationship between power diagrams and convex hulls in $d+1$ dimensions can be established.
+
+This relationship can be used to derive an efficient algorithm to construct power diagrams whose main geometric operation is the construction of a convex hull.
+After describing this algorithm formally, this paper introduces a data structure which can be used to represent polyhedra and therefore power diagrams and lastly presents a concrete implementation of the results.
 
 \appendix
 \section{Building the Code}
