@@ -12,6 +12,7 @@
 \begin{abstract}
     \blindtext
 \end{abstract}
+\clearpage
 \tableofcontents
 
 \section{Introduction}
@@ -22,6 +23,7 @@
 \todo[inline]{Clustering für hochdimensionale Daten}
 \todo[inline]{Metalllegierungen}
 \todo[inline]{http://www-m9.ma.tum.de/Allgemeines/AndreasAlpersPublications}
+\todo[inline]{Hinweis auf Aurenhammer}
 
 \section{Power Diagrams}
 \label{sec:powerdiagrams}
@@ -164,7 +166,7 @@ While other possible combinations of distance and weight have also been investig
         \caption{Equality of powers of two spheres}
         \label{sfig:chordal}
     \end{subfigure}
-    \caption{\Cref{def:power} has a nice geometric interpretation for points $x$ lying outside of the sphere $s=(p, r)$. The power $\pow(x, s) = \dist(x, p)^2 - r^2$ can be interpreted as the length of a tangent of point $p$ to the sphere $s$. When comparing the powers of two non-intersecting spheres $s_1, s_2$, the set of points $x$ for which $\pow(x, s_1) = \pow(x, s_2)$ is a hyperplane perpendicular to the line connecting the two centers but not necessarily its bisector.}
+    \caption{\Cref{def:power} has a geometric interpretation for points $x$ lying outside of the sphere $s=(p, r)$. The power $\pow(x, s) = \dist(x, p)^2 - r^2$ can be interpreted as the length of a tangent of point $p$ to the sphere $s$. When comparing the powers of two non-intersecting spheres $s_1, s_2$, the set of points $x$ for which $\pow(x, s_1) = \pow(x, s_2)$ is a hyperplane perpendicular to the line connecting the two centers but not necessarily its bisector.}
     \label{fig:power}
 \end{figure}
 
@@ -809,7 +811,6 @@ After the following definition, an important result about the size of these latt
         E &\coloneqq \left\{ (f_1, f_2) \in F^2 \middle| f_1 \subsetneq f_2 \wedge \nexists f_3 \in F : f_1 \subsetneq f_3 \subsetneq f_2 \right\} \subseteq F^2.
     \end{align}
 \end{definition}
-
 The minimal vertices of an incidence lattices are the faces of lowest dimension in the polyhedron, while the single maximal node is the polyhedron itself.
 
 \Cref{lem:deltainvolutory} implies that a dual polyhedron obtained using the polarity function $\Delta$ has a very similar combinatorical structure compared to the original polyhedron.
