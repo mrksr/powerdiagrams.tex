@@ -696,7 +696,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
 \begin{proof}
     Let $F = f + X \subset \R^{d+1} \in \F$ be some flat with $f \in \R^{d+1}$, $\dim(X) = j$ for $0 \leq j \leq d$ and let
     \begin{align}
-        X^\bot = \left\{ n \in \R^{d+1} \mid \forall x \in X. \scalar{n, x} = 0 \right\}
+        X^\bot = \left\{ n \in \R^{d+1} \mid \forall x \in X : \scalar{n, x} = 0 \right\}
     \end{align}
     be the set of all vectors orthogonal to $X$ for which $\dim(X^\bot) = d - j + 1$.
     Then all hyperplanes containing $F$ have a normal vector which is in $X^\bot$.
@@ -838,7 +838,7 @@ After the following definition, an important result about the size of these latt
     \end{align}
     with the set of edges $E$ given by
     \begin{align}
-        E &\coloneqq \left\{ (f_1, f_2) \in F^2 \middle| f_1 \subsetneq f_2 \wedge \nexists f_3 \in F : f_1 \subsetneq f_3 \subsetneq f_2 \right\} \subseteq F^2.
+        E &\coloneqq \left\{ (f_1, f_2) \in F^2 \middle| f_1 \subsetneq f_2 \wedge \nexists f_3 \in F : f_1 \subsetneq f_3 \subsetneq f_2 \right\}.
     \end{align}
 \end{definition}
 The minimal vertices of an incidence lattice are the faces of lowest dimension in the polyhedron, while the single maximal node is the polyhedron itself.
