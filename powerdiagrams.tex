@@ -1348,7 +1348,7 @@ Since a vector orthogonal to all chordales could point both inwards and outwards
 
 Adding the directions of edges is the last step in constructing a (shallow) incidence lattice describing the power diagram.
 This lattice can be used to extract information about the power diagram like finding spheres whose cells are non-empty or identifying adjacency relationships between spheres.
-\Cref{sec:running_the_code} describes how the implementation can be used to generate output which can be transformed to a tikz-picture like \cref{fig:garage} or \cref{fig:emptycells}.
+\Cref{sec:running_the_program} describes how the implementation can be used to generate output which can be transformed to a tikz-picture like \cref{fig:garage} or \cref{fig:emptycells}.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -1368,6 +1368,7 @@ After describing this algorithm formally, this paper introduces a data structure
 The implementation presented in \cref{sec:implementation} is written in \CC making use of features introduced into the language in the \CCe standard.
 These features have been part of all major \CC compilers for some time.
 Usage of the standard should therefore not pose problems for the build process on reasonably new systems.
+The build process has been tested with GCC and clang on Linux and MSVC on Windows.
 
 The code depends on libraries for the processing of command line parameters, for linear algebra and for the calculation of convex hulls.
 \begin{description}
@@ -1420,8 +1421,69 @@ $ make clean
 
 \subsection{Windows}
 \label{sub:windows}
-\blindtext
-\blindtext
+Since Windows does not support Makefiles by default, the build process has to be completed manually.
+After installing CMake, the easiest way to use it on Windows is to use the \var{cmake-gui} program, which offers a graphical interface.
+The general structure of the build remains the same.
+If the bundled libraries should be built, CMake has to be invoked twice, once for the libraries and once for the program itself.
+
+The most common compiler on Windows is the MSVC compiler by Microsoft, which is usually installed alongside Visual Studio.
+Both the libraries and the program can be built in both 32 and 64 bit and while untested, using alternative compilers should be possible.
+It is important to either build both parts with the same generator and to either build both with debug information or both parts without it.
+While it is possible to choose in Visual Studio in which mode to build the program, the choice has to be made in CMake in case of the libraries.
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.9\linewidth]{cmake_1.png}
+    \caption{The \src{third-party} directory contains a CMake script which downloads and builds the libraries needed by the \var{powerdiagram} executable.
+    Choose \src{.deps} as the destination folder to ensure that the second step will automatically find the dependencies.}
+    \label{fig:cmake_1}
+\end{figure}
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.45\linewidth]{cmake_2.png}
+    \caption{After clicking the \enquote{Configure}-button, CMake prompts the user to choose a generator or toolchain.
+    Visual Studio and MSVC are the most common toolchain on Windows.
+    Both 32 and 64 bit builds are possible, but both libraries and the final program have to be built using the same generator.}
+    \label{fig:cmake_2}
+\end{figure}
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.9\linewidth]{cmake_3.png}
+    \caption{To change the build type of the libraries from the default debug build to an optimized release build, add the according entry after the \enquote{Configure} step.}
+    \label{fig:cmake_3}
+\end{figure}
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.9\linewidth]{cmake_4.png}
+    \caption{To build the program executable, CMake has to be run again with the top level directory as the source folder.}
+    \label{fig:cmake_4}
+\end{figure}
+
+To create a build on Windows, start with opening \var{cmake-gui} and creating the build files for the libraries.
+\Cref{fig:cmake_1} shows the correct path to ensure that the later step will automatically find the dependencies.
+The source CMake files can be found in \src{third-party}, while the binaries should be built into the folder \src{.deps} (including the period).
+
+After choosing the folders, click the \enquote{Configure}-button and choose the desired generator as shown in \cref{fig:cmake_2}.
+CMake checks whether the compiler works correctly and searches for correct paths.
+By default, the libraries will be built with debug informaion.
+If this is not desired (e.g. for an optimized build), change the \var{CMAKE\_BUILD\_TYPE} variable as shown in \cref{fig:cmake_3}.
+
+After pressing the \enquote{Generate}-button, \src{.deps} should contain a Visual Studio solution file.
+Open the solution with Visual Studio and start a build process, ignoring the build type options.
+Visual Studio will download the source files and compile the libraries, installing them into the \src{.deps} folder.
+This concludes the first step.
+
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=0.9\linewidth]{cmake_5.png}
+    \caption{The Visual Studio solution created by CMake for the program can be used to build the code in both debug and release mode.
+    CMake found the correct paths for all libraries and configured Visual Studio accordingly.
+    The solution explorer shows the \var{powerdiagram} executable which contains the source files which can be edited and debugged as usual.}
+    \label{fig:cmake_4}
+\end{figure}
+Open a new \var{cmake-gui} and prepare the second step as shown in \cref{fig:cmake_4}.
+The destination folder which will contain the final executable can be chosen freely.
+After clicking \enquote{Configure} again, choose the same generator as before and click \enquote{Generate} --- changing the \var{CMAKE\_BUILD\_TYPE} here has no effect.
+After this, the destination directory contains a Visual Studio solution which can be used to build the final program.
 
 \section{Running the Program}
 \label{sec:running_the_program}
@@ -1449,9 +1511,11 @@ For a complete help, use options --help or --helpfull.
     \label{lst:help}
 \end{listing}
 
-This section will show how to use the program to create a visualization of a two-dimensional power diagrams in the \LaTeX-package tikz with \cref{fig:garage} as an example.
-The first step is to define the sphere centers and radii.
-They are defined in two different text files where each line defines a site and different entries of the vectors of the sphere centers are separated with commata, examples of which can be found in the \src{examples} folder.
+This section shows how to use the program to create a visualization of a two-dimensional power diagram in the \LaTeX-package tikz with \cref{fig:garage} as an example.
+The first step is to choose the sphere centers and radii.
+They are defined in two different text files where each line defines a site.
+While the file defining the radii contains one number per line, the different entries of the vectors of the sphere centers are separated with commas, examples of which can be found in the \src{examples} folder.
+A $d$ dimensional input must contain at least $(d+1)$ linearly independent sphere centers.
 The files corresponding to \cref{fig:garage} are called \src{garage\_sites.csv} for the centers and \src{garage\_gamma.csv} for the radii.
 
 \begin{listing}[tb]
@@ -1462,7 +1526,6 @@ $ util/tikz.py /tmp/intermdt
 # Using the Makefile
 $ make TIKZ_OUT=1 garage
     \end{minted}
-    $ % fix highlighting
     \caption{To create a tikz picture from sphere centers and radii defined in text files, the \var{./powerdiagram -draw} parameter can be used.
         If the program is invoked with this parameter, it outputs a easily parseable format describing vertices and edges of a power diagram, which gets saved to a temporary file.
         This output is then parsed by a Python script which in turn creates a tikz picture.
@@ -1506,8 +1569,7 @@ The file \src{util/tikz.py} contains a Python-script which converts this interme
 The commands that need to be executed can be found in \cref{lst:createtikz} with the intermediate output of the \CC program described in \cref{lst:intermediate}.
 There is also a template in \src{util/template.tex} which can be used to quickly compile the output of the script files into a standalone image.
 
-
-\nocite{*}
+\clearpage
 \bibliographystyle{alpha}
 \bibliography{powerdiagrams}
 \end{document}
