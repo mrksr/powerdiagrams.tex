@@ -14,7 +14,7 @@
     Power diagrams are a generalization of Voronoi diagrams which define a cell decomposition of an euclidean space based on a finite set of spheres, assigning every sphere a polyhedral cell for which it minimizes the power function of the points with respect to all spheres.
     This paper gives a formal definition of power diagrams together with some fundamental results.
     It continues with the investigation of the close relationship of power diagrams in $d$ dimensions to arrangements of hyperplanes in $d+1$ dimensions and the convex hull of points obtained via their polarization.
-    This connection gives rise to an efficient algorithm for computing the power diagram, for which both a formal definition and the description of an implementation is presented.
+    This connection gives rise to an efficient algorithm for computing power diagrams, for which both a formal definition and the description of an implementation is presented.
 \end{abstract}
 \vfill
 
@@ -34,13 +34,13 @@ A way of describing a power diagram is via the adjacency structure of the differ
 Two cells are adjacent if they share points which have the same minimizing power with respect to both spheres.
 In this case, they share a polyhedron which is incident to both cells.
 This interdisciplinary project is concerned with describing power diagrams formally, describing algorithms to construct such incidence structures and implementing them in \CC.
-The theoretical parts of this paper are guided by a paper by Aurenhammer \cite{aurenhammer1987power} which is be complemented with some additional proofs.
+The theoretical parts of this project are guided by a paper by Aurenhammer \cite{aurenhammer1987power} which is be complemented with some additional proofs.
 
 The first section of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
 Using a transformation from spheres to hyperplanes, the next section shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
 This equivalency is used to also show a dual relationship between power diagrams and the convex hull of a set of points, which can be exploited to give an efficient algorithm to construct incidence structures of power diagrams.
-With incidence lattices, a data structure to store these structures is introduced.
-In the last section of the paper, the implementation of both the algorithms and the data structure accompanying this paper is described.
+With incidence lattices, a data structure to store them is introduced.
+In the last section of the paper, the implementation of both the algorithms and the incidence lattices accompanying this paper is described.
 
 \section{Power Diagrams}
 \label{sec:powerdiagrams}
@@ -110,7 +110,7 @@ After introducing some geometric notation, some fundamental results about power 
 
 \subsection{Definition of Power Diagrams}
 \label{sub:definition_of_power_diagrams}
-There are multiple possible modifications of Voronoi diagrams, a few of which are decribed in \cite{aurenhammer1987power}.
+There are multiple possible modifications of Voronoi diagrams, a few of which are described in \cite{aurenhammer1987power}.
 To obtain \define{power diagrams}, each point $p \in M$ is assigned a \define{weight} $w(p)$, where a larger weight results in a larger cell.
 While the distance function to be minimized in Voronoi diagrams for points $x \in \R^d$ in a cell is $\dist(x, p)$, power diagrams use the function $\dist(x, p)^2 - w(p)$.
 While other possible combinations of distance and weight have also been investigated \cite{aurenhammer1987power}, this definition has a connection to the power of circles around the points $p \in M$.
@@ -261,7 +261,7 @@ The following will repeat some notations of \cite{aurenhammer1987power}.
 
 Let $n \in \R^d$ with $n \neq 0$ and let $b \in \R$.
 Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^+ = \left\{ x \in \R^d \mid n^T x \geq b \right\}$ is an \define{(closed) upper halfspace} in $\R^d$.
-A \define{$j$-flat} $f$ is a a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
+A \define{$j$-flat} $f$ is a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
 It is an affine subspace of $\R^d$ with dimensionality $j$ and is expressible as the affine hull of $j + 1$ linearly independent points in $f$.
 
 A set $P \subseteq R^d$ is called a \define{polyhedron} iff it is expressible as the intersection of a finite number of halfspaces.
@@ -278,7 +278,7 @@ Facets with normal vector orthogonal to $v$ are not attributed to either group.
 Any other face is in the lower or upper convex hull if it is contained in a facet which is in $\CHb$ or $\CHt$ respectively.
 
 A \define{cell decomposition $C$} of $\R^d$ is a finite family of polyhedra for which every face of a polyhedron in $C$ is itself a member of $C$ and for which a non-empty intersection of any two members of $C$ is a face of each of them, together with $\bigcup_{f \in C} f = \R^d$.
-Fully dimensional polyhedra, or $d$-faces, of $C$ are called \define{cells}.
+Full-dimensional polyhedra, or $d$-faces, of $C$ are called \define{cells}.
 $C$ and a $(d+1)$-polyhedron $P$ are called \define{affinely equivalent} if there exists a central or parallel projection $\varphi$ such that for every face $f \in C$, $f = \varphi(g)$ holds for some face $g$ of $P$.
 
 These notations can now be used to describe power diagrams in an algebraic way and to show that they define a cell decomposition.
@@ -661,7 +661,7 @@ This directly implies the following lemma, which connects chordales to the newly
 
 \begin{lemma}
     \label{lem:verticalprojection}
-    Let $s$ and $t$ be non-cocentric spheres in $h_0$.
+    Let $s$ and $t$ be non-concentric spheres in $h_0$.
     Then $\chor(s, t)$ is the vertical projection of $\Pi(s) \cap \Pi(t)$ onto $h_0$.
 \end{lemma}
 
@@ -932,7 +932,7 @@ Together with \cref{thm:equivalentpolyhedron} it follows that the incidence latt
 \Cref{fig:incidencelattice} shows an example of this relationship.
 A square defined by four vertices can be interpreted as a degenerated lower convex hull in three dimensions. It is then dual to a Voronoi diagram in two dimensions whose incidence structure is described by the same incidence lattice with reverted edges.
 
-Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by Bronsted \cite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressable as intersections of upwards pointing halfspaces).
+Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by Bronsted \cite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressible as intersections of upwards pointing halfspaces).
 
 \begin{lemma}
     \label{lem:latticesexponential}
@@ -945,7 +945,7 @@ To lessen the impact of higher dimensions somewhat, the implementation presented
 \subsection{Naive Algorithm}
 \label{sub:naive_algorithm}
 For any power diagram which contains a cell bounded by a $0$-face, every cell is bounded by a $0$-face, as stated by \cref{lem:zerofaces}.
-The proof of the lemma yields that the existance of a $0$-face in a power diagram is guaranteed if there are at least $d+1$ linearly independent spheres, which also is a necessary condition.
+The proof of the lemma yields that the existence of a $0$-face in a power diagram is guaranteed if there are at least $d+1$ linearly independent spheres, which also is a necessary condition.
 
 Faces are called internal faces of a power diagram if they can be expressed as the convex hull of $0$-faces, i.e.~if they are polytopal.
 The naive algorithm presented here uses these observations to find all $0$-faces.
@@ -984,7 +984,7 @@ Operations of the incidence lattice are denoted using addition and subtraction o
     \caption{Naive approach to find $0$-faces of Power Diagrams}
     \label{alg:zerofaces}
 \end{algorithm}
-To analyze the running time, the different steps are analyzed seperately and lead to a bound derived from the combinatorical structure of $\Ge$.
+To analyze the running time, the different steps are analyzed separately and lead to a bound derived from the combinatorical structure of $\Ge$.
 \begin{theorem}
     Let $S = \left\{ s_1, \dots, s_n \right\}$ a set of spheres in $d$ dimensions with $n > d$ and at least $d + 1$ spheres linearly independent.
     \Cref{alg:zerofaces} then finds the $0$-faces of $\PD(S)$ in $\Oh(\binom{n}{d + 1} \cdot \max(d^3, n))$ time.
@@ -1004,8 +1004,8 @@ Since this naive algorithm is not applicable in practice due to its running time
 \subsection{Dual Algorithm}
 \label{sub:dual_algorithm}
 According to \cref{thm:equivalentconvexhull}, an incidence lattice which is equivalent to the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions can be obtained using the lower part of a certain convex hull in $\R^{d+1}$.
-\cite{seidel1981convex} describs an optimal algorithm to obtain convex hulls in even dimensions, while \cite{preparata1977convex} describes one which is optimal for $d \in \left\{ 2, 3 \right\}$.
-The implementation to this paper uses the quickhull algorithm described in \cite{barber1996quickhull}.
+\cite{seidel1981convex} describes an optimal algorithm to obtain convex hulls in even dimensions, while \cite{preparata1977convex} describes one which is optimal for $d \in \left\{ 2, 3 \right\}$.
+The implementation to this paper uses the QuickHull algorithm described in \cite{barber1996quickhull}.
 Their results can be summarized as follows.
 \begin{lemma}
     \label{lem:convexhulls}
@@ -1061,7 +1061,7 @@ Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithm
 
 \section{Implementation}
 \label{sec:implementation}
-In addition to the theoretical description of the data structure and algorithms presented in \cref{sec:constructing_power_diagrams}, they were also implemented as part of this project.
+In addition to their theoretical description, the data structure and algorithms presented in \cref{sec:constructing_power_diagrams} were also implemented as part of this project.
 The implementation is written in \CC, making heavy use of features in the \CCe standard which introduces a more functional and generic style to the language.
 References for these features can be found in the newer editions of \cite{stroustrup1986c++} and \cite{stroustrup2014programming} and also in \cite{meyers2014effective}.
 To improve readability, code presented in this paper will be pseudo code rather than concrete \CC.
@@ -1070,7 +1070,7 @@ This section first introduces a concrete implementation of incidence lattices ba
 \subsection{Incidence Lattices}
 \label{sub:impl_incidence_lattices}
 The incidence lattices described in \cref{sub:incidence_lattices} and \cite{edelsbrunner1986constructing} can be used to represent the subset-relationships between different faces of a polyhedron.
-Since it was shown in \cref{thm:equivalentpolyhedron} that a power diagram in $d$ dimensions can be represented by a polyhedron in $(d+1)$ dimensions, incidence lattices can also be used to represent the cells of power diagrams via their shared boundaries.
+Since it was shown in \cref{thm:equivalentpolyhedron} that a power diagram in $d$ dimensions can be represented by a polyhedron in $d+1$ dimensions, incidence lattices can also be used to represent the cells of power diagrams via their shared boundaries.
 
 According to \cref{def:incidencelattice}, incidence lattices are graphs where every face is a vertex and two faces are connected with a directed edge if the source is a true subset of the sink with no faces in between.
 To avoid confusion with $0$-faces, the vertices of these graphs will in the following be called \define{nodes}.
@@ -1079,15 +1079,19 @@ These graphs represent finite graphs with directed edges.
 They are called bidirectional since it is possible to traverse the edges in both directions in $\Oh(1)$ time.
 
 To achieve this, every node is identified by some unique (numeric) identifier.
-The graph is then modelled as a hash-map from those identifiers to entries which are tuples of two incidence lists and some value the node holds, which in the case of incidence lattices is used to store normal vectors or points.
+The graph is then modelled as a hash-map from those identifiers to entries.
+The entries are tuples of two incidence lists and some value the node holds.
+In the case of incidence lattices this value is used to store normal vectors or points.
 Element access of the graph map has an amortized cost of $\Oh(1)$.
-The incidence lists for every node hold both all successors and predecessors, allowing for the direct access in either direction.
-Maintaining both incidence lists increases the work necessary to insert and delete both nodes and edges in terms of constant factors, but no in terms of complexity, which is in $\Oh(n)$ with $n$ the number of nodes for deletion of nodes and in $\Oh(1)$ for the other operations.
+The incidence lists for every node hold both all successors and predecessors, allowing the direct access in either direction.
+Maintaining both incidence lists increases the work necessary to insert and delete both nodes and edges in terms of constant factors, but not in terms of complexity.
+With $n$ being the number of nodes, deletion of a node is in $\Oh(n)$ and the other operations are in $\Oh(1)$.
 
 Incidence lattices are Hasse diagrams and therefore directed acyclic graphs.
 A node in such a graph is called \define{minimal} if it does not have a predecessor and \define{maximal} if it does not have a successor.
 Internal faces in the incidence lattice can be described as the convex hull of their vertices.
-Since there are no non-empty faces which are true subsets of vertices, finding the vertices which define such a face translates to finding the minimal nodes in the graph which are connected to the face.
+Since there are no non-empty faces which are true subsets of vertices, they are the minimal nodes of an incidence lattice.
+Finding the vertices which define internal faces therefore translates to finding the minimal nodes in the graph which are connected to the face.
 For extremal faces, the minimal nodes connected to it also represent all adjacent vertices.
 Their convex hull does not produce the face however, since it contains rays.
 
@@ -1235,7 +1239,7 @@ Their convex hull does not produce the face however, since it contains rays.
             \end{tikzpicture}
         };
     \end{tikzpicture}
-    \caption{The left figure shows part of an incidence lattice in the process of being filled before the insertion of the new face $\left\{ 1,2,3 \right\}$. To identifiy the red dashed edges which need to be bisected by the new face, lower and upper boundaries have to be found.
+    \caption{The left figure shows part of an incidence lattice in the process of being filled before the insertion of the new face $\left\{ 1,2,3 \right\}$. To identify the red dashed edges which need to be bisected by the new face, lower and upper boundaries have to be found.
         The face $\left\{ 1, 2 \right\}$ is a largest subset of the new face and therefore an outgoing edge needs to be replaced.
         The face $\left\{ 1, 2, 3, 4 \right\}$ is a smallest superset of the new face and therefore, the new face has to point to it.
     }
@@ -1246,18 +1250,18 @@ During this process, the lattice is usually \define{shallow} in the sense that i
 Adding a face which is not minimal requires finding existing edges in the lattice which get cut when inserting the new face, an example of which can be seen in \cref{fig:addingfaces}.
 
 Every face which is not minimal needs to (not necessarily directly) be connected to the minimal faces it contains, which in non-degenerate cases are vertices.
-Similarly, it also needs to be connected to faces of higher dimensionality it is a subset of.
-Since the lattice should not contain transitive edges, it is necessary to identify the maximal subfaces (which in the code are called \define{groups}) and minimal superfaces (which in the code are called \define{lubs}) which are exactly the nodes whose edges have to be modified.
+Similarly, it also needs to be connected to faces of higher dimensionality which it is a subset of.
+Since the lattice should not contain transitive edges, it is necessary to identify the maximal subfaces (which are called \define{groups} in the code) and minimal superfaces (which are called \define{lubs} in the code) which are exactly the nodes whose edges have to be modified.
 
 The algorithm for finding those maximal and minimal relevant faces can be seen in \cref{alg:addface}.
 Finding minimal nodes connected to a face and finding the relevant faces can all be achieved using breadth first search.
 The graph data structure therefore contains a generalized search which can be called using function parameters.
 All these searches have a worst-case running time of $\Oh(n^2)$ with $n$ being the number of faces and therefore nodes in the graph.
-To speed up the program, the incidence lattices cache the minimal nodes of every node they contain, speeding up the $\pred{MinimalsOf}$-function to $\Oh(1)$.
+To speed up the program, the incidence lattices cache the minimal nodes of every node they contain, making the $\pred{MinimalsOf}$-function an $\Oh(1)$ operation.
 This is possible since it is not necessary to remove faces besides the restriction operations.
 
 This data structure forms the basis for both the naive algorithm and the efficient algorithm using the convex hull of polar points.
-Since the implementation of the naive algorithm in \src{PowerDiagramNaive.cpp} follows \cref{alg:zerofaces} rather directly, the following subsection will describe the implementation of the efficient algorithm.
+Since the implementation of the naive algorithm in \src{PowerDiagramNaive.cpp} follows \cref{alg:zerofaces} rather directly, the following subsection will only describe the implementation of the efficient algorithm.
 
 \subsection{Dual Algorithm}
 \label{sub:impl_dual_algorithm}
@@ -1267,10 +1271,10 @@ Since the creation of a convex hull is a known geometrical problem, this impleme
 
 While there exists a multitude of algorithms to construct convex hulls in both the two and three-dimensional cases, there are surprisingly few alternatives available for the general $d$-dimensional case.
 To make it possible to easily switch the algorithm used, the concrete convex hull algorithms are encapsulated and are required to implement a simple interface which takes a set of points and returns an incidence lattice.
-Since these lattices are of exponential size in general, the lattices returned are expected to be shallow and only contain vertices, facets and ridges ($(d-2)$-faces).
+Since these lattices are of exponential size in general, the algorithms are expected to return a shallow version which only contain vertices, facets and ridges ($(d-2)$-faces).
 
-This implementation uses the generalization of the quickhull algorithm for arbitrary dimensions, a description of which can be found in \cite{barber1996quickhull} and an interface to which is implemented in \src{ConvexHullQhull.cpp}.
-Quickhull assumes that the input is fully dimensional.
+This implementation uses the generalization of the QuickHull algorithm for arbitrary dimensions, a description of which can be found in \cite{barber1996quickhull} and an interface to which is implemented in \src{ConvexHullQhull.cpp}.
+QuickHull assumes that the input is full-dimensional.
 It starts by creating a simplex from $d + 1$ points and then iteratively adds the remaining points to the convex hull.
 It does so by inspecting the facets of the current convex hull and finding all points in the upper halfspace of a hyperplane containing the facet with a normal vector which points to the outside of the convex hull.
 If a point is above a facet in this sense, the facet is called \define{visible} from this point.
@@ -1279,7 +1283,7 @@ It is added to the convex hull by creating new simplices using horizontal ridges
 A ridge is called \define{horizontal} for a point if it connects two facets out of which one is visible to the point and one is not.
 For well-behaved inputs, this operation should also add some of the points closer to the facet to the convex hull.
 Those do not have to be considered in later iterations.
-Quickhull is a variant of the Beneath-Beyond Algorithm described in \cite{grunbaum1963measures} and \cite{clarkson1989applications}.
+QuickHull is therefore a variant of the Beneath-Beyond Algorithm described in \cite{grunbaum1963measures} and \cite{clarkson1989applications}.
 An alternative implementation of convex hulls in general dimensions can be found in the CGAL library \cite{cgal:eb-15a}.
 
 \begin{algorithm}[tbp]
@@ -1339,7 +1343,7 @@ See \cref{alg:dual_lattice} for a more formal description of this part of the al
     \caption{Find direction of an extremal ray}
     \label{alg:ridges}
 \end{algorithm}
-If the convex hull algorithm returned a shallow incidence lattice which, besides the vertices and facets, only contained ridges, the dualized lattice then only contains edges ($1$-faces) of the power diagram.
+If the convex hull algorithm returns a shallow incidence lattice which, besides the vertices and facets, only contains ridges, the dualized lattice only contains edges ($1$-faces) of the power diagram.
 To facilitate the output of these edges, an additional step of the algorithm is the calculation of their directions.
 For internal edges, the direction can be calculated as the difference of the two vertices which define the edge via their convex hull.
 For extremal edges, the direction must be contained in the chordales of all pairs of spheres defining the edge (i.e. the minimal nodes of the node representing the edge in the lattice).
@@ -1352,15 +1356,17 @@ This lattice can be used to extract information about the power diagram like fin
 
 \section{Conclusion}
 \label{sec:conclusion}
-This paper introduced power diagrams which are an generalization of Voronoi diagrams.
-This generalization adds the notion of a real weight to every site of the diagram and introduces a new distance function, the power of a point with respect to a site, which also gives rise to a geometric interpretation which identifies the site centers and weights with spheres.
-The power diagram of a set of spheres is then a collection of polyhedral cells where each cell generated by a sphere which minimizes the power function for every point in the cell.
+This paper introduced power diagrams which are a generalization of Voronoi diagrams.
+It adds the notion of a real weight to every site of the diagram and introduces a new distance function, the power of a point with respect to a site.
+The power function gives rise to a geometric interpretation which identifies the site centers and weights with spheres.
+The power diagram of a set of spheres is then a collection of polyhedral cells where each cell is generated by a sphere.
+A point is part of its cell if a sphere minimizes the power function in comparison to all other spheres.
 
-After introducing some general properties of power diagrams, the main focus of the project lies on the affine equivalency of power diagrams in $d$ dimensions and polyhedra in $d+1$ dimensions which can be described as the intersection of half spaces which point upwards in $x_{d+1}$ direction.
+After introducing some general properties of power diagrams, the main focus of the project lies on the affine equivalency of power diagrams in $d$ dimensions and those polyhedra in $d+1$ dimensions which can be described as the intersection of half spaces which point upwards in $x_{d+1}$ direction.
 Using a polarity function which maps these polyhedra to combinatorically dual ones, a dual relationship between power diagrams and convex hulls in $d+1$ dimensions can be established.
 
 This relationship can be used to derive an efficient algorithm to construct power diagrams whose main geometric operation is the construction of a convex hull.
-After describing this algorithm formally, this paper introduces a data structure which can be used to represent polyhedra and therefore power diagrams and lastly presents a concrete implementation of the results.
+After describing this algorithm formally and introducing a data structure which can be used to represent polyhedra and therefore power diagrams, this paper lastly presents a concrete implementation of the results.
 
 \appendix
 \section{Building the Code}
@@ -1368,25 +1374,25 @@ After describing this algorithm formally, this paper introduces a data structure
 The implementation presented in \cref{sec:implementation} is written in \CC making use of features introduced into the language in the \CCe standard.
 These features have been part of all major \CC compilers for some time.
 Usage of the standard should therefore not pose problems for the build process on reasonably new systems.
-The build process has been tested with GCC and clang on Linux and MSVC on Windows.
+The build process has been tested with GCC and Clang on Linux and MSVC on Windows.
 
 The code depends on libraries for the processing of command line parameters, for linear algebra and for the calculation of convex hulls.
 \begin{description}
     \item[gflags]
         Gflags is a library for the simple processing of command line parameters developed by Google \cite{gflags}.
-        It is licenced under the BSD license which poses minimal restrictions on the redistribution of the covered software.
+        It is licensed under the BSD license which poses minimal restrictions on the redistribution of the covered software.
         Gflags is a comparatively small and compact library which is not quite as feature rich as alternatives like the program options of Boost, but is much easier to integrate in a small project and provides enough possibilities to create a simple command line interface to choose between different algorithms and outputs.
     \item[Eigen] Eigen is an open library for fast and reliable linear algebra developed mainly by Benoît and Guennebaud \cite{eigen}.
         It is licensed under the MPL license which is aims to find a compromise between proprietary and open source developers and also poses little restrictions on the redistribution.
         Eigen provides both data structures for vectors and matrices and also implements many important primitives of linear algebra like the solution of systems of linear equations.
-    \item[Qhull] Qhull is a library which implements the quickhull algorithm for convex hulls and is developed by Barber \cite{barber1996quickhull}.
+    \item[Qhull] Qhull is a library which implements the QuickHull algorithm for convex hulls and is developed by Barber \cite{barber1996quickhull}.
         It is licensed under a custom license which allows both the redistribution and alteration of the code.
         Qhull is one of the few choices for libraries implementing convex hulls in arbitrary dimensions and has been chosen for this project for its speed and numerical stability.
 \end{description}
 
-To simplify the compilation, the implementation of this interdisciplinary project includes CMake scripts which automate most of the build process \cite{cmake}.
-CMake is a tool which allows programmers to specify how a program should be compiled in a way which is independent of operating systems and compiler or IDE choices.
-CMake generates project files in a toolchain of the users choice.
+To simplify the compilation, the implementation of this interdisciplinary project includes CMake scripts which automate most of the build process.
+CMake \cite{cmake} is a tool which allows programmers to specify how a program should be compiled in a way which is independent of operating systems and compiler or IDE choices.
+CMake generates project files in a toolchain of the user's choice.
 It can, for example, create Makefiles for a command line based build on Linux or it can create solutions which can be used in Visual Studio on Windows.
 There are many parameters and customizable choices to create build files using CMake.
 The following two subsections will describe a typical build process on both Linux and Windows, which can be customized via options described in the documentation of CMake \cite{cmake-tutorial}.
@@ -1397,10 +1403,10 @@ The CMake scripts can either use libraries installed on the target system (for e
 The latter is achieved by separating the build process into two steps, first downloading and building all dependencies and then using those dependencies to create the final program.
 
 Since a correct usage of these different steps can be cumbersome, the implementation also provides a top level \src{Makefile} which automates the process.
-Thise make script will invoke CMake to build the library dependencies or only build the main program.
+This make script will invoke CMake to build the library dependencies or only build the main program.
 It can be configured using variables shown in \cref{lst:make}.
 \begin{listing}[tb]
-    \begin{minted}[linenos]{shell}
+    \begin{minted}{shell}
 # Debug build using bundled libraries
 $ make
 # Clean bundled libraries and program
@@ -1464,7 +1470,7 @@ The source CMake files can be found in \src{third-party}, while the binaries sho
 
 After choosing the folders, click the \enquote{Configure}-button and choose the desired generator as shown in \cref{fig:cmake_2}.
 CMake checks whether the compiler works correctly and searches for correct paths.
-By default, the libraries will be built with debug informaion.
+By default, the libraries will be built with debug information.
 If this is not desired (e.g. for an optimized build), change the \var{CMAKE\_BUILD\_TYPE} variable as shown in \cref{fig:cmake_3}.
 
 After pressing the \enquote{Generate}-button, \src{.deps} should contain a Visual Studio solution file.
@@ -1491,7 +1497,7 @@ The compiled program has a simple command line interface which allows the select
 The program includes a short documentation which can be viewed by invoking \var{./powerdiagram -help}.
 The output of this invocation can be seen in \cref{lst:help}.
 \begin{listing}[tb]
-    \begin{minted}[linenos]{shell}
+    \begin{minted}{shell}
 Sample usage:
     ./powerdiagram [Options] <centers> <radii>
 For a complete help, use options --help or --helpfull.
@@ -1519,7 +1525,7 @@ A $d$ dimensional input must contain at least $(d+1)$ linearly independent spher
 The files corresponding to \cref{fig:garage} are called \src{garage\_sites.csv} for the centers and \src{garage\_gamma.csv} for the radii.
 
 \begin{listing}[tb]
-    \begin{minted}[linenos]{shell}
+    \begin{minted}{shell}
 # Manual invocation
 $ ./powerdiagram -draw garage_sites.csv garage_gamma.csv > /tmp/intrmdt
 $ util/tikz.py /tmp/intermdt
@@ -1533,7 +1539,7 @@ $ make TIKZ_OUT=1 garage
     \label{lst:createtikz}
 \end{listing}
 \begin{listing}[tb]
-    \begin{minted}[linenos]{Python}
+    \begin{minted}{Python}
 # Spheres
 s1 2 3 1
 s2 5 0 1
