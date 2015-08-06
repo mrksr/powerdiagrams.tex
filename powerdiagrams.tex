@@ -237,6 +237,7 @@ Every such site gets assigned its partition of the space where there is no other
     \label{fig:garage}
 \end{figure}
 
+\newpage % For layout reasons
 \begin{definition}[Power Diagram]
     \label{def:powerdiagram}
     The \define{power diagram} $\PD(S)$ of a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$ is a tuple of all \define{cells} corresponding to the sites.
@@ -490,7 +491,7 @@ Then the transformation function is defined as follows.
             rule] (191.7098,132.1344) -- (222.6000,132.4019);
             \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
             rule] (367.4572,133.4572) -- (388.2572,66.9429);
-            \path[draw=back,line join=miter,line cap=butt,miter limit=4.00,even odd
+            \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
             rule] (388.2572,66.9429) -- (197.6000,66.9429);
             \path[draw=black, arrows={-latex},line join=miter,line cap=butt,miter limit=4.00,even odd
             rule] (285.6023,132.8780) -- (367.4572,133.4572) node[label={[label distance=.25em]right:$x_1$}]{};
@@ -1364,14 +1365,147 @@ After describing this algorithm formally, this paper introduces a data structure
 \appendix
 \section{Building the Code}
 \label{sec:building_the_code}
-\todo[inline]{Libraries}
-\todo[inline]{Make, CMake}
-\todo[inline]{Windows...}
+The implementation presented in \cref{sec:implementation} is written in \CC making use of features introduced into the language in the \CCe standard.
+These features have been part of all major \CC compilers for some time.
+Usage of the standard should therefore not pose problems for the build process on reasonably new systems.
 
-\section{Running the Code}
-\label{sec:running_the_code}
-\todo[inline]{Makefile \enquote{driver}}
-\todo[inline]{Some examples}
+The code depends on libraries for the processing of command line parameters, for linear algebra and for the calculation of convex hulls.
+\begin{description}
+    \item[gflags]
+        Gflags is a library for the simple processing of command line parameters developed by Google \cite{gflags}.
+        It is licenced under the BSD license which poses minimal restrictions on the redistribution of the covered software.
+        Gflags is a comparatively small and compact library which is not quite as feature rich as alternatives like the program options of Boost, but is much easier to integrate in a small project and provides enough possibilities to create a simple command line interface to choose between different algorithms and outputs.
+    \item[Eigen] Eigen is an open library for fast and reliable linear algebra developed mainly by Benoît and Guennebaud \cite{eigen}.
+        It is licensed under the MPL license which is aims to find a compromise between proprietary and open source developers and also poses little restrictions on the redistribution.
+        Eigen provides both data structures for vectors and matrices and also implements many important primitives of linear algebra like the solution of systems of linear equations.
+    \item[Qhull] Qhull is a library which implements the quickhull algorithm for convex hulls and is developed by Barber \cite{barber1996quickhull}.
+        It is licensed under a custom license which allows both the redistribution and alteration of the code.
+        Qhull is one of the few choices for libraries implementing convex hulls in arbitrary dimensions and has been chosen for this project for its speed and numerical stability.
+\end{description}
+
+To simplify the compilation, the implementation of this interdisciplinary project includes CMake scripts which automate most of the build process \cite{cmake}.
+CMake is a tool which allows programmers to specify how a program should be compiled in a way which is independent of operating systems and compiler or IDE choices.
+CMake generates project files in a toolchain of the users choice.
+It can, for example, create Makefiles for a command line based build on Linux or it can create solutions which can be used in Visual Studio on Windows.
+There are many parameters and customizable choices to create build files using CMake.
+The following two subsections will describe a typical build process on both Linux and Windows, which can be customized via options described in the documentation of CMake \cite{cmake-tutorial}.
+
+\subsection{Linux}
+\label{sub:linux}
+The CMake scripts can either use libraries installed on the target system (for example via a package manager) or compile all libraries from source.
+The latter is achieved by separating the build process into two steps, first downloading and building all dependencies and then using those dependencies to create the final program.
+
+Since a correct usage of these different steps can be cumbersome, the implementation also provides a top level \src{Makefile} which automates the process.
+Thise make script will invoke CMake to build the library dependencies or only build the main program.
+It can be configured using variables shown in \cref{lst:make}.
+\begin{listing}[tb]
+    \begin{minted}[linenos]{shell}
+# Debug build using bundled libraries
+$ make
+# Clean bundled libraries and program
+$ make distclean
+
+# Release build using system libraries
+$ make CMAKE_BUILD_TYPE=Release USE_BUNDLED_DEPS=0
+# Clean program only
+$ make clean
+    \end{minted}
+    \caption{A simple invocation of \var{make} creates a debug build using bundles libraries.
+    The computer will download the libraries, build them and then build the power diagram program.
+    To specify the creation of an optimized release build, the variable \var{CMAKE\_BUILD\_TYPE} can be used, while \var{USE\_BUNDLED\_DEPS} can be set to 0 to use system libraries.
+    \var{make clean} and \var{make distclean} can be used to remove the compiled files.
+    }
+    \label{lst:make}
+\end{listing}
+
+\subsection{Windows}
+\label{sub:windows}
+\blindtext
+\blindtext
+
+\section{Running the Program}
+\label{sec:running_the_program}
+The compiled program has a simple command line interface which allows the selection of power diagram sites, algorithms to be executed and output options.
+The program includes a short documentation which can be viewed by invoking \var{./powerdiagram -help}.
+The output of this invocation can be seen in \cref{lst:help}.
+\begin{listing}[tb]
+    \begin{minted}[linenos]{shell}
+Sample usage:
+    ./powerdiagram [Options] <centers> <radii>
+For a complete help, use options --help or --helpfull.
+
+  Flags from (...)/powerdiagram/ConvexHullQhull.cpp:
+    -qhullout (Output string for Qhull (e.g. "f i s"))
+        type: string default: ""
+
+  Flags from (...)/powerdiagram_main.cpp:
+    -draw (Output Information needed to draw the Diagram)
+        type: bool default: false
+    -dual (Run the Dual Algorithm) type: bool default: true
+    -naive (Run the Naive Algorithm) type: bool default: false
+    -verbose (Verbose output) type: bool default: false
+    \end{minted}
+    \caption{The output of running \var{./powerdiagram -help}.}
+    \label{lst:help}
+\end{listing}
+
+This section will show how to use the program to create a visualization of a two-dimensional power diagrams in the \LaTeX-package tikz with \cref{fig:garage} as an example.
+The first step is to define the sphere centers and radii.
+They are defined in two different text files where each line defines a site and different entries of the vectors of the sphere centers are separated with commata, examples of which can be found in the \src{examples} folder.
+The files corresponding to \cref{fig:garage} are called \src{garage\_sites.csv} for the centers and \src{garage\_gamma.csv} for the radii.
+
+\begin{listing}[tb]
+    \begin{minted}[linenos]{shell}
+# Manual invocation
+$ ./powerdiagram -draw garage_sites.csv garage_gamma.csv > /tmp/intrmdt
+$ util/tikz.py /tmp/intermdt
+# Using the Makefile
+$ make TIKZ_OUT=1 garage
+    \end{minted}
+    $ % fix highlighting
+    \caption{To create a tikz picture from sphere centers and radii defined in text files, the \var{./powerdiagram -draw} parameter can be used.
+        If the program is invoked with this parameter, it outputs a easily parseable format describing vertices and edges of a power diagram, which gets saved to a temporary file.
+        This output is then parsed by a Python script which in turn creates a tikz picture.
+        The Makefile mentioned in \cref{sub:linux} can also generate tikz output.}
+    \label{lst:createtikz}
+\end{listing}
+\begin{listing}[tb]
+    \begin{minted}[linenos]{Python}
+# Spheres
+s1 2 3 1
+s2 5 0 1
+s3 -2  0  3
+s4 2 0 2
+s5 4 2 1
+
+# Vertices
+p1 0.625     2
+p2    4 0.75
+p3 2.75    2
+
+# Internal Edges
+ei p1 p3 s1 s4
+ei p2 p3 s4 s5
+
+# External Edges
+ee p1 s1 s3 d-0.6  0.8
+ee p1 s3 s4 d 0 -1
+ee p2 s2 s4 d-0 -1
+ee p2 s2 s5 d0.894427 0.447214
+ee p3 s1 s5 d0.447214 0.894427
+    \end{minted}
+    \caption{The intermediate output format generated by \var{./powerdiagram -draw}.
+    The output first enumerates both the spheres and vertices.
+    Every internal edge can be defined as the connection of two of the vertices, while the external edges are defined as a point and a normalized direction of the ray.
+    The additional annotations of the edge describe to which cells of spheres the edge is incident.}
+    \label{lst:intermediate}
+\end{listing}
+Creating a tikz output is a two-step process.
+The \CC executable itself cannot produce tikz but rather outputs a format which is easily parseable.
+The file \src{util/tikz.py} contains a Python-script which converts this intermediate format to tikz output.
+The commands that need to be executed can be found in \cref{lst:createtikz} with the intermediate output of the \CC program described in \cref{lst:intermediate}.
+There is also a template in \src{util/template.tex} which can be used to quickly compile the output of the script files into a standalone image.
+
 
 \nocite{*}
 \bibliographystyle{alpha}
