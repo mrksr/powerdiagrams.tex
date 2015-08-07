@@ -367,11 +367,11 @@ To justify this approach, the following lemma shows that for power diagrams whic
 
 \begin{lemma}
     \label{lem:zerofaces}
-    Let $S \subset \R^d \times \R$ be a finite set of spheres.
+    Let $S \subset \R^d \times \R_{\geq 0}$ be a finite set of spheres.
     If any cell of $\PD(S)$ is bounded by a $0$-face, then every cell in $\PD(S)$ is bounded by a $0$-face.
 \end{lemma}
 \begin{proof}
-    Let $S = \left\{ s_1, \dots, s_k \right\} \subset \R^d \times \R$ be a finite set of spheres $s_i = (z_i, r_i^2)$ with $k \geq d+2$ and $s_1, \dots, s_d, s_{d+1}, s_{d+2} \in S$ such that (the cell of) $s_{d+1}$ shares a $0$-face with $s_1, \dots, s_d$ in $\PD(S)$.
+    Let $S = \left\{ s_1, \dots, s_k \right\} \subset \R^d \times \R_{\geq 0}$ be a finite set of spheres $s_i = (z_i, r_i^2)$ with $k \geq d+2$ and $s_1, \dots, s_d, s_{d+1}, s_{d+2} \in S$ such that (the cell of) $s_{d+1}$ shares a $0$-face with $s_1, \dots, s_d$ in $\PD(S)$.
     Since the chordales of $s_{d+1}$ with these sites intersect in a $0$-face, their $d$ normal vectors $\left\{  z_i - z_{d+1} \mid 1 \leq i \leq d\right\}$ must be linearly independent, or equivalently, it holds that $\dim(\aff(\left\{ z_1, z_2, \dots, z_{d+1} \right\})) = d$.
 
     Suppose that $s_{d+2}$ is not bounded by a $0$-face.
