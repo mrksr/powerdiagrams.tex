@@ -37,7 +37,7 @@ A way of describing a power diagram is via the adjacency structure of the differ
 Two cells are adjacent if they share points which have the same minimizing power with respect to both spheres.
 In this case, they share a polyhedron which is incident to both cells.
 This interdisciplinary project is concerned with describing power diagrams formally, describing algorithms to construct such incidence structures and implementing them in \CC.
-The theoretical parts of this project are guided by a paper by Aurenhammer \cite{aurenhammer1987power} which is be complemented with some additional proofs.
+The theoretical parts of this project are guided by a paper by \textcite{aurenhammer1987power} which is be complemented with some additional proofs.
 
 The first section of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
 Using a transformation from spheres to hyperplanes, the next section shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
@@ -103,7 +103,7 @@ A \define{Delaunay triangulation} of a set of points $M$ is a graph in which thr
 Two regions in the Voronoi diagram then are neighbours iff there exists an edge in the Delaunay triangulation between their corresponding points.
 
 This gives rise to efficient algorithms for constructing the diagrams, since the triangulations can be obtained in $\Oh(n \log n)$ time by incrementally inserting points in an existing triangulation.
-This algorithm was first described by Green and Sibson \cite{green1978computing} and is optimal, since one can reduce the sorting problem to finding triangulations \cite{aurenhammer1991voronoi}.
+This algorithm was first described by \textcite{green1978computing} and is optimal, since one can reduce the sorting problem to finding triangulations \cite{aurenhammer1991voronoi}.
 Another algorithm to find Delaunay triangulation described by Aurenhammer involves lifting the two dimensional input into three dimensions by projecting it to a paraboloid.
 The triangulation can then be found by computing the lower convex hull of those points, also yielding $\Oh(n \log n)$ complexity in two dimensions.
 The efficient algorithm presented in this paper is a generalization of this algorithm for power diagrams.
@@ -190,7 +190,7 @@ While other possible combinations of distance and weight have also been investig
     \label{fig:power}
 \end{figure}
 
-The power function was, for example, mentioned at the beginning of the 19th century by Steiner \cite{steiner1881jacob} and Laguerre \cite{blaschke2013vorlesungen} as a measure of the relationship of a point to a circle.
+The power function was, for example, mentioned at the beginning of the 19th century by \textcite{steiner1881jacob} and Laguerre \cite{blaschke2013vorlesungen} as a measure of the relationship of a point to a circle.
 A point has a negative power if inside, a positive power if outside and its power vanishes if it lies on the circle.
 Using the Pythagorean theorem, this function has a geometric interpretation shown in \cref{fig:power}.
 
@@ -829,7 +829,7 @@ Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_
 This means that all chordales which exist in the power diagram and their intersections which form flats of lower dimensionality are represented as faces in this polyhedron as can be seen from \cref{lem:verticalprojection}.
 To represent all faces which are boundaries of cells in the power diagram, one can therefore choose a data structure which represents the faces of the equivalent polyhedron.
 
-Grünbaum~\cite{grunbaum2003convex} observes that by creating a partial order on faces of a polyhedron induced by set inclusion of the points in the faces, one can obtain the so called incidence lattice of the polyhedron.
+\Textcite{grunbaum2003convex} observes that by creating a partial order on faces of a polyhedron induced by set inclusion of the points in the faces, one can obtain the so called incidence lattice of the polyhedron.
 The two-dimensional case is also described in more detail in \cite{edelsbrunner1986constructing}.
 After the following definition, an important result about the size of these lattices will be presented.
 
@@ -937,7 +937,7 @@ Together with \cref{thm:equivalentpolyhedron} it follows that the incidence latt
 \Cref{fig:incidencelattice} shows an example of this relationship.
 A square defined by four vertices can be interpreted as a degenerated lower convex hull in three dimensions. It is then dual to a Voronoi diagram in two dimensions whose incidence structure is described by the same incidence lattice with reverted edges.
 
-Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by Bronsted \cite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressible as intersections of upwards pointing halfspaces).
+Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by \textcite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressible as intersections of upwards pointing halfspaces).
 
 \begin{lemma}
     \label{lem:latticesexponential}
@@ -1009,7 +1009,7 @@ Since this naive algorithm is not applicable in practice due to its running time
 \subsection{Dual Algorithm}
 \label{sub:dual_algorithm}
 According to \cref{thm:equivalentconvexhull}, an incidence lattice which is equivalent to the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions can be obtained using the lower part of a certain convex hull in $\R^{d+1}$.
-\cite{seidel1981convex} describes an optimal algorithm to obtain convex hulls in even dimensions, while \cite{preparata1977convex} describes one which is optimal for $d \in \left\{ 2, 3 \right\}$.
+\Textcite{seidel1981convex} describes an optimal algorithm to obtain convex hulls in even dimensions, while \textcite{preparata1977convex} describe one which is optimal for $d \in \left\{ 2, 3 \right\}$.
 The implementation to this paper uses the QuickHull algorithm described in \cite{barber1996quickhull}.
 Their results can be summarized as follows.
 \begin{lemma}
@@ -1387,10 +1387,10 @@ The code depends on libraries for the processing of command line parameters, for
         Gflags is a library for the simple processing of command line parameters developed by Google \cite{gflags}.
         It is licensed under the BSD license which poses minimal restrictions on the redistribution of the covered software.
         Gflags is a comparatively small and compact library which is not quite as feature rich as alternatives like the program options of Boost, but is much easier to integrate in a small project and provides enough possibilities to create a simple command line interface to choose between different algorithms and outputs.
-    \item[Eigen] Eigen is an open library for fast and reliable linear algebra developed mainly by Benoît and Guennebaud \cite{eigen}.
+    \item[Eigen] Eigen is an open library for fast and reliable linear algebra developed by \textcite{eigen}.
         It is licensed under the MPL license which is aims to find a compromise between proprietary and open source developers and also poses little restrictions on the redistribution.
         Eigen provides both data structures for vectors and matrices and also implements many important primitives of linear algebra like the solution of systems of linear equations.
-    \item[Qhull] Qhull is a library which implements the QuickHull algorithm for convex hulls and is developed by Barber \cite{barber1996quickhull}.
+    \item[Qhull] Qhull is a library which implements the QuickHull algorithm for convex hulls and is developed by \textcite{barber1996quickhull}.
         It is licensed under a custom license which allows both the redistribution and alteration of the code.
         Qhull is one of the few choices for libraries implementing convex hulls in arbitrary dimensions and has been chosen for this project for its speed and numerical stability.
 \end{description}
