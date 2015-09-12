@@ -15,7 +15,7 @@
 \vfill
 \begin{abstract}
     Power diagrams are a generalization of Voronoi diagrams which define a cell decomposition of an euclidean space based on a finite set of spheres, assigning every sphere a polyhedral cell for which it minimizes the power function of the points with respect to all spheres.
-    This paper gives a formal definition of power diagrams together with some fundamental results.
+    This paper introoduces power diagrams and provides some fundamental results.
     It continues with the investigation of the close relationship of power diagrams in $d$ dimensions to arrangements of hyperplanes in $d+1$ dimensions and the convex hull of points obtained via their polarization.
     This connection gives rise to an efficient algorithm for computing power diagrams, for which both a formal definition and the description of an implementation is presented.
 \end{abstract}
@@ -28,7 +28,7 @@
 \label{sec:introduction}
 Power diagrams define a cell decomposition of the euclidean space $\R^d$ into cells defined by a finite set of spheres.
 A point is part of the cell of some sphere if there is no other sphere for which the power of the point with respect to the sphere is lower.
-They can be understood as a generalization of Voronoi diagrams with a different metric of distance to the sphere centers.
+They can be understood as a generalization of Voronoi diagrams with a different distance function with respect to the sphere centers.
 
 Power diagrams can be used to solve geometric problems like finding the volume of a union of spheres \cite{avis1988computing} or to solve packing problems with spheres \cite{toth2013lagerungen}.
 Applications outside of geometry include the solution of weighted balanced clusterings \cite{brieden2012optimal} and the description of the internal structure of polycrytals \cite{alpers2015generalized}.
@@ -41,7 +41,7 @@ The theoretical parts of this project are guided by a paper by \textcite{aurenha
 
 The first section of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
 Using a transformation from spheres to hyperplanes, the next section shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
-This equivalency is used to also show a dual relationship between power diagrams and the convex hull of a set of points, which can be exploited to give an efficient algorithm to construct incidence structures of power diagrams.
+This equivalency is used to also show a dual relationship between power diagrams in $\R^d$ and the convex hull of a set of points in $\R^{d+1}$, which can be exploited to give an efficient algorithm to construct incidence structures of power diagrams.
 With incidence lattices, a data structure to store them is introduced.
 In the last section of the paper, the implementation of both the algorithms and the incidence lattices accompanying this paper is described.
 
@@ -96,16 +96,16 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
     \label{fig:voronoi}
 \end{figure}
 
-\cref{fig:voronoi} shows an example of a Voronoi diagram in $d = 2$ dimensions.
+\Cref{fig:voronoi} shows an example of a Voronoi diagram in $d = 2$ dimensions.
 While obtaining the hyperplanes which potentially separate the regions is easy, it must be identified which of them actually exist, since not every region is a neighbour of every other region.
 It can be shown that there exists a dual relationship between Voronoi diagrams in two dimensions and Delaunay triangulations \cite{aurenhammer1991voronoi}.
-A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points are connected iff the smallest circle containing all three points does not contain any other point in $M$.
+A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points form a clique iff the smallest circle containing all three points does not contain any other point in $M$.
 Two regions in the Voronoi diagram then are neighbours iff there exists an edge in the Delaunay triangulation between their corresponding points.
 
 This gives rise to efficient algorithms for constructing the diagrams, since the triangulations can be obtained in $\Oh(n \log n)$ time by incrementally inserting points in an existing triangulation.
 This algorithm was first described by \textcite{green1978computing} and is optimal, since one can reduce the sorting problem to finding triangulations \cite{aurenhammer1991voronoi}.
 Another algorithm to find Delaunay triangulation described by Aurenhammer involves lifting the two dimensional input into three dimensions by projecting it to a paraboloid.
-The triangulation can then be found by computing the lower convex hull of those points, also yielding $\Oh(n \log n)$ complexity in two dimensions.
+The triangulation can then be found by computing the convex hull of those points, also yielding $\Oh(n \log n)$ complexity in two dimensions.
 The efficient algorithm presented in this paper is a generalization of this algorithm for power diagrams.
 
 In this section, power diagrams will be defined in terms of the power of a point with respect to a sphere.
@@ -120,7 +120,7 @@ While other possible combinations of distance and weight have also been investig
 
 \begin{definition}[Power of a Point]
     \label{def:power}
-    The \define{power} of a point $x \in \R^d$ with respect to a sphere $s = (p, r^2)$ with center $p \in \R^d$ and radius $r \in \R$ is given by
+    The \define{power} of a point $x \in \R^d$ with respect to a sphere $s = (p, r^2)$ with center $p \in \R^d$ and radius $r \in \R_{\geq 0}$ is given by
     \begin{align}
         \pow(x, s) = \dist(x, p)^2 - r^2.
     \end{align}
@@ -245,13 +245,14 @@ Every such site gets assigned its partition of the space where there is no other
 \newpage % For layout reasons
 \begin{definition}[Power Diagram]
     \label{def:powerdiagram}
-    The \define{power diagram} $\PD(S)$ of a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$ is a tuple of all \define{cells} corresponding to the sites.
+    For a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$, a \define{cell} is given by
     \begin{align}
         \cell_S &: \left\{\begin{aligned}
             S &\to \powerset{\R^d}\\
             s &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}: \pow(x, s) \leq \pow(x, t) \right\}
-        \end{aligned}\right.\\
-        \PD(\left\{ s_1, \dots, s_n \right\}) &\coloneqq \left( \cell_S(s_1), \dots, \cell_S(s_n) \right)
+        \end{aligned}\right..\\
+        \intertext{The \define{power diagram $\PD(S)$} is a tuple of the cells corresponding to all sites and given by}
+        \PD(\left\{ s_1, \dots, s_n \right\}) &\coloneqq \left( \cell_S(s_1), \dots, \cell_S(s_n) \right).
     \end{align}
 \end{definition}
 
@@ -277,7 +278,7 @@ $P$ is called a \define{polytope} if it is bounded and can then also be expresse
 
 Two $d$-polyhedra $P$ and $Q$ are called \define{(combinatorically) dual} if there is a bijection $\varphi$ from the $j$-faces of $P$ to the $(d-j-1)$-faces of $Q$ for $0 \leq j \leq d  -1$ such that $f \subseteq g$ for any two faces $f$ and $g$ of $P$ iff the converse $\varphi(f) \supseteq \varphi(g)$ holds in $Q$.
 
-A convex hull can be separated into its upper and lower parts with respect to some vector $v \neq 0$.
+A polytope can be separated into its upper and lower parts with respect to some vector $v \neq 0$.
 A facet of the convex hull with outwards pointing normal vector $n$ is part of the \define{lower convex hull $\CHb$} if $\scalar{n, v} < 0$ and part of the \define{upper convex hull $\CHt$} if $\scalar{n, v} > 0$.
 Facets with normal vector orthogonal to $v$ are not attributed to either group.
 Any other face is in the lower or upper convex hull if it is contained in a facet which is in $\CHb$ or $\CHt$ respectively.
@@ -361,7 +362,7 @@ This can happen if a is sphere completely contained in another sphere.
 This is not a sufficient condition however.
 Such a constellation can also lead to a sphere $s$ having a cell for which it holds that $z_s \not\in \cell_S(s) \neq \varnothing$.
 
-While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales actually are tight bounds to a cell and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
+While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales have non-empty intersection with their cells and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
 To describe all existing non-extremal faces, one can find all $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
 To justify this approach, the following lemma shows that for power diagrams which have $0$-faces, this approach does not miss non-extremal faces.
 
@@ -394,15 +395,15 @@ Using this identity together with a duality mapping for polyhedra will finally c
 
 \subsection{The Transformation Function}
 \label{sub:the_transform}
-The embedding of power diagrams in an additional dimension relies on the fact that the power function of a sphere in $\R^d$ can be calculated using distances to some hyperplane in $\R^{d+1}$.
+The embedding of power diagrams in a space of one dimension higher relies on the fact that the power function of a sphere in $\R^d$ can be calculated using distances to some hyperplane in $\R^{d+1}$.
 These hyperplanes can be obtained from the spheres using a transformation function.
 
 Inspect the space $\R^{d+1}$ and let the original space $\R^d$ be identified with the hyperplane $h_0: x_{d+1} = 0$.
 Let $\Ha$ be the set of all hyperplanes not parallel to the $x_{d+1}$ axis
 \begin{align}
-    \Ha &\coloneqq \left\{ h \subseteq \R^{d+1} \mid \exists a \in \R^d, a_{d+1} \in \R : x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1} \right\}
+    \Ha &\coloneqq \left\{ h \subseteq \R^{d+1} \mid \exists a \in \R^d, a_{d+1} \in \R : x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1} \right\}.
 \end{align}
-with $h_0 \in \Ha$.
+Thus, $h_0 \in \Ha$.
 Lastly let $U$ denote the paraboloid $x_{d+1} = x_{[d]}^Tx_{[d]}$ with $x_{[d]} = \left( x_1, \dots, x_d \right)^T$.
 Then the transformation function is defined as follows.
 
@@ -605,13 +606,10 @@ Then the transformation function is defined as follows.
     The orthogonal projection onto the $x_1$-$x_2$-plane of the intersection of the two hyperplanes is the chordale of the two spheres.}
     \label{fig:projection}
 \end{figure}
-This transform has a direct connection to $U$ since
-\begin{align}
-    \Pi(s) \cap U &= \left\{ x \in \R^{d+1} \mid x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 = x_{[d]}^Tx_{[d]} \right\}
-\end{align}
-holds with
+This transform has a direct connection to $U$ since for any sphere $s$
 \begin{alignat}{2}
-    &&2x_{[d]}^Tz_{[d]} - z_{[d]}^Tz_{[d]} + r^2 &= x_{[d]}^Tx_{[d]}\\
+    x \in \Pi(s) \cap U &\Leftrightarrow\quad& x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 &\wedge x_{d+1} = x_{[d]}^Tx_{[d]}\\
+    &\Leftrightarrow\quad&2x_{[d]}^Tz_{[d]} - z_{[d]}^Tz_{[d]} + r^2 &= x_{[d]}^Tx_{[d]}\\
     &\Leftrightarrow\quad& \dist(x_{[d]}, z) &= r^2\\
     &\Leftrightarrow\quad& x_{[d]} &\in s.
 \end{alignat}
@@ -620,13 +618,13 @@ A visualization of this can be seen in \cref{fig:projection}.
 The following lemma proofs that this mapping is an identification of the two concepts.
 \begin{lemma}
     \label{lem:pibijection}
-    The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ which intersect $U$.
+    The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ with nonempty intersection with $U$.
 \end{lemma}
 \begin{proof}
     Clearly, $\Pi$ is injective since two spheres with different centers map to hyperplanes with different normal vectors and two concentric spheres need to share the same radius $r$ to map to hyperplanes with the same offset.
     $\Pi$ is also surjective if every intersection of $U$ with a hyperplane in $\Ha$ is an ellipsoid which maps to a sphere if projected to $h_0$.
 
-    Let $n \in \R^{d+1}$ be a normal vector with $n_{d+1} = 1$, let $b \in \R$ be an offset and let $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ be a hyperplane with $h \in \Ha$.
+    Let $n \in \R^{d+1}$ be the normal vector with $n_{d+1} = 1$, let $b \in \R$ be an offset and let $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ be a hyperplane with $h \in \Ha$.
     The intersection of $h$ with $U$ is given by
     \begin{align}
         h \cap U = \left\{ x \in \R^{d+1} \mid x_{d+1} = b - n_{[d]}^T x_{[d]} = x_{[d]}^T x_{[d]} \right\}
@@ -675,7 +673,7 @@ This directly implies the following lemma, which connects chordales to the newly
 The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of these hyperplanes and $(d-j)$-flats in this dual domain.
 
 \begin{definition}[Polarity Function]
-    Let $\Ha$ be the set of all hyperplanes not parallel to the $x_{d+1}$ axis and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis
+    Let $\Ha$ as defined above and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis
     \begin{align}
         \F &\coloneqq \left\{ f \subseteq \R^{d+1} \mid
                 \exists 1 \leq k \leq d + 1: \exists h_1, \dots, h_{k} \in \Ha : \varnothing \neq f = \bigcap_{i = 1}^{k} h_i\right\}.
@@ -698,7 +696,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
     $\Delta$ is an involutory function and a bijection from $j$-flats to $(d-j)$-flats in $\F$ for $0 \leq j \leq d$.
 \end{lemma}
 \begin{proof}
-    Let $F = f + X \subset \R^{d+1} \in \F$ be some flat with $f \in \R^{d+1}$, $\dim(X) = j$ for $0 \leq j \leq d$ and let
+    Let $F = f + X \subset \R^{d+1} \in \F$ be some flat with $f \in \R^{d+1}$, $x$ a linear subspace with $\dim(X) = j$ for $0 \leq j \leq d$ and let
     \begin{align}
         X^\bot = \left\{ n \in \R^{d+1} \mid \forall x \in X : \scalar{n, x} = 0 \right\}
     \end{align}
@@ -710,7 +708,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
         &= \left\{ x \in \R^{d+1} \mid n_{d+1} \cdot x_{d+1} = -n_{[d]}^Tx_{[d]} + n^Tf \right\}
     \end{align}
     its corresponding hyperplane containing $F$.
-    Note that by definition of $\F$, for all $n \in X^\bot$ it holds that $x_{d+1} \neq 0$.
+    Note that by definition of $\F$, for all $n \in X^\bot$ it holds that $n_{d+1} \neq 0$.
     Then let $N = \left\{ n \in X^\bot \mid n_{d+1} = 1 \right\}$ be the set of all possible normalized normal vectors with $\dim(N) = d - j$ and
     \begin{align}
         \Delta(F) &= \Delta(h(N))\\
@@ -719,7 +717,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
         &= \bigcup_{n \in N} \left\{ \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n^T f \end{pmatrix} \right\} \\
         &= \bigcup_{n \in N} \left\{ \begin{pmatrix} -\frac{1}{2} n_{[d]}\\ - n_{[d]}^T f_{[d]} - f_{d+1} \end{pmatrix} \right\}.
     \end{align}
-    $\Delta(F)$ is therefore a $(d - j)$-flat which is the result of an affine transformation on $N$.
+    $\Delta(F)$ is therefore a $(d - j)$-flat which is the result of an affine transformation of $N$.
 
     Now assume that $\Delta(F) \not\in \F$.
     Then $\Delta(F)$ is not expressible as the intersection of hyperplanes in $\Ha$ and therefore, there must exist two different $d^{(1)}, d^{(2)} \in \Delta(F)$ with $d_{[d]}^{(1)} - d_{[d]}^{(2)} = 0$.
@@ -751,7 +749,7 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 \begin{lemma}
     \label{lem:relativepositions}
     Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
-    Then $p$ is above, in or below $h$ iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
+    Then $p$ is above, in or below $h$ with respect to the $(d+1)$th component iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
 \end{lemma}
 \begin{proof}
     Let $x,n \in \R^{d+1}$ and $h = \left\{ y \in \R^{d+1} \mid y_{d+1} = n_{[d]}^Ty_{[d]} + n_{d+1} \right\}$ a hyperplane in $\R^{d+1}$.
@@ -783,7 +781,7 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
 \end{theorem}
 \begin{proof}
     Let $P = \bigcap_{i=1}^n h_i^+$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with positive $(d+1)$th coordinates such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
-    Also assume that $h_i \cup U \neq h_i$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
+    Also assume that $h_i \cup U \neq \varnothing$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
 
     \Cref{lem:pibijection} implies that there is a set $S = \left\{ s_1, \dots, s_n \right\}$ of spheres in $h_0$ such that $\Pi(s_i) = h_i$.
     Using \cref{lem:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) iff $x \in \cell_S(s_i)$ is in $\PD(S)$.
@@ -847,7 +845,7 @@ After the following definition, an important result about the size of these latt
 \end{definition}
 The minimal vertices of an incidence lattice are the faces of lowest dimension in the polyhedron, while the single maximal node is the polyhedron itself.
 
-\Cref{lem:deltainvolutory} implies that a dual polyhedron obtained using the polarity function $\Delta$ has a very similar combinatorical structure compared to the original polyhedron.
+\Cref{lem:deltainvolutory} implies that a dual polyhedron obtained using the polarity function $\Delta$ has a dual combinatorical structure compared to the original polyhedron.
 Since every $j$-face has been replaced by a $(d-j)$-face, the subset-relationship between two faces are reversed, i.e.~if $f_1 \subsetneq f_2$, then $\Delta(f_1) \supsetneq \Delta(f_2)$.
 This directly yields that the incidence lattice of this dual polyhedron is isomorphic to the graph created by reverting all edges in the original incidence lattice.
 Together with \cref{thm:equivalentpolyhedron} it follows that the incidence lattice describing the boundaries of a power diagram can be obtained from an incidence lattice of the lower part of a convex hull by reverting all edges in the lattice.
@@ -1077,8 +1075,7 @@ This section first introduces a concrete implementation of incidence lattices ba
 The incidence lattices described in \cref{sub:incidence_lattices} and \cite{edelsbrunner1986constructing} can be used to represent the subset-relationships between different faces of a polyhedron.
 Since it was shown in \cref{thm:equivalentpolyhedron} that a power diagram in $d$ dimensions can be represented by a polyhedron in $d+1$ dimensions, incidence lattices can also be used to represent the cells of power diagrams via their shared boundaries.
 
-According to \cref{def:incidencelattice}, incidence lattices are graphs where every face is a vertex and two faces are connected with a directed edge if the source is a true subset of the sink with no faces in between.
-To avoid confusion with $0$-faces, the vertices of these graphs will in the following be called \define{nodes}.
+According to \cref{def:incidencelattice}, incidence lattices are graphs where every face is a node and two faces are connected with a directed edge if the source is a true subset of the sink with no faces in between.
 The implementation of these lattices in \src{IncidenceLattice.hpp} uses the graph data structure in \src{BidirectionalGraph.hpp} as an internal representation.
 These graphs represent finite graphs with directed edges.
 They are called bidirectional since it is possible to traverse the edges in both directions in $\Oh(1)$ time.
@@ -1101,7 +1098,7 @@ For extremal faces, the minimal nodes connected to it also represent all adjacen
 Their convex hull does not produce the face however, since it contains rays.
 
 \begin{algorithm}[tbp]
-    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices which should be combined to a face and \pred{filter}, \pred{cont} and \pred{next} predicates mapping from nodes to boolean truth values.
+    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices which should be combined to a face and \pred{filter}, \pred{continue} and \pred{nextNodes} predicates mapping from nodes to boolean truth values.
     \begin{algorithmic}[1]
         \Function{FindNodesBFS}{$v_0, \pred{filter}, \pred{continue}, \pred{nextNodes}$}
             \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
@@ -1256,7 +1253,7 @@ Adding a face which is not minimal requires finding existing edges in the lattic
 
 Every face which is not minimal needs to (not necessarily directly) be connected to the minimal faces it contains, which in non-degenerate cases are vertices.
 Similarly, it also needs to be connected to faces of higher dimensionality which it is a subset of.
-Since the lattice should not contain transitive edges, it is necessary to identify the maximal subfaces (which are called \define{groups} in the code) and minimal superfaces (which are called \define{lubs} in the code) which are exactly the nodes whose edges have to be modified.
+Since the lattice must not contain transitive edges, it is necessary to identify the maximal subfaces (which are called \define{groups} in the code) and minimal superfaces (which are called \define{lubs} in the code) which are exactly the nodes whose edges have to be modified.
 
 The algorithm for finding those maximal and minimal relevant faces can be seen in \cref{alg:addface}.
 Finding minimal nodes connected to a face and finding the relevant faces can all be achieved using breadth first search.
