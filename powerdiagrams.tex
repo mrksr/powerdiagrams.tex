@@ -293,7 +293,7 @@ These notations can now be used to describe power diagrams in an algebraic way a
 \label{sub:properties_of_power_diagrams}
 The boundaries of the cells a power diagram are given by sets of points for which the powers with respect to at least two sites are equal.
 Using the definition of the power function in \cref{def:power}, it can be shown that these boundaries are hyperplanes.
-\begin{lemma}
+\begin{lemma}[\lemcite{Observation 1}]
     \label{lem:chordale}
     Let $s = (z_s, r^2_s)$ and $t = (z_t, r^2_t)$ be spheres in $\R^d$ with $z_s \neq z_t$. The points $x$ for which $\pow(x, s) = \pow(x, t)$ are called the \define{chordale} of $s$ and $t$ and form the hyperplane
     \begin{align}
@@ -308,7 +308,7 @@ A power diagram for which all radii are equal is therefore equivalent to the Vor
 
 The normal vectors of the chordales of three spheres are given by the pairwise differences of their centers.
 Since any of these differences can be expressed through the other two, their intersection has higher dimensionality than a general intersection of three hyperplanes can have.
-\begin{lemma}
+\begin{lemma}[\lemcite{Observation 2}]
     \label{lem:cellsarepolyhedra}
     Let $s, t$ and $u$ be spheres in $\R^d$ with $d \geq 2$.
     If the spheres are not collinear, the intersection of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
@@ -317,7 +317,7 @@ Since any of these differences can be expressed through the other two, their int
 \end{lemma}
 
 Every cell in the power diagram is either unbounded or it is bounded by chordales or intersections of other chordales.
-\begin{lemma}
+\begin{lemma}[\lemcite{Section 2.2}]
     The power diagram $\PD(S)$ of a finite set of spheres in $\R^d$ is a cell decomposition of $\R^d$.
 \end{lemma}
 \begin{proof}
@@ -603,7 +603,8 @@ Then the transformation function is defined as follows.
     \end{tikzpicture}
     \caption{The projection function $\Pi$ maps the spheres $s_1$ and $s_2$ to hyperplanes in $d+1$ dimensions.
     The intersection of the projections $\Pi(s_i)$ and the paraboloid $U$ are the orthogonal projections of $s_i$ onto the paraboloid.
-    The orthogonal projection onto the $x_1$-$x_2$-plane of the intersection of the two hyperplanes is the chordale of the two spheres.}
+    The orthogonal projection onto the $x_1$-$x_2$-plane of the intersection of the two hyperplanes is the chordale of the two spheres.
+    This figure is a recreation of \lemcite{Figure 4}.}
     \label{fig:projection}
 \end{figure}
 This transform has a direct connection to $U$ since for any sphere $s$
@@ -647,7 +648,7 @@ The following lemma proofs that this mapping is an identification of the two con
 \end{proof}
 
 Because $\Pi(s)$ is the vertical projection of spheres to $U$, the resulting hyperplanes can also be used to compute the power of some point with respect to $s$.
-\begin{lemma}
+\begin{lemma}[\lemcite{Observation 4}]
     \label{lem:distances}
     Let $s = (z, r^2)$ be a sphere in $h_0$ and $x \in h_0$.
     Let $x^\prime$ and $x^{\prime\prime}$ denote the vertical projections of $x$ onto $U$ and $\Pi(s)$. It then holds that
@@ -746,7 +747,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
 \end{proof}
 
 An additional property of $\Delta$ is its preservation of relative positions of points and hyperplanes.
-\begin{lemma}
+\begin{lemma}[\lemcite{Observation 5}]
     \label{lem:relativepositions}
     Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
     Then $p$ is above, in or below $h$ with respect to the $(d+1)$th component iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
@@ -775,7 +776,7 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 Having established the bijectivity of $\Pi$ it can be shown that power diagrams in $\R^d$ can be identified with boundaries of $(d+1)$-polyhedra.
 Since $\Pi$ provides a mapping to hyperplanes which intersect $U$, only polyhedra which are bounded by such hyperplanes can be considered.
 Any other polyhedron can however be converted to such a polyhedron by moving it up in $x_{d+1}$-direction, preserving their combinatorical structure.
-\begin{theorem}
+\begin{theorem}[\lemcite{Theorem 4}]
     \label{thm:equivalentpolyhedron}
     For any $(d+1)$-polyhedron P which is expressible as the intersection of halfspaces pointing upwards, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
 \end{theorem}
@@ -794,7 +795,7 @@ To also describe polyhedra $P$ generated using the intersection of upper halfspa
 Having established the existence of an affinely equivalent polyhedron for each set of spheres in $h_0$, the following theorem will show that using the polarity function $\Delta$, it is possible to relate power diagrams to convex hulls.
 Remember that a convex hull splits into its top and bottom part with respect to some vector $v$ given by the sign of the scalar product of $v$ with outwards pointing normal vectors, where orthogonal facets are assigned to neither parts.
 In the following, separations with respect to the $x_{d+1}$-axis will be considered.
-\begin{theorem}
+\begin{theorem}[\lemcite{Theorem 5}]
     \label{thm:equivalentconvexhull}
     For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$ up to movement in $x_{d+1}$-direction.
 \end{theorem}
@@ -1049,7 +1050,7 @@ The different steps of the algorithm allow for a straightforward analysis of its
     \label{alg:embedding}
 \end{algorithm}
 
-\begin{theorem}
+\begin{theorem}[\lemcite{Theorem 7}]
     Let $S$ be a set of $n$ spheres in $\R^d$ and denote the amount of time necessary to compute the convex hull of $n$ points in $\R^{d}$ as $\Time_d(n)$.
     \Cref{alg:embedding} then constructs $\PD(S)$ in $\Oh(\Time_{d+1}(n))$ time.
 \end{theorem}
