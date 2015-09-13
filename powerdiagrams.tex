@@ -1132,7 +1132,7 @@ Their convex hull does not produce the face however, since it contains rays.
             \State $\Ge \gets \left\{  \right\}$
             \For{$v \in V_{\textnormal{minimals}}$}
                 \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL, \cdot)}$
-                \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose Maximal Nodes in $G$}
+                \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose maximal nodes in $G$}
                 \State $\Ge \gets \Ge \cup G$
             \EndFor
             \State \Return $\Ge$
@@ -1146,7 +1146,9 @@ Their convex hull does not produce the face however, since it contains rays.
                 \State \Return \textbf{not} \Call{isUB}{$f$}
             \EndFunction
             \State Choose $v_0 \in V_{\textnormal{minimals}}$
-            \State \Return \Call{FindNodesBFS}{$\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL, \cdot)$}
+            \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL, \cdot)}$
+            \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g^\prime, g) \in \IL \right\}$\Comment{Choose minimal nodes in $G$}
+            \State \Return $G$
         \EndFunction
         \Statex
         \Procedure{AddFace}{$\IL, V_{\textnormal{minimals}}$}
