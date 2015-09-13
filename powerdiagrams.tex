@@ -1099,7 +1099,7 @@ For extremal faces, the minimal nodes connected to it also represent all adjacen
 Their convex hull does not produce the face however, since it contains rays.
 
 \begin{algorithm}[tbp]
-    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices which should be combined to a face and \pred{filter}, \pred{continue} and \pred{nextNodes} predicates mapping from nodes to boolean truth values.
+    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices to be combined to a face, \pred{filter} and \pred{continue} predicates mapping from nodes to boolean truth values and \pred{nextNodes} mapping from nodes to sets of nodes.
     \begin{algorithmic}[1]
         \Function{FindNodesBFS}{$v_0, \pred{filter}, \pred{continue}, \pred{nextNodes}$}
             \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
@@ -1154,10 +1154,8 @@ Their convex hull does not produce the face however, since it contains rays.
         \Procedure{AddFace}{$\IL, V_{\textnormal{minimals}}$}
             \State $V_{\textnormal{below}} \gets \Call{FindGroups}{\IL, V_{\textnormal{minimals}}}$
             \State $V_{\textnormal{above}} \gets \Call{FindLUBs}{\IL, V_{\textnormal{minimals}}}$
-            \Statex
             \State $\IL \gets \IL - \left\{ (a, b) \mid a \in V_{\textnormal{above}}, b \in V_{\textnormal{below}} \right\}$\Comment{Remove old edges}
-            \State $\IL \gets \IL + \left\{ V_{\textnormal{minimals}} \right\}$\Comment{Add new face}
-            \State $\IL \gets \IL + \left\{ (b, V_{\textnormal{minimals}}) \mid b \in V_{\textnormal{below}} \right\}$\Comment{Add new edges}
+            \State $\IL \gets \IL + \left\{ V_{\textnormal{minimals}} \right\} + \left\{ (b, V_{\textnormal{minimals}}) \mid b \in V_{\textnormal{below}} \right\}$\Comment{Add new face and edges}
         \EndProcedure
     \end{algorithmic}
     \caption{Adding faces to an incidence lattice}
