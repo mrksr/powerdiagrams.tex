@@ -246,7 +246,6 @@ Every such site gets assigned its partition of the space where there is no other
     \label{fig:garage}
 \end{figure}
 
-\newpage % For layout reasons
 \begin{definition}[Power Diagram]
     \label{def:powerdiagram}
     For a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$, a \define{cell} is given by
@@ -255,8 +254,8 @@ Every such site gets assigned its partition of the space where there is no other
             S &\to \powerset{\R^d}\\
             s &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}: \pow(x, s) \leq \pow(x, t) \right\}
         \end{aligned}\right..\\
-        \intertext{The \define{power diagram $\PD(S)$} is a tuple of the cells corresponding to all sites and given by}
-        \PD(\left\{ s_1, \dots, s_n \right\}) &\coloneqq \left( \cell_S(s_1), \dots, \cell_S(s_n) \right).
+        \intertext{The \define{power diagram $\PD(S)$} is the set of all cells corresponding to all sites and their non-empty intersections and given by}
+        \PD(S) &\coloneqq \left\{ \bigcap_{p \in P} \cell_S(p) \mid P \in \powerset{S} \setminus \left\{ \varnothing \right\} \right\} \setminus \left\{ \varnothing \right\}.
     \end{align}
 \end{definition}
 
@@ -287,9 +286,11 @@ A facet of the convex hull with outwards pointing normal vector $n$ is part of t
 Facets with normal vector orthogonal to $v$ are not attributed to either group.
 Any other face is in the lower or upper convex hull if it is contained in a facet which is in $\CHb$ or $\CHt$ respectively.
 
-A \define{cell decomposition $C$} of $\R^d$ is a finite family of polyhedra for which every face of a polyhedron in $C$ is itself a member of $C$ and for which a non-empty intersection of any two members of $C$ is a face of each of them, together with $\bigcup_{f \in C} f = \R^d$.
+A \define{cell decomposition $C$} of $\R^d$ is a finite family of polyhedra.
+In this family, every face of a polyhedron in $C$ is itself a member of $C$ and every non-empty intersection of any two members of $C$ is a face of each of them.
+Lastly, the union of all polyhedra must be the whole space, i.e.~$\bigcup_{f \in C} f = \R^d$.
 Full-dimensional polyhedra, or $d$-faces, of $C$ are called \define{cells}.
-$C$ and a $(d+1)$-polyhedron $P$ are called \define{affinely equivalent} if there exists a central or parallel projection $\varphi$ such that for every face $f \in C$, $f = \varphi(g)$ holds for some face $g$ of $P$.
+$C$ and a $(d+1)$-polyhedron $P$ are called \define{affinely equivalent} if there exists a central or parallel projection $\varphi$ such that for every face $f \in C$ it holds that $f = \varphi(g)$ for some face $g$ of $P$.
 
 These notations can now be used to describe power diagrams in an algebraic way and to show that they define a cell decomposition.
 
@@ -326,8 +327,8 @@ Every cell in the power diagram is either unbounded or it is bounded by chordale
 \end{lemma}
 \begin{proof}
     Let $S$ be a finite set of $n$ spheres in $\R^d$ whose centers have an affine dimension of $d$.
-    Since the cell of every sphere $s \in S$ is bounded by $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the intersection of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
-    Together with the fact that every $x \in \R^d$ is part of some cell of $\PD(S)$ by definition, this shows that $\PD(S)$ is a cell decomposition of $\R^d$.
+    Since the cell of every sphere $s \in S$ is bounded by halfspaces defined by its $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the intersection of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
+    Together with the fact that every $x \in \R^d$ is part of some cell of $\PD(S)$ by definition, this shows that $\PD(S)$ is a cell decomposition of $\R^d$, since the combinatorical structure of the shared faces of the polyhedra is guaranteed by definition.
 \end{proof}
 
 \begin{figure}[tb]
@@ -626,7 +627,7 @@ The following lemma proofs that this mapping is an identification of the two con
     The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ with nonempty intersection with $U$.
 \end{lemma}
 \begin{proof}
-    Clearly, $\Pi$ is injective since two spheres with different centers map to hyperplanes with different normal vectors and two concentric spheres need to share the same radius $r$ to map to hyperplanes with the same offset.
+    Clearly, $\Pi$ is injective since two spheres with different centers map to hyperplanes with different normal vectors $n$ normalized to $n_{d+1} = 1$ and two concentric spheres need to share the same radius $r$ to map to hyperplanes with the same offset.
     $\Pi$ is also surjective if every intersection of $U$ with a hyperplane in $\Ha$ is an ellipsoid which maps to a sphere if projected to $h_0$.
 
     Let $n \in \R^{d+1}$ be the normal vector with $n_{d+1} = 1$, let $b \in \R$ be an offset and let $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ be a hyperplane with $h \in \Ha$.
@@ -640,7 +641,7 @@ The following lemma proofs that this mapping is an identification of the two con
         &\Leftrightarrow\quad& x_{[d]}^Tx_{[d]} + n_{[d]}^Tx_{[d]} - b &= 0.
     \end{alignat}
 
-    To show that this projection is actually a sphere, it should be described by a center $v \in \R^d$ and a radius $\alpha \geq 0$ in the equation
+    To show that this projection is a sphere, it must be described by a center $v \in \R^d$ and a radius $\alpha \geq 0$ in the equation
     \begin{alignat}{2}
         &&\dist(x_{[d]},v)^2 &= \alpha.
         \intertext{Now let $\alpha = b + \frac{1}{4} n_{[d]}^Tn_{[d]}$ and $v = -\frac{1}{2}n_{[d]}$. Then}
@@ -678,7 +679,7 @@ This directly implies the following lemma, which connects chordales to the newly
 The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of these hyperplanes and $(d-j)$-flats in this dual domain.
 
 \begin{definition}[Polarity Function]
-    Let $\Ha$ as defined above and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis
+    Let $\Ha$ as defined above and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis, i.e.
     \begin{align}
         \F &\coloneqq \left\{ f \subseteq \R^{d+1} \mid
                 \exists 1 \leq k \leq d + 1: \exists h_1, \dots, h_{k} \in \Ha : \varnothing \neq f = \bigcap_{i = 1}^{k} h_i\right\}.
@@ -701,7 +702,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
     $\Delta$ is an involutory function and a bijection from $j$-flats to $(d-j)$-flats in $\F$ for $0 \leq j \leq d$.
 \end{lemma}
 \begin{proof}
-    Let $F = f + X \subset \R^{d+1} \in \F$ be some flat with $f \in \R^{d+1}$, $x$ a linear subspace with $\dim(X) = j$ for $0 \leq j \leq d$ and let
+    Let $F = f + X \subset \R^{d+1} \in \F$ be some flat with $f \in \R^{d+1}$, $X$ a linear subspace with $\dim(X) = j$ for $0 \leq j \leq d$ and let
     \begin{align}
         X^\bot = \left\{ n \in \R^{d+1} \mid \forall x \in X : \scalar{n, x} = 0 \right\}
     \end{align}
@@ -786,7 +787,7 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
 \end{theorem}
 \begin{proof}
     Let $P = \bigcap_{i=1}^n h_i^+$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
-    Also assume that $h_i \cup U \neq \varnothing$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
+    Also assume that $h_i \cap U \neq \varnothing$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
 
     \Cref{lem:pibijection} implies that there is a set $S = \left\{ s_1, \dots, s_n \right\}$ of spheres in $h_0$ such that $\Pi(s_i) = h_i$.
     Using \cref{lem:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) iff $x \in \cell_S(s_i)$ is in $\PD(S)$, since $x$ is in the cell of $s_i$ if $s_i$ minimizes the power function for this point and therefore, the distance of $x$ to $\Pi(s_i)$ must be maximal, i.e. $f_i$ must be a face of $P$.
@@ -798,6 +799,7 @@ To also describe polyhedra $P$ generated using the intersection of upper halfspa
 
 Having established the existence of an affinely equivalent polyhedron for each set of spheres in $h_0$, the following theorem will show that using the polarity function $\Delta$, it is possible to relate power diagrams to convex hulls.
 A power diagram is called dual to a convex hull if there exists a polyhedron such that the power diagram is affinely equivalent to the polyhedron as described in \cref{thm:equivalentpolyhedron} and this polyhedron is dual to the convex hull.
+
 Remember that a convex hull splits into its top and bottom part with respect to some vector $v$ given by the sign of the scalar product of $v$ with outwards pointing normal vectors, where orthogonal facets are assigned to neither parts.
 In the following, separations with respect to the $x_{d+1}$-axis will be considered.
 \begin{theorem}[\lemcite{Theorem 5}]
@@ -805,7 +807,7 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
     For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
 \end{theorem}
 \begin{proof}
-    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa, up to movement in $x_{d+1}$-direction.
+    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa.
     Let $M = \Delta(H)$ be the set of all polars of the hyperplanes corresponding to all spheres.
     It is to be shown that $\CHb(M)$ is dual to $P$.
 
@@ -813,7 +815,7 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
     Let also $f_i$ and $f_j$ be adjacent in a $(d-1)$-face $g$ ($1 \leq i < j \leq n$).
     Then every $x \in g$ is in $h_i \cap h_j$ and above each $h \in H \setminus \left\{ h_i, h_j \right\}$ via \cref{lem:distances}.
 
-    \Cref{lem:relativepositions} now implies that exactly then $p_i, p_j \in \Delta(x)$ and every other point $p \in M \setminus \left\{ p_i, p_j \right\}$ is above $\Delta(x)$.
+    \Cref{lem:relativepositions} now implies that exactly in this case it holds that $p_i, p_j \in \Delta(x)$ and every other point $p \in M \setminus \left\{ p_i, p_j \right\}$ is above $\Delta(x)$.
     The line defined by $p_i$ and $p_j$, which is $\Delta(g)$, therefore defines an edge of $\CHb(M)$.
     Since a similar argument holds for all other $j$-faces, $P$ is dual to $\CHb(M)$ and therefore, $\PD(S)$ is, too.
 \end{proof}
