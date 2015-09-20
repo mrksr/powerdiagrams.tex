@@ -1076,7 +1076,24 @@ In addition to their theoretical description, the data structure and algorithms 
 The implementation is written in \CC, making heavy use of features in the \CCe standard which introduces a more functional and generic style to the language.
 References for these features can be found in the newer editions of \cite{stroustrup1986c++} and \cite{stroustrup2014programming} and also in \cite{meyers2014effective}.
 To improve readability, code presented in this paper will be pseudo code rather than concrete \CC.
-This section first introduces a concrete implementation of incidence lattices based on directed graphs and then describes how it can be used to implement the dual algorithm.
+
+This section first describes the general architecture of the code written for this interdisciplinary project.
+It continues by introducing a concrete implementation of the incidence lattices presented in \cref{sub:incidence_lattices} based on directed graphs and then describes how it is used to implement the dual algorithm.
+
+\subsection{Code Architecture}
+\label{sub:code_architecture}
+The program uses a command line interface which is mainly implemented in \src{powerdiagram\_main.cpp}.
+The coordinates of the sphere centers and their radii are read from textfiles, a parser for which is implemented in \src{FromCSV.hpp}.
+Based on parameters supplied on the command line, both the naive algorithm of \cref{sub:naive_algorithm} implemented in \src{PowerDiagramNaive.hpp} or the dual algorithm presented in \cref{sub:dual_algorithm} and implemented in \src{PowerDiagramDual.hpp} can be performed.
+
+Both of the algorithms return an incidence lattice which contains the $0$-faces present in the power diagram.
+The dual algorithm also calculates the $1$-faces and the directions of unbounded $1$-faces.
+The incidence lattices are implemented in \src{IncidenceLattice.hpp} and depend on an internal graph representation which is implemented in \src{BidirectionalGraph.hpp}.
+
+While the naive algorithm only depends on a permutation generator implemented in \src{AllChoices.hpp}, the dual algorithm requires a convex hull algorithm.
+The implementation supplies an interface to one such algorithm implemented in \src{ConvexHullQhull.cpp} which is described in \cref{sub:impl_dual_algorithm} and \cref{sec:building_the_code}.
+
+In the following, both the implementations of the incidence lattices and the dual algorithm will be described in more detail.
 
 \subsection{Incidence Lattices}
 \label{sub:impl_incidence_lattices}
