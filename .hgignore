@@ -15,6 +15,8 @@ syntax: glob
 *.toc
 *.nav
 *.snm
+*.bcf
+*.run.xml
 
 # latexmk files
 *.fdb_latexmk
