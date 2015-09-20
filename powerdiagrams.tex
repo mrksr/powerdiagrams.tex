@@ -115,7 +115,10 @@ After introducing some geometric notation, some fundamental results about power 
 \label{sub:definition_of_power_diagrams}
 There are multiple possible modifications of Voronoi diagrams, a few of which are described in \cite{aurenhammer1987power}.
 To obtain \define{power diagrams}, each point $p \in M$ is assigned a \define{weight} $w(p)$, where a larger weight results in a larger cell.
-While the distance function to be minimized in Voronoi diagrams for points $x \in \R^d$ in a cell is $\dist(x, p)$, power diagrams use the function $\dist(x, p)^2 - w(p)$.
+While the definition given here is applicable to more general metrics, the results presented here assume the usage of the euclidean metric $\dist(x, y) = \Vert x - y \Vert^2$.
+
+The distance function to be minimized in Voronoi diagrams for points $x \in \R^d$ in a cell is $\dist(x, p)$.
+Power diagrams use the function $\dist(x, p)^2 - w(p)$.
 While other possible combinations of distance and weight have also been investigated \cite{aurenhammer1987power}, this definition has a connection to the power of circles around the points $p \in M$.
 
 \begin{definition}[Power of a Point]
@@ -261,7 +264,7 @@ After introducing some geometric notation, the remainder of this section will sh
 
 \subsection{Geometric Notation}
 \label{sub:geometric_notation}
-Like Voronoi diagrams, power diagrams will be shown to consist of polyhedral regions, which share faces at their boundaries.
+Like Voronoi diagrams, power diagrams in the euclidean case will be shown to consist of polyhedral regions, which share faces at their boundaries.
 An extensive introduction into polyhedra can be found in \cite{grunbaum2003convex} by Grünbaum and an introduction into convex analysis is given by Gritzmann in \cite{gritzmann2013grundlagen}.
 The following will repeat some notations of \cite{aurenhammer1987power}.
 
@@ -369,14 +372,14 @@ To justify this approach, the following lemma shows that for power diagrams whic
 \begin{lemma}
     \label{lem:zerofaces}
     Let $S \subset \R^d \times \R_{\geq 0}$ be a finite set of spheres.
-    If any cell of $\PD(S)$ is bounded by a $0$-face, then every cell in $\PD(S)$ is bounded by a $0$-face.
+    If any cell of $\PD(S)$ contains a $0$-face, then every cell in $\PD(S)$ contains a $0$-face.
 \end{lemma}
 \begin{proof}
     Let $S = \left\{ s_1, \dots, s_k \right\} \subset \R^d \times \R_{\geq 0}$ be a finite set of spheres $s_i = (z_i, r_i^2)$ with $k \geq d+2$ and $s_1, \dots, s_d, s_{d+1}, s_{d+2} \in S$ such that (the cell of) $s_{d+1}$ shares a $0$-face with $s_1, \dots, s_d$ in $\PD(S)$.
     Since the chordales of $s_{d+1}$ with these sites intersect in a $0$-face, their $d$ normal vectors $\left\{  z_i - z_{d+1} \mid 1 \leq i \leq d\right\}$ must be linearly independent, or equivalently, it holds that $\dim(\aff(\left\{ z_1, z_2, \dots, z_{d+1} \right\})) = d$.
 
-    Suppose that $s_{d+2}$ is not bounded by a $0$-face.
-    Then, a face $f$ of lowest dimension in the polyhedron of $s_{d+2}$ has at least dimension $\dim(f) = 1$ and must be unbounded, giving the polyhedron a non-empty lineality space.
+    Suppose that $s_{d+2}$ does not contain a $0$-face.
+    Then, a face $f$ of lowest dimension in the polyhedron of $s_{d+2}$ has at least dimension $\dim(f) = 1$, giving the polyhedron a non-empty lineality space.
 
     The vectors in this lineality space must be perpendicular to all chordales of $s_{d+2}$, since the polyhedron is bounded by them.
     A subset of the normal vectors of these chordales is the set $C = \left\{ z_i - z_{d+2} \mid 1 \leq i \leq d+1 \right\}$.
@@ -607,12 +610,12 @@ Then the transformation function is defined as follows.
     This figure is a recreation of \lemcite[]{Figure 4}.}
     \label{fig:projection}
 \end{figure}
-This transform has a direct connection to $U$ since for any sphere $s$
+This transform has a direct connection to $U$ since for any sphere $s = (z, r^2)$
 \begin{alignat}{2}
     x \in \Pi(s) \cap U &\Leftrightarrow\quad& x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 &\wedge x_{d+1} = x_{[d]}^Tx_{[d]}\\
     &\Leftrightarrow\quad&2x_{[d]}^Tz_{[d]} - z_{[d]}^Tz_{[d]} + r^2 &= x_{[d]}^Tx_{[d]}\\
     &\Leftrightarrow\quad& \dist(x_{[d]}, z) &= r^2\\
-    &\Leftrightarrow\quad& x_{[d]} &\in s.
+    &\Leftrightarrow\quad& x_{[d]} &\in z + r \cdot \Es^d.
 \end{alignat}
 The intersection of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
 A visualization of this can be seen in \cref{fig:projection}.
@@ -774,18 +777,18 @@ An additional property of $\Delta$ is its preservation of relative positions of 
 \subsection{Power Diagrams and Polyhedra}
 \label{sub:power_diagrams_and_polyhedra}
 Having established the bijectivity of $\Pi$ it can be shown that power diagrams in $\R^d$ can be identified with boundaries of $(d+1)$-polyhedra.
-Since $\Pi$ provides a mapping to hyperplanes which intersect $U$, only polyhedra which are bounded by such hyperplanes can be considered.
+Since $\Pi$ provides a mapping to hyperplanes which intersect $U$, only polyhedra which are bounded by halfspaces defined by such hyperplanes can be considered.
 Any other polyhedron can however be converted to such a polyhedron by moving it up in $x_{d+1}$-direction, preserving their combinatorical structure.
 \begin{theorem}[\lemcite{Theorem 4}]
     \label{thm:equivalentpolyhedron}
-    For any $(d+1)$-polyhedron P which is expressible as the intersection of halfspaces pointing upwards, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
+    For any $(d+1)$-polyhedron P which is expressible as the intersection of upper halfspaces of hyperplanes with normal vectors $n$ with their $(d+1)$th coordinate equal to $1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
 \end{theorem}
 \begin{proof}
-    Let $P = \bigcap_{i=1}^n h_i^+$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with positive $(d+1)$th coordinates such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
+    Let $P = \bigcap_{i=1}^n h_i^+$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
     Also assume that $h_i \cup U \neq \varnothing$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
 
     \Cref{lem:pibijection} implies that there is a set $S = \left\{ s_1, \dots, s_n \right\}$ of spheres in $h_0$ such that $\Pi(s_i) = h_i$.
-    Using \cref{lem:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) iff $x \in \cell_S(s_i)$ is in $\PD(S)$.
+    Using \cref{lem:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) iff $x \in \cell_S(s_i)$ is in $\PD(S)$, since $x$ is in the cell of $s_i$ if $s_i$ minimizes the power function for this point and therefore, the distance of $x$ to $\Pi(s_i)$ must be maximal, i.e. $f_i$ must be a face of $P$.
     This means that $\cell_S(s_i)$ is exactly the vertical projection of $f_i$ onto $h_0$ for all $1 \leq i \leq n$, giving that $\PD(S)$ is affinely equivalent to $P$.
 
     Conversely, given any set of spheres $S$ in $h_0$ a corresponding polyhedron can be constructed by intersecting the upper halfspaces of the hyperplanes in $\Pi(S)$.
@@ -793,11 +796,12 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
 To also describe polyhedra $P$ generated using the intersection of upper halfspaces, one can inspect the reflection of $P$ through $h_0$ as described in \cite{aurenhammer1987power}.
 
 Having established the existence of an affinely equivalent polyhedron for each set of spheres in $h_0$, the following theorem will show that using the polarity function $\Delta$, it is possible to relate power diagrams to convex hulls.
+A power diagram is called dual to a convex hull if there exists a polyhedron such that the power diagram is affinely equivalent to the polyhedron as described in \cref{thm:equivalentpolyhedron} and this polyhedron is dual to the convex hull.
 Remember that a convex hull splits into its top and bottom part with respect to some vector $v$ given by the sign of the scalar product of $v$ with outwards pointing normal vectors, where orthogonal facets are assigned to neither parts.
 In the following, separations with respect to the $x_{d+1}$-axis will be considered.
 \begin{theorem}[\lemcite{Theorem 5}]
     \label{thm:equivalentconvexhull}
-    For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$ up to movement in $x_{d+1}$-direction.
+    For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
 \end{theorem}
 \begin{proof}
     By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa, up to movement in $x_{d+1}$-direction.
@@ -948,7 +952,7 @@ To lessen the impact of higher dimensions somewhat, the implementation presented
 
 \subsection{Naive Algorithm}
 \label{sub:naive_algorithm}
-For any power diagram which contains a cell bounded by a $0$-face, every cell is bounded by a $0$-face, as stated by \cref{lem:zerofaces}.
+For any power diagram which contains a cell with a $0$-face, every cell contains a $0$-face, as stated by \cref{lem:zerofaces}.
 The proof of the lemma yields that the existence of a $0$-face in a power diagram is guaranteed if there are at least $d+1$ linearly independent spheres, which also is a necessary condition.
 
 Faces are called internal faces of a power diagram if they can be expressed as the convex hull of $0$-faces, i.e.~if they are polytopal.
