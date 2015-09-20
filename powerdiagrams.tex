@@ -363,8 +363,8 @@ This is not a sufficient condition however.
 Such a constellation can also lead to a sphere $s$ having a cell for which it holds that $z_s \not\in \cell_S(s) \neq \varnothing$.
 
 While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales have non-empty intersection with their cells and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
-To describe all existing non-extremal faces, one can find all $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
-To justify this approach, the following lemma shows that for power diagrams which have $0$-faces, this approach does not miss non-extremal faces.
+To describe all existing bounded faces, one can find all $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
+To justify this approach, the following lemma shows that for power diagrams which have $0$-faces, this approach does not miss bounded faces.
 
 \begin{lemma}
     \label{lem:zerofaces}
@@ -1002,7 +1002,7 @@ To analyze the running time, the different steps are analyzed separately and lea
 \end{proof}
 
 If one assumes $d \ll n$, this running time can be approximated as $\Oh(n^{d+2})$.
-To construct the complete incidence lattice of the power diagram, this shallow representation has to be filled by adding the internal $j$-faces for $1 \leq j \leq d -1$ and extremal faces would need to be found.
+To construct the complete incidence lattice of the power diagram, this shallow representation has to be filled by adding the internal $j$-faces for $1 \leq j \leq d -1$ and unbounded faces would need to be found.
 Since this naive algorithm is not applicable in practice due to its running time, these questions were not explored further and it was only used as a test implementation for the efficient algorithm presented in the next subsection.
 
 \subsection{Dual Algorithm}
@@ -1095,7 +1095,7 @@ A node in such a graph is called \define{minimal} if it does not have a predeces
 Internal faces in the incidence lattice can be described as the convex hull of their vertices.
 Since there are no non-empty faces which are true subsets of vertices, they are the minimal nodes of an incidence lattice.
 Finding the vertices which define internal faces therefore translates to finding the minimal nodes in the graph which are connected to the face.
-For extremal faces, the minimal nodes connected to it also represent all adjacent vertices.
+For unbounded faces, the minimal nodes connected to it also represent all adjacent vertices.
 Their convex hull does not produce the face however, since it contains rays.
 
 \begin{algorithm}[tbp]
@@ -1327,9 +1327,9 @@ Replacing $j$-faces by $(d-j)$-faces can be achieved by reversing all edges in t
 See \cref{alg:dual_lattice} for a more formal description of this part of the algorithm.
 
 \begin{algorithm}[tbp]
-    Let $\IL$ be the incidence lattice of a power diagram, let $f$ be an extremal $1$-face and $v$ a $0$-face with $v \subset f$.
+    Let $\IL$ be the incidence lattice of a power diagram, let $f$ be an unbounded $1$-face and $v$ a $0$-face with $v \subset f$.
     \begin{algorithmic}[1]
-        \Function{FindDirectionOfExtremalEdge}{$\IL, f, v$}
+        \Function{FindDirectionOfUnboundedEdge}{$\IL, f, v$}
         \State $V_{\textnormal{edge}} \gets \Call{MinimalsOf}{f}$\Comment{$V_{\textnormal{edge}}$ contains primal spheres}
             \State $V_{\textnormal{vertex}} \gets \Call{MinimalsOf}{v}$
             \State Choose $s_{\textnormal{active}} \in V_{\textnormal{edge}}$
@@ -1349,8 +1349,8 @@ See \cref{alg:dual_lattice} for a more formal description of this part of the al
 If the convex hull algorithm returns a shallow incidence lattice which, besides the vertices and facets, only contains ridges, the dualized lattice only contains edges ($1$-faces) of the power diagram.
 To facilitate the output of these edges, an additional step of the algorithm is the calculation of their directions.
 For internal edges, the direction can be calculated as the difference of the two vertices which define the edge via their convex hull.
-For extremal edges, the direction must be contained in the chordales of all pairs of spheres defining the edge (i.e. the minimal nodes of the node representing the edge in the lattice).
-Assuming there is a $0$-face in the power diagram, the extremal edge is a ray starting from some vertex (see \cref{lem:zerofaces}).
+For unbounded edges, the direction must be contained in the chordales of all pairs of spheres defining the edge (i.e. the minimal nodes of the node representing the edge in the lattice).
+Assuming there is a $0$-face in the power diagram, the unbounded edge is a ray starting from some vertex (see \cref{lem:zerofaces}).
 Since a vector orthogonal to all chordales could point both inwards and outwards, the correct direction can be established by testing the power of one point as described in \cref{alg:ridges}.
 
 Adding the directions of edges is the last step in constructing a (shallow) incidence lattice describing the power diagram.
