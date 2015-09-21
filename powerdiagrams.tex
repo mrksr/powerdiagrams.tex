@@ -976,7 +976,7 @@ Operations of the incidence lattice are denoted using addition and subtraction o
                 \State $P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find intersection of all pairs of spheres in $G$}.
                 \If{$P = \left\{ p \right\}$}\Comment{$P$ is a single point}
                     \State Choose $g \in G$
-                    \If{$\forall o \in S \setminus G : \pow(p, o) > \pow(p, g)$}\Comment{$p$ is a $0$-face}
+                    \If{$\forall o \in S \setminus G : \pow(p, o) \geq \pow(p, g)$}\Comment{$p$ is a $0$-face}
                         \State $\IL \gets \IL +\; G + \left\{ p \right\} + \left\{ (g, p) \mid g \in G \right\}$\Comment{Add $0$-face to $\IL$}
                     \EndIf
                 \EndIf
