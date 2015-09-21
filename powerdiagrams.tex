@@ -1277,13 +1277,41 @@ During this process, the lattice is usually \define{shallow} in the sense that i
 Adding a face which is not minimal requires finding existing edges in the lattice which get cut when inserting the new face, an example of which can be seen in \cref{fig:addingfaces}.
 
 Every face which is not minimal needs to (not necessarily directly) be connected to the minimal faces it contains, which in non-degenerate cases are vertices.
-Similarly, it also needs to be connected to faces of higher dimensionality which it is a subset of.
-Since the lattice must not contain transitive edges, it is necessary to identify the maximal subfaces (which are called \define{groups} in the code) and minimal superfaces (which are called \define{lubs} in the code) which are exactly the nodes whose edges have to be modified.
+Similarly, it also needs to be connected to faces of higher dimensionality it is a subset of.
+Since the lattice must not contain transitive edges, it is necessary to identify the correct edges to be modified.
+In the following, the algorithm to find those edges will be described by the example defined in \cref{fig:addingfaces}.
 
 The algorithm for finding those maximal and minimal relevant faces can be seen in \cref{alg:addface}.
-Finding minimal nodes connected to a face and finding the relevant faces can all be achieved using breadth first search.
-The graph data structure therefore contains a generalized search which can be called using function parameters.
-All these searches have a worst-case running time of $\Oh(n^2)$ with $n$ being the number of faces and therefore nodes in the graph.
+Given a shallow incidence lattice as described in the left side of \cref{fig:addingfaces}, inserting a new face into an incomplete lattice requires finding all the edges in the existing lattice which have to be bisected by the new face.
+
+Suppose the face $f_{123} = \left\{ 1, 2, 3 \right\}$ which is defined by the intersection of the cells represented by the nodes $1$, $2$ and $3$ should be added to the lattice.
+Since it already contains the face $f_{1234} = \left\{ 1, 2, 3, 4 \right\}$, there must be paths connecting the three mentioned minimal nodes to $f_{1234}$.
+The combinatorical structure of the power diagram gives that $f_{1234} \subseteq f_{123}$ and therefore, the lattice must contain the edge $(f_{123}, f_{1234})$ after the update.
+Note that the direction of the edge is a convention and could be chosen differently, depending on whether the lattice is based on the primal or dual polyhedron.
+For the same reason, the lattice must also contain the edge $(3, f_{123})$, which would make the edge $(3, f_{1234})$ transitive, so it has to be removed.
+Note however that there was no edge $(2, f_{1234})$, since there is already a face $f_{12} = \left\{ 1, 2 \right\}$ which combines the other two cells.
+Lastly, suppose there existed a face $f_{12345} = \left\{ 1, 2, 3, 4, 5 \right\}$ in the lattice.
+Then although $f_{12345} \subseteq f_{123}$ holds, the edge $(f_{123}, f_{12345})$ must not be added, since after connecting $f_{123}$ to $f_{1234}$, this edge would be transitive.
+
+To identify the existing nodes which are incident to edges which should be bisected, faces \define{above} and \define{below} in the lattice are treated separately.
+A face is considered \define{above} another face in the lattice if the set of minimal nodes it combines is a superset of the minimal nodes of the other face and considered \define{below} if it is a subset.
+In the example, $f_{1234}$ is above of $f_{123}$ while $f_{12}$ is below it.
+Adding the face $f_{123}$ now requires to bisect exactly those edges which connect maximal faces below it to minimal faces above it.
+A face $f$ is considered maximal below (or a \define{group}) of $f_{123}$ if there is no face which is also below $f_{123}$ but above $f$ and minimal above (or a \define{lub}) in a symmetric manner.
+There cannot exist other edges which have to be bisected since those would be transitive.
+
+To find both groups and lubs, the program uses breadth first search.
+The groups can be found by starting from each of the minimal nodes associated with the new face $f_{123}$ (i.e. $1$, $2$ and $3$) and only continuing to new nodes which are also below the new face, i.e.~whose minimal nodes are a subset of the minimal nodes of the new face.
+After finding all candidates, every node which is not maximal has to be removed.
+The example in \cref{fig:addingfaces} contains two groups, the faces $\left\{ 1, 2 \right\}$ and $3$.
+The lubs can be identified similarly by starting from any one of the minimal nodes of the new face and exploring the lattice to find nodes which are above the new face.
+Note that those faces must all be above this minimal node.
+Successors of faces which are above the new face need not be considered.
+Again, after finding the candidates, every node which is not minimal must be removed.
+The example contains one lub, the face $f_{1234}$.
+
+The graph data structure contains a generalized search which can be called using function parameters to implement the similar searches described above.
+All searches have a worst-case running time of $\Oh(n^2)$ with $n$ being the number of faces and therefore nodes in the graph.
 To speed up the program, the incidence lattices cache the minimal nodes of every node they contain, making the $\pred{MinimalsOf}$-function an $\Oh(1)$ operation.
 This is possible since it is not necessary to remove faces besides the restriction operations.
 
