@@ -38,7 +38,7 @@ A way of describing a power diagram is via the adjacency structure of the differ
 Two cells are adjacent if they share points which have the same minimizing power with respect to both spheres.
 In this case, they share a polyhedron which is incident to both cells.
 This interdisciplinary project is concerned with describing power diagrams formally, describing algorithms to construct such incidence structures and implementing them in \CC.
-The theoretical parts of this project are guided by a paper by \textcite{aurenhammer1987power} which is be complemented with some additional proofs.
+The theoretical parts of this project are guided by a paper by \textcite{aurenhammer1987power} but contains some additional proofs as a service to the reader.
 
 The first section of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
 Using a transformation from spheres to hyperplanes, the next section shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
@@ -1009,7 +1009,7 @@ To analyze the running time, the different steps are analyzed separately and lea
 \end{proof}
 
 If one assumes $d \ll n$, this running time can be approximated as $\Oh(n^{d+2})$.
-To construct the complete incidence lattice of the power diagram, this shallow representation has to be filled by adding the internal $j$-faces for $1 \leq j \leq d -1$ and unbounded faces would need to be found.
+To construct the complete incidence lattice of the power diagram, this shallow representation has to be filled by adding the internal $j$-faces for $1 \leq j < d$ and unbounded faces would need to be found.
 Since this naive algorithm is not applicable in practice due to its running time, these questions were not explored further and it was only used as a test implementation for the efficient algorithm presented in the next subsection.
 
 \subsection{Dual Algorithm}
@@ -1149,7 +1149,7 @@ Their convex hull does not produce the face however, since it contains rays.
             \State \Return $V_{\textnormal{found}}$
         \EndFunction
         \Statex
-        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal subfaces of $V_{\textnormal{minimals}}$}
+        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal faces below of $V_{\textnormal{minimals}}$}
             \Function{isGroup}{$f$}
                 \State \Return $\Call{MinimalsOf}{\IL, f} \subseteq V_{\textnormal{minimals}}$
             \EndFunction
@@ -1162,7 +1162,7 @@ Their convex hull does not produce the face however, since it contains rays.
             \State \Return $\Ge$
         \EndFunction
         \Statex
-        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal superfaces of $V_{\textnormal{minimals}}$}
+        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal faces above of $V_{\textnormal{minimals}}$}
             \Function{isUB}{$f$}
                 \State \Return $V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f}$
             \EndFunction
@@ -1424,6 +1424,7 @@ This relationship can be used to derive an efficient algorithm to construct powe
 After describing this algorithm formally and introducing a data structure which can be used to represent polyhedra and therefore power diagrams, this paper lastly presents a concrete implementation of the results.
 
 \appendix
+\newpage % For the layout
 \section{Building the Code}
 \label{sec:building_the_code}
 The implementation presented in \cref{sec:implementation} is written in \CC making use of features introduced into the language in the \CCe standard.
