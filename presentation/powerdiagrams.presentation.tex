@@ -12,7 +12,7 @@
     \titlepage
 \end{frame}
 
-\begin{frame}[c]
+\begin{frame}
     \frametitle{Voronoi- und Powerdiagramme}
 
     \centering
@@ -93,9 +93,8 @@
 \begin{frame}
     \frametitle{Power-Funktion}
 
-    \begin{definition}[Power of a Point]
-        \label{def:power}
-        The \define{power} of a point $x \in \R^d$ with respect to a sphere with center $z \in \R^d$ and radius $r \in \R_{\geq 0}$ is given by
+    \begin{definition}[Power-Funktion]
+        Die \structure{Power} eines Punktes $x \in \R^d$ in Bezug zu einer Sphäre $s$ mit Zentrum $z \in \R^d$ und Radius $r \geq 0$ ist
         \begin{align}
             \pow(x, s) = \dist(x, z)^2 - r^2.
         \end{align}
@@ -114,7 +113,7 @@
 
         \draw
         (tangent) edge[black] node[midway, left] {$r$} (center.center)
-        (center.center) edge[black] node[pos=0.6, sloped, below] {$\dist(x, p)$} (point)
+        (center.center) edge[black] node[pos=0.6, sloped, below] {$\dist(x, z)$} (point)
         (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s)$} (tangent);
         \draw
         (center)
@@ -123,23 +122,6 @@
         (point)
         node[power point, label={above:$x$}] () {};
     \end{tikzpicture}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Powerdiagramm Definition}
-
-    \begin{definition}[Power Diagram]
-        \label{def:powerdiagram}
-        For a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$, a \define{cell} is given by
-        \begin{align}
-            \cell_S &: \left\{\begin{aligned}
-                    S &\to \powerset{\R^d}\\
-                    s &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}: \pow(x, s) \leq \pow(x, t) \right\}
-                \end{aligned}\right..\\
-            \intertext{The \define{power diagram $\PD(S)$} is the set of all cells corresponding to all sites and their non-empty intersections and given by}
-            \PD(S) &\coloneqq \left\{ \bigcap_{p \in P} \cell_S(p) \mid P \in \powerset{S} \setminus \left\{ \varnothing \right\} \right\} \setminus \left\{ \varnothing \right\}.
-        \end{align}
-    \end{definition}
 \end{frame}
 
 \begin{frame}
@@ -175,82 +157,7 @@
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[c]
-    \frametitle{Chordale}
-
-    \begin{lemma}
-        Let $s = (z_s, r^2_s)$ and $t = (z_t, r^2_t)$ be spheres in $\R^d$ with $z_s \neq z_t$. The points $x$ for which $\pow(x, s) = \pow(x, t)$ are called the \define{chordale} of $s$ and $t$ and form the hyperplane
-        \begin{align}
-            \chor(s, t) = \left\{ x \in \R^d \mid 2(z_s - z_t)^Tx = r_t^2 - r_s^2 - z_t^Tz_t + z_s^Tz_s \right\}
-        \end{align}
-        which is perpendicular to the line connecting $z_s$ and $z_t$.
-    \end{lemma}
-
-    \centering
-    \begin{tikzpicture}[x=1cm, y=1cm]
-        \coordinate (center-a) at (-2, 0);
-        \coordinate (center-b) at (2, 0);
-        \coordinate (point) at (0.46875, 3);
-
-        \node[power circle, minimum size=4cm] (circle-a) at (center-a) {};
-        \node[power circle, minimum size=1cm] (circle-b) at (center-b) {};
-
-        \coordinate (tangent-a) at (tangent cs:node=circle-a,point={(point)},solution=1);
-        \coordinate (tangent-b) at (tangent cs:node=circle-b,point={(point)},solution=2);
-
-        \draw[right angle length=1.5ex, right angle symbol={center-a}{center-b}{point}];
-
-        \draw
-        (center-a.center) edge (center-b.center)
-        (point) +(0, 1) edge[very thick, tumgreen] (point |- 0, -2cm)
-        (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s_1)$} (tangent-a)
-        (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s_2)$} (tangent-b);
-
-        \draw
-        (center-a)
-        node[power center, label={[label distance=3.8em]below:$s_1$}] () {}
-        (center-b)
-        node[power center, label={below:$s_2$}] () {}
-
-        (point)
-        node[power point, label={above right:$x$}] () {};
-    \end{tikzpicture}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Transformationsfunktion}
-
-    \begin{definition}[Transformation Function]
-        The \define{transformation function $\Pi$} connects spheres in $\R^d$ to hyperplanes in $\R^{d+1}$.
-        \begin{align}
-            \Pi: \left\{\begin{aligned}
-                    \R^{d} \times \R_{\geq 0} &\to \Ha\\
-                    (z, r^2) &\mapsto \left\{ x \in \R^{d+1} \mid x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 \right\}
-                \end{aligned}\right.
-        \end{align}
-    \end{definition}
-
-    \begin{itemize}
-        \item Paraboloid
-        \item Schitte
-    \end{itemize}
-
-    \begin{lemma}
-        Let $s = (z, r^2)$ be a sphere in $h_0$ and $x \in h_0$.
-        Let $x^\prime$ and $x^{\prime\prime}$ denote the vertical projections of $x$ onto $U$ and $\Pi(s)$. It then holds that
-        \begin{align}
-            \pow(x_{[d]}, s) = \dist(x, x^\prime) - \dist(x, x^{\prime\prime})
-        \end{align}
-    \end{lemma}
-
-    \begin{lemma}
-        \label{lem:verticalprojection}
-        Let $s$ and $t$ be non-concentric spheres in $h_0$.
-        Then $\chor(s, t)$ is the vertical projection of $\Pi(s) \cap \Pi(t)$ onto $h_0$.
-    \end{lemma}
-\end{frame}
-
-\begin{frame}
+\begin{frame}<-4>[label=transformation]
     \frametitle{Transformationsfunktion}
 
     \centering
@@ -258,7 +165,7 @@
         \begin{scope}[cm={{1.25,0.0,0.0,-1.25,(0.0,900.0)}}]
             \path[use as bounding box] (100, 60) rectangle (390, 360);
             % Paraboloid
-            \only<2-> {
+            \only<2-6> {
                 \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
                 rule] (212.3294,187.2000) .. controls (217.7922,182.5589)
                 and (223.8195,178.2548) .. (230.5412,175.7647) .. controls (231.5379,175.3954)
@@ -293,32 +200,57 @@
                 (156.8008,290.3267) and (161.2856,292.9994) ..
                 (164.9139,295.4292)(157.4186,280.1557) .. controls (156.2316,281.8382) and
                 (155.2127,284.1001) .. (155.7216,286.0954);
-                \path[draw=black,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
-                cap=butt,miter limit=4.00,even odd rule]
-                (317.7882,269.3647) .. controls (319.1527,272.7162) and (320.6622,277.9665) ..
-                (322.6234,282.0431) .. controls (323.2589,283.3640) and (323.8203,284.8492) ..
-                (324.2378,285.9741)(303.8118,237.6000) .. controls (309.0582,247.9097) and
-                (313.4263,258.6508) .. (317.7882,269.3647)(290.2588,214.3059) .. controls
-                (295.1243,221.8575) and (299.7375,229.5937) ..
-                (303.8118,237.6000)(278.8235,198.2118) .. controls (283.1211,203.1958) and
-                (286.6945,208.7737) .. (290.2588,214.3059)(257.2235,177.4588) .. controls
-                (265.5326,182.9953) and (272.3033,190.6500) ..
-                (278.8235,198.2118)(247.4823,173.2235) .. controls (250.9929,173.6847) and
-                (254.2770,175.4955) .. (257.2235,177.4588)(233.5852,174.7367) .. controls
-                (238.0924,173.3674) and (242.8746,172.6182) ..
-                (247.4823,173.2235)(292.9003,268.8420) .. controls (289.0511,267.8226) and
-                (285.1075,267.1918) .. (281.1507,266.6821)(310.5779,275.3474) .. controls
-                (304.9808,272.5020) and (298.9699,270.4494) ..
-                (292.9003,268.8420)(321.1845,282.4185) .. controls (318.2566,279.3390) and
-                (314.3658,277.2730) .. (310.5779,275.3474)(325.5686,289.7724) .. controls
-                (325.6261,286.9191) and (323.1510,284.4866) ..
-                (321.1845,282.4185)(321.3260,296.2777) .. controls (323.2528,294.5487) and
-                (325.5164,292.3607) .. (325.5686,289.7724)(315.5357,299.6013) .. controls
-                (317.6307,298.7453) and (319.6662,297.7671) .. (321.3260,296.2777);
+                \alt<-3>{
+                    \path[draw=black,line join=miter,line
+                    cap=butt,miter limit=4.00,even odd rule]
+                    (317.7882,269.3647) .. controls (319.1527,272.7162) and (320.6622,277.9665) ..
+                    (322.6234,282.0431) .. controls (323.2589,283.3640) and (323.8203,284.8492) ..
+                    (324.2378,285.9741)(303.8118,237.6000) .. controls (309.0582,247.9097) and
+                    (313.4263,258.6508) .. (317.7882,269.3647)(290.2588,214.3059) .. controls
+                    (295.1243,221.8575) and (299.7375,229.5937) ..
+                    (303.8118,237.6000)(278.8235,198.2118) .. controls (283.1211,203.1958) and
+                    (286.6945,208.7737) .. (290.2588,214.3059)(257.2235,177.4588) .. controls
+                    (265.5326,182.9953) and (272.3033,190.6500) ..
+                    (278.8235,198.2118)(247.4823,173.2235) .. controls (250.9929,173.6847) and
+                    (254.2770,175.4955) .. (257.2235,177.4588)(233.5852,174.7367) .. controls
+                    (238.0924,173.3674) and (242.8746,172.6182) ..
+                    (247.4823,173.2235)(292.9003,268.8420) .. controls (289.0511,267.8226) and
+                    (285.1075,267.1918) .. (281.1507,266.6821)(310.5779,275.3474) .. controls
+                    (304.9808,272.5020) and (298.9699,270.4494) ..
+                    (292.9003,268.8420)(321.1845,282.4185) .. controls (318.2566,279.3390) and
+                    (314.3658,277.2730) .. (310.5779,275.3474)(325.5686,289.7724) .. controls
+                    (325.6261,286.9191) and (323.1510,284.4866) ..
+                    (321.1845,282.4185)(321.3260,296.2777) .. controls (323.2528,294.5487) and
+                    (325.5164,292.3607) .. (325.5686,289.7724)(315.5357,299.6013) .. controls
+                    (317.6307,298.7453) and (319.6662,297.7671) .. (321.3260,296.2777);
+                }{
+                    \path[draw=black,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+                    cap=butt,miter limit=4.00,even odd rule]
+                    (317.7882,269.3647) .. controls (319.1527,272.7162) and (320.6622,277.9665) ..
+                    (322.6234,282.0431) .. controls (323.2589,283.3640) and (323.8203,284.8492) ..
+                    (324.2378,285.9741)(303.8118,237.6000) .. controls (309.0582,247.9097) and
+                    (313.4263,258.6508) .. (317.7882,269.3647)(290.2588,214.3059) .. controls
+                    (295.1243,221.8575) and (299.7375,229.5937) ..
+                    (303.8118,237.6000)(278.8235,198.2118) .. controls (283.1211,203.1958) and
+                    (286.6945,208.7737) .. (290.2588,214.3059)(257.2235,177.4588) .. controls
+                    (265.5326,182.9953) and (272.3033,190.6500) ..
+                    (278.8235,198.2118)(247.4823,173.2235) .. controls (250.9929,173.6847) and
+                    (254.2770,175.4955) .. (257.2235,177.4588)(233.5852,174.7367) .. controls
+                    (238.0924,173.3674) and (242.8746,172.6182) ..
+                    (247.4823,173.2235)(292.9003,268.8420) .. controls (289.0511,267.8226) and
+                    (285.1075,267.1918) .. (281.1507,266.6821)(310.5779,275.3474) .. controls
+                    (304.9808,272.5020) and (298.9699,270.4494) ..
+                    (292.9003,268.8420)(321.1845,282.4185) .. controls (318.2566,279.3390) and
+                    (314.3658,277.2730) .. (310.5779,275.3474)(325.5686,289.7724) .. controls
+                    (325.6261,286.9191) and (323.1510,284.4866) ..
+                    (321.1845,282.4185)(321.3260,296.2777) .. controls (323.2528,294.5487) and
+                    (325.5164,292.3607) .. (325.5686,289.7724)(315.5357,299.6013) .. controls
+                    (317.6307,298.7453) and (319.6662,297.7671) .. (321.3260,296.2777);
+                }
             }
 
             % Intersection lines
-            \only<4-> {
+            \only<7-> {
                 \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
                 rule, very thick] (197.6000,66.9429) -- (285.6023,132.8780);
                 \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
@@ -343,6 +275,10 @@
             rule] (285.6023,132.8780) -- (367.4572,133.4572) node[label={[label distance=.25em]right:$x_1$}]{};
             \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
             rule] (285.6023,132.8780) -- (257.7040,132.6452);
+            \only<-3,8-> {
+                \path[draw=black,line join=miter,line cap=butt,miter limit=4.00,even odd
+                rule] (222.6,132.4019) -- (285.6000,132.8780);
+            }
 
             % x_3 axis
             \only<2-> {
@@ -356,98 +292,159 @@
             }
 
             % Circles and projections
-            \path[draw=tumblue,line join=miter,line cap=round,miter limit=4.00,nonzero
-            rule] (195.1641,107.6757) .. controls (195.1476,111.7672)
-            and (204.0558,115.0899) .. (215.0665,115.0991) .. controls (226.0773,115.1081)
-            and (235.0258,111.8006) .. (235.0589,107.7091)(215.1265,100.2745) .. controls
-            (204.1157,100.2715) and (195.1806,103.5841) ..
-            (195.1641,107.6757)(235.0589,107.6868) .. controls (235.0589,103.5952) and
-            (226.1373,100.2775) .. (215.1265,100.2745);
-            \path[draw=tumblue,line join=miter,line cap=round,miter limit=4.00,nonzero
-            rule] (248.1028,85.9943) .. controls (248.0787,92.5248) and
-            (262.1904,97.6159) .. (278.2344,97.6306) .. controls (294.2784,97.6453) and
-            (305.8324,92.6134) .. (305.8806,86.0830)(305.8807,86.0298) .. controls
-            (305.8807,79.4994) and (294.3658,73.9743) .. (278.3218,73.9694) .. controls
-            (262.2777,73.9645) and (248.1250,79.4557) .. (248.1009,85.9861);
+            \begin{scope}[tumred]
+                \path[draw,line join=miter,line cap=round,miter limit=4.00,nonzero
+                rule] (195.1641,107.6757) .. controls (195.1476,111.7672)
+                and (204.0558,115.0899) .. (215.0665,115.0991) .. controls (226.0773,115.1081)
+                and (235.0258,111.8006) .. (235.0589,107.7091)(215.1265,100.2745) .. controls
+                (204.1157,100.2715) and (195.1806,103.5841) ..
+                (195.1641,107.6757)(235.0589,107.6868) .. controls (235.0589,103.5952) and
+                (226.1373,100.2775) .. (215.1265,100.2745);
 
-            \only<3-> {
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule] (195.3017,251.2001)
-                -- (195.1641,107.6757);
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule] (235.0589,107.7091)
-                -- (234.7192,219.6998);
-                \path[draw=tumblue,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule] (234.7192,219.6998)
-                .. controls (234.6688,226.2075) and (232.1661,234.6090) ..
-                (227.3925,242.8227)(227.3925,242.8227) .. controls (218.9241,257.3941) and
-                (206.5155,265.8568) .. (199.6773,261.7247) .. controls (196.7369,259.9479) and
-                (195.3057,256.1317) .. (195.3017,251.2001)(195.3017,251.2001) .. controls
-                (195.2967,244.6625) and (197.8020,236.1647) .. (202.6291,227.8589) .. controls
-                (211.0976,213.2875) and (223.5061,204.8248) .. (230.3443,208.9569) .. controls
-                (233.3279,210.7598) and (234.7582,214.6625) .. (234.7192,219.6998);
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=round,miter limit=4.00,nonzero rule] (305.8806,86.0830)
-                -- (306.0247,258.7995);
-                \path[draw=tumblue,line join=miter,line cap=round,miter limit=4.00,nonzero
-                rule] (306.0247,258.7996) .. controls (306.0083,260.9460)
-                and (305.5164,262.6311) .. (304.5000,263.7327) .. controls (299.3848,269.2763)
-                and (282.9214,257.9415) .. (267.7278,238.4156) .. controls (255.8617,223.1661)
-                and (248.2796,207.4304) .. (247.9645,198.6286)(306.0247,258.7996) .. controls
-                (306.0909,250.1440) and (298.4260,233.9864) .. (286.2515,218.3406) .. controls
-                (271.0580,198.8148) and (254.5946,187.4799) .. (249.4794,193.0235) .. controls
-                (248.3591,194.2376) and (247.8761,196.1605) .. (247.9645,198.6286);
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule] (247.9645,198.6286)
-                -- (248.1028,85.9943);
-            }
+                \only<3-4> {
+                    \path[draw,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+                    cap=butt,miter limit=4.00,nonzero rule] (234.7192,219.6998)
+                    .. controls (234.6688,226.2075) and (232.1661,234.6090) ..
+                    (227.3925,242.8227)(227.3925,242.8227) .. controls (218.9241,257.3941) and
+                    (206.5155,265.8568) .. (199.6773,261.7247) .. controls (196.7369,259.9479) and
+                    (195.3057,256.1317) .. (195.3017,251.2001)(195.3017,251.2001) .. controls
+                    (195.2967,244.6625) and (197.8020,236.1647) .. (202.6291,227.8589) .. controls
+                    (211.0976,213.2875) and (223.5061,204.8248) .. (230.3443,208.9569) .. controls
+                    (233.3279,210.7598) and (234.7582,214.6625) .. (234.7192,219.6998);
+                }
+                \only<3-4> {
+                    \path[draw,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                    cap=butt,miter limit=4.00,nonzero rule] (235.0589,107.7091)
+                    -- (234.7192,219.6998);
+                    \path[draw,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                    cap=butt,miter limit=4.00,nonzero rule] (195.3017,251.2001)
+                    -- (195.1641,107.6757);
+                }
+            \end{scope}
+            \begin{scope}[tumgreen]
+                \path[draw,line join=miter,line cap=round,miter limit=4.00,nonzero
+                rule] (248.1028,85.9943) .. controls (248.0787,92.5248) and
+                (262.1904,97.6159) .. (278.2344,97.6306) .. controls (294.2784,97.6453) and
+                (305.8324,92.6134) .. (305.8806,86.0830)(305.8807,86.0298) .. controls
+                (305.8807,79.4994) and (294.3658,73.9743) .. (278.3218,73.9694) .. controls
+                (262.2777,73.9645) and (248.1250,79.4557) .. (248.1009,85.9861);
+
+                \only<3-4> {
+                    \path[draw,line join=miter,line cap=round,miter limit=4.00,nonzero
+                    rule] (306.0247,258.7996) .. controls (306.0083,260.9460)
+                    and (305.5164,262.6311) .. (304.5000,263.7327) .. controls (299.3848,269.2763)
+                    and (282.9214,257.9415) .. (267.7278,238.4156) .. controls (255.8617,223.1661)
+                    and (248.2796,207.4304) .. (247.9645,198.6286)(306.0247,258.7996) .. controls
+                    (306.0909,250.1440) and (298.4260,233.9864) .. (286.2515,218.3406) .. controls
+                    (271.0580,198.8148) and (254.5946,187.4799) .. (249.4794,193.0235) .. controls
+                    (248.3591,194.2376) and (247.8761,196.1605) .. (247.9645,198.6286);
+                }
+                \only<3-4> {
+                    \path[draw,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                    cap=butt,miter limit=4.00,nonzero rule] (247.9645,198.6286)
+                    -- (248.1028,85.9943);
+                    \path[draw,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                    cap=round,miter limit=4.00,nonzero rule] (305.8806,86.0830)
+                    -- (306.0247,258.7995);
+                }
+            \end{scope}
 
             % Pi planes
-            \only<3-> {
-                \path[draw=black,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
-                cap=butt,miter limit=4.00,even odd rule]
-                (287.8263,176.7128) -- (238.0560,129.0592)(337.5966,224.3664) --
-                (287.8263,176.7128)(344.9903,252.5778) -- (337.5966,224.3664);
-                \path[draw=black,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
-                cap=butt,miter limit=4.00,even odd rule]
-                (313.3697,297.4475) -- (344.9903,252.5778);
-                \path[draw=black,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
-                cap=butt,miter limit=4.00,even odd rule]
-                (169.1107,253.7846) -- (238.0256,310.9489);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (257.7040,132.6452) -- (243.7156,121.0292);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (226.1189,145.9960) -- (157.1446,243.8588);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (157.1446,243.8588) -- (169.1107,253.7846);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (238.0256,310.9489) -- (279.5673,345.4074);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (238.0560,129.0592) -- (235.5971,132.5480);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (235.5971,132.5480) -- (226.1189,145.9960);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (279.5673,345.4074) -- (313.3697,297.4475);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (344.9903,252.5778) -- (366.1384,222.5777);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (366.1384,222.5777) -- (257.7040,132.6452);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (243.7156,121.0292) -- (238.0560,129.0592);
-                \path[draw=black,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
-                rule] (216.1980,108.1336) --
-                (249.8835,236.6651)(371.2821,352.8979) --
-                (344.9903,252.5778)(249.8835,236.6651) --
-                (371.2821,352.8979)(238.0560,129.0592) -- (216.1980,108.1336);
+            \only<4-> {
+                \begin{scope}[black, onslide={<4-5> tumgreen}]
+                    \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                    rule] (226.1189,145.9960) --
+                    (249.8835,236.6651)(371.2821,352.8979) --
+                    (344.9903,252.5778)(249.8835,236.6651) --
+                    (371.2821,352.8979);
+                \end{scope}
+                \begin{scope}[black, onslide={<4-5> tumred}]
+                    \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                    rule] (226.1189,145.9960) -- (157.1446,243.8588);
+                    \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                    rule] (157.1446,243.8588) -- (169.1107,253.7846);
+                    \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                    rule] (238.0256,310.9489) -- (279.5673,345.4074);
+                    \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                    rule] (279.5673,345.4074) -- (313.3697,297.4475);
+
+                    \only<4-5, 7-> {
+                        \path[draw,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+                        cap=butt,miter limit=4.00,even odd rule]
+                        (313.3697,297.4475) -- (344.9903,252.5778);
+                    }
+
+                    \alt<-6> {
+                        \path[draw,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+                        cap=butt,miter limit=4.00,even odd rule]
+                        (169.1107,253.7846) -- (238.0256,310.9489);
+                    }{
+                        \path[draw,thick,line join=miter,line
+                        cap=butt,miter limit=4.00,even odd rule]
+                        (169.1107,253.7846) -- (238.0256,310.9489);
+                    }
+                \end{scope}
+
+                \only<-7> {
+                    \begin{scope}[black, onslide={<4-5> tumgreen}]
+                        \path[draw,thick,dash pattern=on 2.56pt off 2.56pt,line join=miter,line
+                        cap=butt,miter limit=4.00,even odd rule]
+                        (287.8263,176.7128) -- (238.0560,129.0592)(337.5966,224.3664) --
+                        (287.8263,176.7128)(344.9903,252.5778) -- (337.5966,224.3664);
+                        \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                        rule]
+                        (238.0560,129.0592) -- (216.1980,108.1336) -- (226.1189,145.9960);
+                    \end{scope}
+                    \begin{scope}[black, onslide={<4-5> tumred}]
+                        \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                        rule] (257.7040,132.6452) -- (243.7156,121.0292);
+                        \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                        rule] (238.0560,129.0592) -- (235.5971,132.5480);
+                        \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                        rule] (235.5971,132.5480) -- (226.1189,145.9960);
+                        \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                        rule] (344.9903,252.5778) -- (366.1384,222.5777);
+                        \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                        rule] (366.1384,222.5777) -- (257.7040,132.6452);
+                        \path[draw,thick,line join=miter,line cap=butt,miter limit=4.00,even odd
+                        rule] (243.7156,121.0292) -- (238.0560,129.0592);
+                    \end{scope}
+                }
             }
 
-            \only<2-> {
-                \node at (165, 305) {$U$};
+            % Projection point
+            \coordinate (p1)   at (295, 115);
+            \coordinate (p1p1) at (295, 170);
+            \coordinate (p1p2) at (295, 215);
+            \coordinate (p1u)  at (295, 295);
+
+            \only<5-6> {
+                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                cap=butt,miter limit=4.00,nonzero rule]
+                    (p1) -- (p1u);
+
+                \tikzstyle{intersection} = [sphere center, tumblue, minimum size=2pt];
+                \node[intersection, minimum size=4pt, label={[yshift=-0.3ex]below:$p$}] at (p1) {};
+                \node[intersection, tumred] at (p1p1) {};
+                \node[intersection, tumgreen] at (p1p2) {};
+                \node[intersection, black] at (p1u) {};
             }
 
-            \only<3-> {
-                \node at (375, 285) {$\Pi(s_1)$};
-                \node at (165, 200) {$\Pi(s_2)$};
+            \only<6> {
+                \draw[thick, tumred]
+                    ($(p1p1) - (0.3em, 0)$) --
+                    ($(p1u) - (0.3em, 0)$)
+                    node[pos=0.2, label={left:$\pow(p, s_1)$}];
+
+                \draw[thick, tumgreen]
+                    ($(p1p2) + (0.3em, 0)$) --
+                    ($(p1u) + (0.3em, 0)$)
+                    node[pos=0.6, label={right:$\pow(p, s_2)$}];
+            }
+
+            \only<4-> {
+                \node at (375, 285) {$\Pi(s_2)$};
+                \node at (165, 200) {$\Pi(s_1)$};
             }
 
             \node at (200, 96) {$s_1$};
@@ -456,118 +453,50 @@
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Polarisationsfunktion}
+\begin{frame}[t]
+    \frametitle{Transformationsfunktion}
 
-    \begin{definition}[Polarity Function]
-        Let $\Ha$ as defined above and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis, i.e.
-        \begin{align}
-            \F &\coloneqq \left\{ f \subseteq \R^{d+1} \mid
-                \exists 1 \leq k \leq d + 1: \exists h_1, \dots, h_{k} \in \Ha : \varnothing \neq f = \bigcap_{i = 1}^{k} h_i\right\}.
-            \intertext{The \define{polarity function $\Delta$} then is a mapping in $\F$ given by}
-            \Delta &: \left\{ \begin{aligned}
-                    \F &\to \F\\
-                    f &\mapsto \begin{dcases}
-                        \left\{ \begin{pmatrix} \frac{1}{2} a \\ -a_{d+1} \end{pmatrix} \right\} &\qquad \textnormal{if } h \in \Ha \textnormal{ with } x \in h \Leftrightarrow x_{d+1} = a^Tx_{[d]} + a_{d+1}\\
-                        \bigcup_{\substack{h \in \Ha:\\f \subseteq h}} h &\qquad \textnormal{if } \dim(f) < d
-                    \end{dcases}
-                \end{aligned}
-            \right..
-        \end{align}
-    \end{definition}
-
+    Sei $s = (z, r^2)$ eine Sphäre und $x$ ein Punkt im Originalraum.
+    \vfill
     \begin{lemma}
-        \label{lem:relativepositions}
-        Let $p \in \R^{d+1}$ and $h$ a hyperplane in $\R^{d+1}$.
-        Then $p$ is above, in or below $h$ with respect to the $(d+1)$th component iff $\Delta(h)$ is above, in or below $\Delta(p)$ respectively.
+        Sei \structure{$\pi_U$} die vertikale Projektion von $x$ auf den Paraboloiden und\\
+        sei \structure{$\pi_s$} die Projektion auf $\Pi(s)$.\\
+        Dann ist die \structure{Power-Funktion} von $x$ und $s$ gegeben durch
+        \begin{align}
+            \pow(x, s) = \dist(x, \pi_U) - \dist(x, \pi_s).
+        \end{align}
     \end{lemma}
+    \vfill
 \end{frame}
+
+\againframe<4->{transformation}
 
 \begin{frame}
     \frametitle{Powerdiagramme und Polyeder}
 
-    \centering
-    \begin{tikzpicture}[font=\scriptsize, scale=0.70]
-        \tikzstyle{corner} = [circle, fill, tumblue, minimum size=8pt, inner sep=0]
-        \tikzstyle{lattice} = [circle, fill, tumblue, minimum size=6pt, inner sep=0]
-        \tikzstyle{lattice edge} = [thick, arrows={-latex}, shorten >=4pt]
-
-        \coordinate (p1) at (-0.8, 0);
-        \coordinate (p2) at (1.2, 0);
-        \coordinate (p3) at (1.2, 2);
-        \coordinate (p4) at (-0.8, 2);
-
-        \draw[fill=tumgreen!40]
-        (p1) -- (p2) -- (p3) -- (p4) -- (p1);
-
-        \draw[black, very thick]
-        (p1) -- (p2) -- (p3) -- (p4) -- (p1);
-
-        \draw
-        (p1) node[corner, label={below:$v_1$}] {}
-        (p2) node[corner, label={below:$v_2$}] {}
-        (p3) node[corner, label={above:$v_3$}] {}
-        (p4) node[corner, label={above:$v_4$}] {};
-
-        \coordinate (d1) at (3.5, -0.5);
-        \coordinate (d2) at (5, -0.5);
-        \coordinate (d3) at (6.5, -0.5);
-        \coordinate (d4) at (8, -0.5);
-        \coordinate (d12) at (3.5, 1);
-        \coordinate (d23) at (5, 1);
-        \coordinate (d34) at (6.5, 1);
-        \coordinate (d14) at (8, 1);
-        \coordinate (d1234) at (5.75, 2.5);
-
-        \draw[lattice edge] (d1) to (d12);
-        \draw[lattice edge] (d1) to[bend right=10] (d14);
-        \draw[lattice edge] (d2) to (d12);
-        \draw[lattice edge] (d2) to (d23);
-        \draw[lattice edge] (d3) to (d23);
-        \draw[lattice edge] (d3) to (d34);
-        \draw[lattice edge] (d4) to (d14);
-        \draw[lattice edge] (d4) to (d34);
-        \draw[lattice edge] (d12) to (d1234);
-        \draw[lattice edge] (d23) to (d1234);
-        \draw[lattice edge] (d34) to (d1234);
-        \draw[lattice edge] (d14) to (d1234);
-
-        \draw
-        (d1) node[lattice, label={below:$1$}] {}
-        (d2) node[lattice, label={below:$2$}] {}
-        (d3) node[lattice, label={below:$3$}] {}
-        (d4) node[lattice, label={below:$4$}] {}
-        (d12) node[lattice, black, label={left:$\left\{ 1, 2 \right\}$}] {}
-        % (d23) node[lattice, black, label={left:$\left\{ 2, 3 \right\}$}] {}
-        % (d34) node[lattice, black, label={right:$\left\{ 3, 4 \right\}$}] {}
-        (d23) node[lattice, black] {}
-        (d34) node[lattice, black] {}
-        (d14) node[lattice, black, label={right:$\left\{ 1, 4 \right\}$}] {}
-        (d1234) node[lattice, tumgreen, rectangle, label={above:$\left\{ 1, 2, 3, 4 \right\}$}] {};
-
-        \coordinate (s1) at (10.8, 0);
-        \coordinate (s2) at (12.8, 0);
-        \coordinate (s3) at (12.8, 2);
-        \coordinate (s4) at (10.8, 2);
-        \coordinate (v1) at (11.8, 1);
-
-        \draw[black, very thick]
-        (v1) -- ($(v1) + (1.5, 0)$)
-        (v1) -- ($(v1) + (-1.5, 0)$)
-        (v1) -- ($(v1) + (0, 1.5)$)
-        (v1) -- ($(v1) + (0, -1.5)$);
-
-        \draw
-        (s1) node[corner, label={below:$s_1$}] {}
-        (s2) node[corner, label={below:$s_2$}] {}
-        (s3) node[corner, label={above:$s_3$}] {}
-        (s4) node[corner, label={above:$s_4$}] {}
-        (v1) node[corner, tumgreen, rectangle] {};
-    \end{tikzpicture}
-
-    \begin{theorem}[\lemcite{Theorem 4}]
-        For any $(d+1)$-polyhedron P which is expressible as the intersection of upper halfspaces of hyperplanes with normal vectors $n$ with their $(d+1)$th coordinate equal to $1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
+    \begin{theorem}
+        Zu \structure{jedem $(d+1)$-Polyeder}, der \structure{nur nach unten} beschränkt ist, existiert ein äquivalentes Powerdiagramm in $d$ Dimensionen und umgekehrt.
     \end{theorem}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Polarisationsfunktion}
+
+    \begin{lemma}
+        $\Delta$ ist selbst-invers und eine Bijektion zwischen $j$- und $(d-j)$-Räumen.
+    \end{lemma}
+
+    \vfill
+
+    \begin{lemma}
+        Ein Punkt $p$ ist über, in oder unter einer Hyperebene $h$\\ genau dann wenn $\Delta(h)$ über, in oder unter $\Delta(p)$ ist.
+    \end{lemma}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Polarisationsfunktion}
+
+    Ich bin eine Abbildung
     \begin{theorem}[\lemcite{Theorem 5}]
         For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
     \end{theorem}
@@ -576,30 +505,26 @@
 \begin{frame}
     \frametitle{Dualer Algorithmus}
 
-    \begin{block}{Algorithmus}
-        \begin{algorithmic}[1]
-            \Function{PowerDiagram}{$S$}
-                \State $H \gets \Pi(S)$\Comment{Compute hyperplanes of spheres}
-                \State $P \gets \Delta(H)$\Comment{Compute poles of the hyperplanes}
-                \Statex
-                \State $\IL \gets \CH(P)$\Comment{Construct convex hull of $P$}
-                \State $(\IL_b, \IL_t) \gets$ Split $\IL$ into top and bottom parts\Comment{$\IL_b$ represents $\CHb(P)$}
-                \For{face $f$ \textbf{in} $\IL_b$}\Comment{Dualize $\IL_b$}
-                    \If{$f$ \textbf{is a} facet}
-                        \State Find the hyperplane $h$ containing $f$
-                        \State Replace $f$ by the polar point $\Delta(h)$
-                    \Else
-                        \State Replace $j$-face $f$ by a $(d-j)$-face\Comment{$0 \leq j < d$}
-                    \EndIf
-                \EndFor
-                \Statex
-                \For{vertex $v$ \textbf{in} $\IL_b$}
-                    \State Project $v$ vertically onto $h_0$.\Comment{Forget $(d+1)$st coordinates}
-                \EndFor
-                \State \Return $\IL_b$
-            \EndFunction
-        \end{algorithmic}
+    Gegeben eine endliche Menge $S$ von Sphären in $d$ Dimensionen.
+
+    \vfill
+
+    \begin{block}{Inzidenzstruktur eines Powerdiagrammes bestimmen}
+        \begin{enumerate}
+            \item Bestimme die \structure{dualen Punkte} $\Delta(\Pi(S))$
+            \item Berechne die \alert{konvexe Hülle} dieser Punkte
+            \item Finde die \structure{untere Hälfte} der konvexen Hülle
+            \item \structure{Dualisiere} diese Hälfte
+            \item \structure{Projiziere} die Faces in den Originalraum
+        \end{enumerate}
     \end{block}
+
+    \vfill
+
+    \begin{itemize}
+        \item Dominiert durch Konvexe Hülle
+        \item Diese hat Laufzeit $\Oh(n \log n + n^{\left\lceil d/2\right\rceil})$
+    \end{itemize}
 \end{frame}
 
 \begin{frame}

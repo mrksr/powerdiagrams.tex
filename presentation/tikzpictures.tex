@@ -42,3 +42,9 @@
         }
     }
 }
+
+% See
+% https://tex.stackexchange.com/a/23583
+\tikzset{onslide/.code args={<#1>#2}{%
+  \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
+}}
