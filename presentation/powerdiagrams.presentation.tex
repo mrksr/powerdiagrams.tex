@@ -17,14 +17,14 @@
 
     \centering
     \begin{tikzpicture}
-        \path[use as bounding box] (-4, -3.05) rectangle (7, 5.05);
-        \path[clip] (-5, -3.05) rectangle (7.5, 5.05);
+        \path[use as bounding box] (-4, -3.05) rectangle (7, 4.05);
+        \path[clip] (-5, -3.05) rectangle (7.5, 4.05);
 
-        \node[sphere center, label={above:$s_1$}] (s1) at (     2.0,     3.0) {};
-        \node[sphere center, label={above:$s_5$}] (s2) at (     5.0,     0.0) {};
-        \node[sphere center, label={above:$s_3$}] (s3) at (    -2.0,     0.0) {};
-        \node[sphere center, label={below:$s_4$}] (s4) at (     2.0,     0.0) {};
-        \node[sphere center, label={above:$s_2$}] (s5) at (     4.0,     2.0) {};
+        \node[sphere center] (s1) at (     2.0,     3.0) {};
+        \node[sphere center] (s2) at (     5.0,     0.0) {};
+        \node[sphere center] (s3) at (    -2.0,     0.0) {};
+        \node[sphere center] (s4) at (     2.0,     0.0) {};
+        \node[sphere center] (s5) at (     4.0,     2.0) {};
 
         \coordinate (p1v) at (     0.0,     1.5);
         \coordinate (p2v) at (     3.5,     0.5);
@@ -40,16 +40,16 @@
             \draw[right angle length=1.5ex, right angle symbol={s4}{s2}{p2v}];
             \draw[right angle length=1.5ex, right angle symbol={s4}{s1}{p3v}];
 
-            \draw[internal edge] (p1v) edge node[internal spheres] {${1, 4}$} (p3v);
-            \draw[extremal edge] (p2v) edge node[extremal spheres] {${4, 5}$} ($(p2v) + 10*(     0.0,    -1.0)$);
+            \draw[internal edge] (p1v) edge (p3v);
+            \draw[extremal edge] (p2v) edge ($(p2v) + 10*(     0.0,    -1.0)$);
         }
 
         \only<3> {
-            \draw[internal edge] (p2v) edge node[internal spheres] {${2, 4}$} (p3v);
-            \draw[extremal edge] (p1v) edge node[extremal spheres] {${3, 4}$} ($(p1v) + 10*(    -0.0,    -1.0)$);
-            \draw[extremal edge] (p1v) edge node[extremal spheres] {${1, 3}$} ($(p1v) + 10*(    -0.6,     0.8)$);
-            \draw[extremal edge] (p2v) edge node[extremal spheres] {${2, 5}$} ($(p2v) + 10*(  0.8944,  0.4472)$);
-            \draw[extremal edge] (p3v) edge node[extremal spheres] {${1, 2}$} ($(p3v) + 10*(  0.4472,  0.8944)$);
+            \draw[internal edge] (p2v) edge (p3v);
+            \draw[extremal edge] (p1v) edge ($(p1v) + 10*(    -0.0,    -1.0)$);
+            \draw[extremal edge] (p1v) edge ($(p1v) + 10*(    -0.6,     0.8)$);
+            \draw[extremal edge] (p2v) edge ($(p2v) + 10*(  0.8944,  0.4472)$);
+            \draw[extremal edge] (p3v) edge ($(p3v) + 10*(  0.4472,  0.8944)$);
 
             \node[point] () at (p1v) {};
             \node[point] () at (p2v) {};
@@ -67,61 +67,26 @@
         \only<5> {
             \draw[thin] (s4) edge (s2);
             \draw[right angle length=1.5ex, right angle symbol={s4}{s2}{p2}];
-            % \draw[thin]
-            %     (s4) edge (s5)
-            %     (s4) edge (s2)
-            %     (s2) edge (s5);
-            % \draw[right angle length=1.5ex, right angle symbol={s4}{s5}{p2}];
-            % \draw[right angle length=1.5ex, right angle symbol={s4}{s2}{p2}];
-            % \draw[right angle length=1.5ex, right angle symbol={s2}{s5}{p2}];
 
-            \draw[extremal edge] (p1) edge node[extremal spheres] {${1, 3}$} ($(p1) + 10*(    -0.6,     0.8)$);
-            \draw[extremal edge] (p1) edge node[extremal spheres, pos=0.2] {${3, 4}$} ($(p1) + 10*(     0.0,    -1.0)$);
-            \draw[internal edge] (p1) edge node[internal spheres, pos=0.2] {${1, 4}$} (p3);
-            \draw[extremal edge] (p2) edge node[extremal spheres, pos=0.2] {${4, 5}$} ($(p2) + 10*(    -0.0,    -1.0)$);
-            \draw[extremal edge] (p2) edge node[extremal spheres] {${2, 5}$} ($(p2) + 10*(  0.8944,  0.4472)$);
-            \draw[internal edge] (p2) edge node[internal spheres, pos=0.5] {${2, 4}$} (p3);
-            \draw[extremal edge] (p3) edge node[extremal spheres] {${1, 2}$} ($(p3) + 10*(  0.4472,  0.8944)$);
+            \draw[extremal edge] (p1) edge ($(p1) + 10*(    -0.6,     0.8)$);
+            \draw[extremal edge] (p1) edge ($(p1) + 10*(     0.0,    -1.0)$);
+            \draw[internal edge] (p1) edge (p3);
+            \draw[extremal edge] (p2) edge ($(p2) + 10*(    -0.0,    -1.0)$);
+            \draw[extremal edge] (p2) edge ($(p2) + 10*(  0.8944,  0.4472)$);
+            \draw[internal edge] (p2) edge (p3);
+            \draw[extremal edge] (p3) edge ($(p3) + 10*(  0.4472,  0.8944)$);
 
             \node[point] () at (p1) {};
             \node[point] () at (p2) {};
             \node[point] () at (p3) {};
         }
     \end{tikzpicture}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Power-Funktion}
-
-    \begin{definition}[Power-Funktion]
-        Die \structure{Power} eines Punktes $x \in \R^d$ in Bezug zu einer Sphäre $s$ mit Zentrum $z \in \R^d$ und Radius $r \geq 0$ ist
+    \vfill
+    \only<4-> {
         \begin{align}
-            \pow(x, s) = \dist(x, z)^2 - r^2.
+            \pow(x, s) = \dist(x, z)^2 - r^2
         \end{align}
-    \end{definition}
-
-    \centering
-    \begin{tikzpicture}[x=1cm, y=1cm]
-        \coordinate (center) at (0, 0);
-        \coordinate (point) at (2, 3);
-
-        \node[power circle, minimum size=3cm, label={[yshift=0.5cm]below:$s$}] (circle) at (center) {};
-
-        \coordinate (tangent) at (tangent cs:node=circle,point={(point)},solution=1);
-
-        \draw[right angle length=1.5ex, right angle symbol={center}{tangent}{point}];
-
-        \draw
-        (tangent) edge[black] node[midway, left] {$r$} (center.center)
-        (center.center) edge[black] node[pos=0.6, sloped, below] {$\dist(x, z)$} (point)
-        (point) edge[very thick, tumblue] node[midway, sloped, above] {$\pow(x, s)$} (tangent);
-        \draw
-        (center)
-        node[power center, label={below:$z$}] () {}
-
-        (point)
-        node[power point, label={above:$x$}] () {};
-    \end{tikzpicture}
+    }
 \end{frame}
 
 \begin{frame}
@@ -157,7 +122,7 @@
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}<-4>[label=transformation]
+\begin{frame}
     \frametitle{Transformationsfunktion}
 
     \centering
@@ -447,39 +412,30 @@
                 \node at (165, 200) {$\Pi(s_1)$};
             }
 
+            \only<4> {
+                \node at (140, 335) {$
+                    \begin{aligned}
+                        \MoveEqLeft x \in \Pi\left( (z, r^2) \right) \Leftrightarrow\\
+                        &x_{d+1} = 2 x_{[d]}^T z - z^Tz + r^2
+                    \end{aligned}$};
+            }
+
             \node at (200, 96) {$s_1$};
             \node at (250, 73) {$s_2$};
         \end{scope}
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[t]
-    \frametitle{Transformationsfunktion}
-
-    Sei $s = (z, r^2)$ eine Sphäre und $x$ ein Punkt im Originalraum.
-    \vfill
-    \begin{lemma}
-        Sei \structure{$\pi_U$} die vertikale Projektion von $x$ auf den Paraboloiden und\\
-        sei \structure{$\pi_s$} die Projektion auf $\Pi(s)$.\\
-        Dann ist die \structure{Power-Funktion} von $x$ und $s$ gegeben durch
-        \begin{align}
-            \pow(x, s) = \dist(x, \pi_U) - \dist(x, \pi_s).
-        \end{align}
-    \end{lemma}
-    \vfill
-\end{frame}
-
-\againframe<4->{transformation}
-
 \begin{frame}
     \frametitle{Powerdiagramme und Polyeder}
 
     \begin{theorem}
-        Zu \structure{jedem $(d+1)$-Polyeder}, der \structure{nur nach unten} beschränkt ist, existiert ein äquivalentes Powerdiagramm in $d$ Dimensionen und umgekehrt.
+        Sei $P$ ein $(d+1)$-Polyeder, der nur von Halbräumen beschränkt wird, deren \structure{Normalenvektoren nach unten zeigen}.
+        Dann existiert ein \structure{zu $P$ äquivalentes Powerdiagramm} in $d$ Dimensionen und umgekehrt.
     \end{theorem}
 \end{frame}
 
-\begin{frame}<-4>[label=polarisation]
+\begin{frame}<-7>[label=polarisation]
     \frametitle{Polarisationsfunktion}
 
     \centering
@@ -543,11 +499,11 @@
             \only<2-> {
                 \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule]
                 (234.9472,385.6085) -- (254.4397,401.7799);
-                \path[draw=tumorange, very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule] 
+                \path[draw=tumorange, very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule]
                 (261.1692,437.3901) -- (245.9441,407.0247);
                 \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule] (245.9941,407.0997) -- (234.9553,385.6223);
                 \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule] (254.2589,401.4621) -- (310.8795,465.3198);
-                \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule] 
+                \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule]
                 (171.8763,438.0841) -- (234.9472,385.6085);
                 \path[draw=tumorange,very thick,line join=miter,line cap=butt,even odd rule]
                 (221.8125,465.6000) -- (236.0500,437.6500);
@@ -555,17 +511,17 @@
                 cap=butt,miter limit=4.00,even odd rule]
                 (235.9000,437.8000) -- (254.3500,401.7500);
 
-                \path[draw=black,opacity=0.990,line join=miter,line cap=butt,even odd rule] 
+                \path[draw=black,dotted,opacity=0.990,line join=miter,line cap=butt,even odd rule]
                 (221.8288,465.5646) -- (171.8763,438.0841);
-                \path[draw=black,opacity=0.990,line join=miter,line cap=butt,even odd rule] (261.0000,437.3000) -- (310.6665,465.1914) --
+                \path[draw=black,dotted,opacity=0.990,line join=miter,line cap=butt,even odd rule] (261.0000,437.3000) -- (310.6665,465.1914) --
                 (221.7963,465.5408);
-                \path[draw=black,opacity=0.990,line join=miter,line cap=butt,even odd rule] 
+                \path[draw=black,dotted,opacity=0.990,line join=miter,line cap=butt,even odd rule]
                 (171.8713,438.0310) -- (261.1692,437.3901);
             }
 
             % Dual polytope
-            \only<4-> {
-                \begin{scope}[draw=black,thick,onslide={<5-> tumorange, very thick}]
+            \only<7-> {
+                \begin{scope}[draw=black,thick,onslide={<8-> tumorange, very thick}]
                     \path[draw,dash pattern=on 1.93pt off 1.93pt,line join=miter,line
                     cap=butt,miter limit=4.00,even odd rule]
                     (218.6447,259.9551) -- (233.3455,269.4401);
@@ -580,8 +536,15 @@
                     \path[draw,line join=miter,line cap=butt,miter limit=4.00,even odd
                     rule] (209.2682,285.9893) -- (218.8495,260.3567);
                 \end{scope}
-                \path[draw=black,thick, onslide={<6-> tumgreen, very thick, dashed}, line join=miter,line cap=butt,miter limit=4.00,even odd
+                \path[draw=black,thick, onslide={<9-> tumgreen, very thick, dashed}, line join=miter,line cap=butt,miter limit=4.00,even odd
                 rule] (d2) -- (d4);
+            }
+
+            \only<5-> {
+                \begin{scope}[draw=black,thick,onslide={<8-> tumorange, very thick}]
+                    \path[draw,line join=miter,line cap=butt,miter limit=4.00,even odd
+                    rule] (209.2463,285.8057) -- (268.9208,245.8557);
+                \end{scope}
             }
 
             % Centers
@@ -601,7 +564,7 @@
             \coordinate (d4) at (277.9283,299.8486);
 
             % Vertical Lines
-            \only<3-> {
+            \only<6-> {
                 \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
                 cap=butt,miter limit=4.00,nonzero rule]
                 (s1) -- (p1);
@@ -610,39 +573,51 @@
                 (s1) -- (d1);
                 \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
                 cap=butt,miter limit=4.00,nonzero rule]
-                (s2) -- (p2);
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule]
-                (s2) -- (d2);
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule]
-                (s3) -- (p3);
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule]
-                (s3) -- (d3);
-                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,nonzero rule]
                 (s4) -- (p4);
                 \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
                 cap=butt,miter limit=4.00,nonzero rule]
                 (s4) -- (d4);
             }
 
-            % Center Nodes
             \only<3-> {
-                \tikzstyle{intersection} = [sphere center, tumblue, minimum size=3pt];
+                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                cap=butt,miter limit=4.00,nonzero rule]
+                (s2) -- (p2);
+                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                cap=butt,miter limit=4.00,nonzero rule]
+                (s2) -- (d2);
+            }
+
+            \only<4-> {
+                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                cap=butt,miter limit=4.00,nonzero rule]
+                (s3) -- (p3);
+                \path[draw=tumblue,dash pattern=on 0.64pt off 1.92pt,line join=miter,line
+                cap=butt,miter limit=4.00,nonzero rule]
+                (s3) -- (d3);
+            }
+
+            % Center Nodes
+            \tikzstyle{intersection} = [sphere center, tumblue, minimum size=3pt];
+            \only<6-> {
                 \node[intersection] at (s1) {};
                 \node[intersection] at (p1) {};
                 \node[intersection] at (d1) {};
-                \node[intersection] at (s2) {};
-                \node[intersection] at (p2) {};
-                \node[intersection] at (d2) {};
-                \node[intersection] at (s3) {};
-                \node[intersection] at (p3) {};
-                \node[intersection] at (d3) {};
                 \node[intersection] at (s4) {};
                 \node[intersection] at (p4) {};
                 \node[intersection] at (d4) {};
+            }
+
+            \only<3-> {
+                \node[intersection] at (s2) {};
+                \node[intersection] at (p2) {};
+                \node[intersection] at (d2) {};
+            }
+
+            \only<4-> {
+                \node[intersection] at (s3) {};
+                \node[intersection] at (p3) {};
+                \node[intersection] at (d3) {};
             }
 
             % Labels
@@ -658,11 +633,38 @@
                 \node at (265,472) {$\Pi(s_4)$};
             }
 
-            \only<3-> {
+            \only<3-4> {
+                \node at (125, 255) {$
+                    \begin{aligned}
+                        \Delta(\Pi(s)) = \left\{ \begin{pmatrix} \frac{1}{2} n \\ -n_{d+1} \end{pmatrix} \right\}
+                    \end{aligned}$};
+            }
+
+            \only<5> {
+                \node at (125, 255) {$
+                    \begin{aligned}
+                        \Delta(f) = \bigcup_{\mathclap{\substack{h \text{ Hyperebene},\\f \subseteq h}}} \Delta(h)
+                    \end{aligned}$};
+            }
+
+            \only<6-> {
                 \node[label={[xshift=-0.5em]left:$\Delta\big( \Pi(s_1) \big)$}] at (d1) {};
-                \node[label={[xshift=-0.5em]left:$\Delta\big( \Pi(s_2) \big)$}] at (d2) {};
-                \node[label={[xshift=+0.5em]right:$\Delta\big( \Pi(s_3) \big)$}] at (d3) {};
                 \node[label={[xshift=+0.5em]right:$\Delta\big( \Pi(s_4) \big)$}] at (d4) {};
+            }
+
+            \only<3-> {
+                \node[label={[xshift=-0.5em]left:$\Delta\big( \Pi(s_2) \big)$}] at (d2) {};
+            }
+
+            \only<4-> {
+                \node[label={[xshift=+0.5em]right:$\Delta\big( \Pi(s_3) \big)$}] at (d3) {};
+            }
+
+            \only<3-5> {
+                \draw[arrows={-latex}, thick] (p2) -- ($(p2) + (-15, -12)$);
+            }
+            \only<4-5> {
+                \draw[arrows={-latex}, thick] (p3) -- ($(p3) + (15, -12)$);
             }
         \end{scope}
     \end{tikzpicture}
@@ -676,7 +678,7 @@
     \end{lemma}
 \end{frame}
 
-\againframe<4->{polarisation}
+\againframe<7->{polarisation}
 
 \begin{frame}
     \frametitle{Dualer Algorithmus}
