@@ -497,19 +497,19 @@
 
             % Primal polyhedron
             \only<2-> {
-                \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule]
-                (234.9472,385.6085) -- (254.4397,401.7799);
-                \path[draw=tumorange, very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule]
-                (261.1692,437.3901) -- (245.9441,407.0247);
-                \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule] (245.9941,407.0997) -- (234.9553,385.6223);
-                \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule] (254.2589,401.4621) -- (310.8795,465.3198);
-                \path[draw=tumorange,very thick,opacity=0.990,line join=miter,line cap=butt,even odd rule]
-                (171.8763,438.0841) -- (234.9472,385.6085);
-                \path[draw=tumorange,very thick,line join=miter,line cap=butt,even odd rule]
-                (221.8125,465.6000) -- (236.0500,437.6500);
-                \path[draw=tumorange,very thick,dash pattern=on 1.92pt off 1.92pt,line join=miter,line
-                cap=butt,miter limit=4.00,even odd rule]
-                (235.9000,437.8000) -- (254.3500,401.7500);
+                \begin{scope}[draw=tumorange, very thick,onslide={<5> black, thick}]
+                    \path[draw,opacity=0.990,line join=miter,line cap=butt,even odd rule]
+                    (234.9472,385.6085) -- (254.4397,401.7799);
+                    \path[draw,opacity=0.990,line join=miter,line cap=butt,even odd rule] (254.2589,401.4621) -- (310.8795,465.3198);
+                    \path[draw,opacity=0.990,line join=miter,line cap=butt,even odd rule]
+                    (171.8763,438.0841) -- (234.9472,385.6085);
+                    \path[draw,line join=miter,line cap=butt,even odd rule]
+                    (221.8125,465.6000) -- (236.0500,437.6500);
+                    \path[draw,dash pattern=on 1.92pt off 1.92pt,line join=miter,line
+                    cap=butt,miter limit=4.00,even odd rule]
+                    (235.9000,437.8000) -- (254.3500,401.7500);
+                \end{scope}
+                \path[draw=tumorange, very thick, onslide={<5> tumgreen},opacity=0.990,line join=miter,line cap=butt,even odd rule] (261.1692,437.3901) -- (234.9553,385.6223);
 
                 \path[draw=black,dotted,opacity=0.990,line join=miter,line cap=butt,even odd rule]
                 (221.8288,465.5646) -- (171.8763,438.0841);
@@ -541,7 +541,7 @@
             }
 
             \only<5-> {
-                \begin{scope}[draw=black,thick,onslide={<8-> tumorange, very thick}]
+                \begin{scope}[draw=black,thick,onslide={<5> tumgreen, very thick}, onslide={<8-> tumorange, very thick}]
                     \path[draw,line join=miter,line cap=butt,miter limit=4.00,even odd
                     rule] (209.2463,285.8057) -- (268.9208,245.8557);
                 \end{scope}
@@ -636,7 +636,7 @@
             \only<3-4> {
                 \node at (125, 255) {$
                     \begin{aligned}
-                        \Delta(\Pi(s)) = \left\{ \begin{pmatrix} \frac{1}{2} n \\ -n_{d+1} \end{pmatrix} \right\}
+                        \Delta(\Pi(s)) = \left\{ \begin{pmatrix} z \\ z^Tz - r^2 \end{pmatrix} \right\}
                     \end{aligned}$};
             }
 
