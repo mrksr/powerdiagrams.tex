@@ -38,7 +38,9 @@ A way of describing a power diagram is via the adjacency structure of the differ
 Two cells are adjacent if they share points which have the same minimizing power with respect to both spheres.
 In this case, they share a polyhedron which is incident to both cells.
 This interdisciplinary project is concerned with describing power diagrams formally, describing algorithms to construct such incidence structures and implementing them in \CC.
-The theoretical parts of this project are guided by a paper by \textcite{aurenhammer1987power} but contains some additional proofs as a service to the reader.
+The theoretical parts of this project are guided by a paper by \textcite{aurenhammer1987power}.
+While all statements presented here can be found in \cite{aurenhammer1987power}, only the ones with an explicit citation contain a proof in the original paper.
+For the other statements, proofs are provided as a service to the reader.
 
 The first section of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
 Using a transformation from spheres to hyperplanes, the next section shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
@@ -248,7 +250,7 @@ Every such site gets assigned its partition of the space where there is no other
 
 \begin{definition}[Power Diagram]
     \label{def:powerdiagram}
-    For a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$, a \define{cell} is given by
+    For a finite set of sites $S = \left\{ s_1, \dots, s_n \right\} \subset \R^d \times \R_{\geq 0}$, the mapping from spheres to their corresponding \define{cells} is given by
     \begin{align}
         \cell_S &: \left\{\begin{aligned}
             S &\to \powerset{\R^d}\\
@@ -269,7 +271,7 @@ An extensive introduction into polyhedra can be found in \cite{grunbaum2003conve
 The following will repeat some notations of \cite{aurenhammer1987power}.
 
 Let $n \in \R^d$ with $n \neq 0$ and let $b \in \R$.
-Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^+ = \left\{ x \in \R^d \mid n^T x \geq b \right\}$ is an \define{(closed) upper halfspace} in $\R^d$.
+Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^\leq = \left\{ x \in \R^d \mid n^T x \leq b \right\}$ is an \define{(closed) halfspace} in $\R^d$.
 A \define{$j$-flat} $f$ is a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
 It is an affine subspace of $\R^d$ with dimensionality $j$ and is expressible as the affine hull of $j + 1$ linearly independent points in $f$.
 
@@ -369,12 +371,12 @@ Such a constellation can also lead to a sphere $s$ having a cell for which it ho
 
 While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales have non-empty intersection with their cells and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
 To describe all existing bounded faces, one can find all $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
-To justify this approach, the following lemma shows that for power diagrams which have $0$-faces, this approach does not miss bounded faces.
+The following lemma shows that if a power diagram contains a $0$-face, finding those faces and the cells which are adjacent to them is sufficient to construct a set of all non-empty cells and therefore decide whether some specific cell is empty.
 
 \begin{lemma}
     \label{lem:zerofaces}
     Let $S \subset \R^d \times \R_{\geq 0}$ be a finite set of spheres.
-    If any cell of $\PD(S)$ contains a $0$-face, then every cell in $\PD(S)$ contains a $0$-face.
+    If $\PD(S)$ contains a $0$-face, then every cell in $\PD(S)$ contains a $0$-face.
 \end{lemma}
 \begin{proof}
     Let $S = \left\{ s_1, \dots, s_k \right\} \subset \R^d \times \R_{\geq 0}$ be a finite set of spheres $s_i = (z_i, r_i^2)$ with $k \geq d+2$ and $s_1, \dots, s_d, s_{d+1}, s_{d+2} \in S$ such that (the cell of) $s_{d+1}$ shares a $0$-face with $s_1, \dots, s_d$ in $\PD(S)$.
@@ -783,14 +785,17 @@ Since $\Pi$ provides a mapping to hyperplanes which intersect $U$, only polyhedr
 Any other polyhedron can however be converted to such a polyhedron by moving it up in $x_{d+1}$-direction, preserving their combinatorical structure.
 \begin{theorem}[\lemcite{Theorem 4}]
     \label{thm:equivalentpolyhedron}
-    For any $(d+1)$-polyhedron P which is expressible as the intersection of upper halfspaces of hyperplanes with normal vectors $n$ with their $(d+1)$th coordinate equal to $1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
+    For any $(d+1)$-polyhedron P which is expressible as the intersection of upper halfspaces of hyperplanes with normal vectors with their $(d+1)$th coordinate equal to $-1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
 \end{theorem}
 \begin{proof}
-    Let $P = \bigcap_{i=1}^n h_i^+$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
+    Let $P = \bigcap_{i=1}^n h_i^\leq$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
     Also assume that $h_i \cap U \neq \varnothing$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
+    This movement does not affect the desired affine equivalence.
 
     \Cref{lem:pibijection} implies that there is a set $S = \left\{ s_1, \dots, s_n \right\}$ of spheres in $h_0$ such that $\Pi(s_i) = h_i$.
-    Using \cref{lem:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) iff $x \in \cell_S(s_i)$ is in $\PD(S)$, since $x$ is in the cell of $s_i$ if $s_i$ minimizes the power function for this point and therefore, the distance of $x$ to $\Pi(s_i)$ must be maximal, i.e. $f_i$ must be a face of $P$.
+    Using \cref{lem:distances} it holds that the vertical projection of any $x \in h_0$ onto $P$ is in $f_i$ (and therefore $h_i$) iff $x \in \cell_S(s_i)$:
+    The point $x$ is in the cell of $s_i$ iff $s_i$ minimizes the power function for this point.
+    Since $\pow(x, s_i) = \dist(x, x^\prime) - \dist(x, x^{\prime\prime})$ with $x^\prime$ being its projection to $U$ and $x^{\prime\prime}$ being its projection to $\Pi(s_i)$, the distance of $x$ to $\Pi(s_i)$ must therefore be maximal, i.e.~$f_i$ must contain $x^{\prime\prime}$.
     This means that $\cell_S(s_i)$ is exactly the vertical projection of $f_i$ onto $h_0$ for all $1 \leq i \leq n$, giving that $\PD(S)$ is affinely equivalent to $P$.
 
     Conversely, given any set of spheres $S$ in $h_0$ a corresponding polyhedron can be constructed by intersecting the upper halfspaces of the hyperplanes in $\Pi(S)$.
@@ -807,7 +812,7 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
     For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
 \end{theorem}
 \begin{proof}
-    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_1, \dots, h_n \mid h_i = \Pi(s_i) \right\}$ and vice versa.
+    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_i \mid h_i = \Pi(s_i), 1 \leq i \leq n \right\}$ with $n = \abs{S}$ and vice versa.
     Let $M = \Delta(H)$ be the set of all polars of the hyperplanes corresponding to all spheres.
     It is to be shown that $\CHb(M)$ is dual to $P$.
 
@@ -817,7 +822,9 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
 
     \Cref{lem:relativepositions} now implies that exactly in this case it holds that $p_i, p_j \in \Delta(x)$ and every other point $p \in M \setminus \left\{ p_i, p_j \right\}$ is above $\Delta(x)$.
     The line defined by $p_i$ and $p_j$, which is $\Delta(g)$, therefore defines an edge of $\CHb(M)$.
-    Since a similar argument holds for all other $j$-faces, $P$ is dual to $\CHb(M)$ and therefore, $\PD(S)$ is, too.
+
+    An analogous argument holds for all other $j$-faces ($0 \leq j < d-1$) by substituting the pair of faces by a set of faces adjacent in a $j$-face in this proof.
+    $P$ is thus dual to $\CHb(M)$ and therefore, $\PD(S)$ is, too.
 \end{proof}
 
 \section{Constructing Power Diagrams}
