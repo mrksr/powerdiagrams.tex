@@ -55,6 +55,7 @@ A \define{Voronoi diagram} is a cell decomposition of the space introduced by a 
 It assigns every point $p \in M$ its \define{region} of points for which there is no point closer than $p$ in $M$.
 Using the euclidean metric, these regions are guaranteed to be polyhedra.
 The normal vectors of the hyperplanes at the boundaries are given by the connecting line of neighbouring points with the hyperplane bisecting this line.
+\Cref{fig:voronoi} shows an example of a Voronoi diagram in $d = 2$ dimensions.
 \begin{figure}[tb]
     \centering
     \begin{tikzpicture}
@@ -99,7 +100,6 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
     \label{fig:voronoi}
 \end{figure}
 
-\Cref{fig:voronoi} shows an example of a Voronoi diagram in $d = 2$ dimensions.
 While obtaining the hyperplanes which potentially separate the regions is easy, it must be identified which of them actually exist, since not every region is a neighbour of every other region.
 It can be shown that there exists a dual relationship between Voronoi diagrams in two dimensions and Delaunay triangulations \cite{aurenhammer1991voronoi}.
 A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points form a clique iff the smallest circle containing all three points does not contain any other point in $M$.
@@ -415,12 +415,12 @@ Lastly let $U$ denote the paraboloid $x_{d+1} = x_{[d]}^Tx_{[d]}$ with $x_{[d]} 
 Then the transformation function is defined as follows.
 
 \begin{definition}[Transformation Function]
-    The \define{transformation function $\Pi$} connects spheres in $\R^d$ to hyperplanes in $\R^{d+1}$.
+    The \define{transformation function $\Pi$} connects spheres in $\R^d$ to hyperplanes in $\R^{d+1}$ and is given by
     \begin{align}
         \Pi: \left\{\begin{aligned}
             \R^{d} \times \R_{\geq 0} &\to \Ha\\
             (z, r^2) &\mapsto \left\{ x \in \R^{d+1} \mid x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 \right\}
-        \end{aligned}\right.
+        \end{aligned}\right..
     \end{align}
 \end{definition}
 
@@ -614,7 +614,7 @@ Then the transformation function is defined as follows.
     This figure is a recreation of \lemcite[]{Figure 4}.}
     \label{fig:projection}
 \end{figure}
-This transform has a direct connection to $U$ since for any sphere $s = (z, r^2)$
+This transform has a direct connection to $U$ since for any sphere $s = (z, r^2)$ it holds that
 \begin{alignat}{2}
     x \in \Pi(s) \cap U &\Leftrightarrow\quad& x_{d+1} = 2x_{[d]}^Tz - z^Tz + r^2 &\wedge x_{d+1} = x_{[d]}^Tx_{[d]}\\
     &\Leftrightarrow\quad&2x_{[d]}^Tz_{[d]} - z_{[d]}^Tz_{[d]} + r^2 &= x_{[d]}^Tx_{[d]}\\
@@ -629,10 +629,10 @@ The following lemma proofs that this mapping is an identification of the two con
     The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ with nonempty intersection with $U$.
 \end{lemma}
 \begin{proof}
-    Clearly, $\Pi$ is injective since two spheres with different centers map to hyperplanes with different normal vectors $n$ normalized to $n_{d+1} = 1$ and two concentric spheres need to share the same radius $r$ to map to hyperplanes with the same offset.
+    Clearly, $\Pi$ is injective since two spheres with different centers map to hyperplanes with different normal vectors $n$ normalized to $n_{d+1} = -1$ and two concentric spheres need to share the same radius $r$ to map to hyperplanes with the same offset.
     $\Pi$ is also surjective if every intersection of $U$ with a hyperplane in $\Ha$ is an ellipsoid which maps to a sphere if projected to $h_0$.
 
-    Let $n \in \R^{d+1}$ be the normal vector with $n_{d+1} = 1$, let $b \in \R$ be an offset and let $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ be a hyperplane with $h \in \Ha$.
+    Let $n \in \R^{d+1}$ be the normal vector with $n_{d+1} = -1$, let $b \in \R$ be an offset and let $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ be a hyperplane with $h \in \Ha$.
     The intersection of $h$ with $U$ is given by
     \begin{align}
         h \cap U = \left\{ x \in \R^{d+1} \mid x_{d+1} = b - n_{[d]}^T x_{[d]} = x_{[d]}^T x_{[d]} \right\}
@@ -963,9 +963,9 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
             \node[label={[xshift=+0.5em]right:$\Delta\big( \Pi(s_3) \big)$}] at (d3) {};
         \end{scope}
     \end{tikzpicture}
-    \caption{The polar point of the hyperplane $\Pi(s_i)$ shares the first $d$ coordinates with the sphere center $z_i$.
+    \caption{The polar point $\Delta(\Pi(s_i))$ of the hyperplane $\Pi(s_i)$ shares the first $d$ coordinates with the sphere center $z_i$.
         The polar of a face of lower dimension is the polar point of all hyperplanes containing the face.
-        The polar of the $1$-face $\Pi(s_1) \cap \Pi(s_3)$ is the convex hull of the polars of the two hyperplanes.
+        The polar of the $1$-face contained in $\Pi(s_1) \cap \Pi(s_3)$ is the convex hull of the polars of the two hyperplanes.
         The lower convex hull of the polar points is dual to the power diagram.
     }
     \label{fig:polarity}
@@ -1570,7 +1570,7 @@ An alternative implementation of convex hulls in general dimensions can be found
 After obtaining the shallow incidence lattice of the convex hull of the polar points, this lattice needs to be split into the top and bottom parts as described in \cref{alg:embedding}.
 Since only the bottom lattice is needed to construct the power diagram, all faces which are not contained in a bottom-facing facet are removed from the incidence lattice.
 To dualize the incidence lattice, the only non-trivial operation is to replace facets with polar points of hyperplanes containing the facet.
-Replacing $j$-faces by $(d-j)$-faces can be achieved by reversing all edges in the lattice or, equivalently, by interpreting minimal nodes as maximal ones and considering predecessors instead of successors.
+Replacing $j$-faces by $(d-j)$-faces can be achieved by reversing all edges in the lattice or, equivalently, by interpreting minimal nodes in the lattice as the maximal ones of the dual polyhedron and considering predecessors instead of successors for the subset relationship.
 See \cref{alg:dual_lattice} for a more formal description of this part of the algorithm.
 
 \begin{algorithm}[tbp]
