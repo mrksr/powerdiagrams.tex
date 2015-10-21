@@ -1,25 +1,154 @@
-\input{preamble.tex}
+\documentclass[biblatexBackend=biber]{tumthesis}
+
+% ------------------------------------------------------------------------------
+%FixMe-Status: final (no FixMe comments) or draft (comments visible)
+% \fxsetup{draft}
+\fxsetup{final}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+%  Language selection for metadata and main text (can be changed at any point in
+%  the main text.
+%\selectlanguage{ngerman}
+\selectlanguage{english}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+% Data for the bibliography
+\addbibresource{powerdiagrams.bib}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+% Further packages and TikZ libraries can be incorporated here.
+\usetikzlibrary{calc}
 \input{tikzpictures.tex}
 
-\addbibresource{powerdiagrams.bib}
+\usepackage{microtype}
+\addtokomafont{disposition}{\boldmath}
 
+\usepackage{minted}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathdots}
+\usepackage{mathtools}
+% \usepackage{autonum}
+
+\usepackage{subcaption}
+\usepackage[font=small, labelfont=bf, format=hang, indention=-2em]{caption}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+\graphicspath{{figures/}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Es}{\mathbb{S}}
+\newcommand{\Ha}{\mathcal{H}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Ge}{\mathcal{G}}
+\newcommand{\Oh}{\mathcal{O}}
+
+\DeclareMathOperator{\dist}{d}
+\DeclareMathOperator{\pow}{pow}
+\DeclareMathOperator{\PD}{PD}
+\DeclareMathOperator{\cell}{cell}
+\DeclareMathOperator{\chor}{chor}
+\DeclareMathOperator{\aff}{aff}
+\DeclareMathOperator{\CH}{CH}
+\DeclareMathOperator{\CHb}{CH_b}
+\DeclareMathOperator{\CHt}{CH_t}
+\DeclareMathOperator{\IL}{IL}
+\DeclareMathOperator{\ls}{ls}
+\DeclareMathOperator{\Time}{T}
+
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
+\newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\scalar}[1]{\left\langle #1 \right\rangle}
+\newcommand{\powerset}[1]{\mathcal{P}(#1)}
+
+\newcommand{\define}[1]{\emph{#1}}
+\newcommand{\pred}[1]{\textsc{#1}}
+\newcommand{\src}[1]{\textsc{#1}}
+\newcommand{\var}[1]{\texttt{#1}}
+
+% \newcommand{\Wlog}{w.\,l.\,o.\,g.\ }
+% \newcommand{\WLOG}{W.\,l.\,o.\,g.\ }
+
+\newcommand{\lemcite}[2][cf.]{\cite[#1][#2]{aurenhammer1987power}}
+
+% See https://tex.stackexchange.com/questions/4302/prettiest-way-to-typeset-c-cplusplus
+\def\CC{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\textbf{++}}}\xspace}
+\def\CCe{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\textbf{++}}11}\xspace}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+% PDF-Metadaten
+\hypersetup{
+    pdfauthor={Markus Kaiser},
+    pdftitle={Incidence Structures of Power Diagrams},
+    pdfsubject={Interdisciplinary Project},
+    pdfkeywords={},
+    colorlinks=false, % no coloured links (for the print version)
+}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+% Data for the title page and declaration
+\author{Markus Kaiser}
 \title{Incidence Structures of Power Diagrams}
-\subtitle{Interdisciplinary Project}
-\author{%
-    \texorpdfstring{Markus Kaiser\\\href{mailto:markus.kaiser@in.tum.de}{markus.kaiser@in.tum.de}}{Markus Kaiser}}
-\publishers{Technische Universität München}
+% \subtitle{Interdisciplinary Project}
+\faculty{Fakultät für Mathematik}
+\institute{Lehrstuhl für Angewandte Geometrie und Diskrete Mathematik}
+%\subject{master}
+%\subject{bachelor}
+%\subject{diploma}
+%\subject{project}
+% \subject{seminar}
+\subject{idp}
+\professor{Prof. Dr. Peter Gritzmann} %Themensteller
+\advisor{M.Sc. Fabian Klemm} %Betreuer
+\date{\today} %Submission Date
+\place{München} %Place where document is signed
+% ------------------------------------------------------------------------------
 
+% ==============================================================================
+% Main part of the document
+% ==============================================================================
 \begin{document}
-\maketitle
-\thispagestyle{empty}
-\vfill
-\begin{abstract}
-    \input{abstract.tex}
-\end{abstract}
-\vfill
+\pagestyle{empty}
+\frontmatter%
+%\selectlanguage{ngerman}
+\selectlanguage{english}
+\maketitlepage%
+\makedeclaration%
 
-\clearpage
-\tableofcontents
+\cleardoublepage
+\selectlanguage{english}
+\section*{Abstract}
+\input{abstract}
 
-\input{chapters.tex}
+\tableofcontents%
+
+\mainmatter%
+\pagestyle{headings}
+
+\include{chapters}
+
+% all appendices behind backmatter will go without numbers
+\backmatter
+
+\listoffigures
+\listofalgorithms
+\listoflistings
+
+% Bibliography
+\addtocontents{toc}{\protect\enlargethispage{\baselineskip}}
+\printbibliography[heading=bibintoc]
+
+%In the final version, this should be empty and needn't be commented out. Someone who works sloppily should at least remember to comment out the fixme list, so that unfinished places are
+%not so obvious for the examiners.
+\listoffixmes
+%
 \end{document}

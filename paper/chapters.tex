@@ -1,4 +1,4 @@
-\section{Introduction}
+\chapter{Introduction}
 \label{sec:introduction}
 Power diagrams define a cell decomposition of the euclidean space $\R^d$ into cells defined by a finite set of spheres.
 A point is part of the cell of some sphere if there is no other sphere for which the power of the point with respect to the sphere is lower.
@@ -15,13 +15,13 @@ The theoretical parts of this project are guided by a paper by \textcite{aurenha
 While all statements presented here can be found in \cite{aurenhammer1987power}, only the ones with an explicit citation contain a proof in the original paper.
 For the other statements, proofs are provided as a service to the reader.
 
-The first section of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
-Using a transformation from spheres to hyperplanes, the next section shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
+The first chapter of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
+Using a transformation from spheres to hyperplanes, the next chapter shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the interchapter of halfspaces pointing upwards in $d+1$ dimensions.
 This equivalency is used to also show a dual relationship between power diagrams in $\R^d$ and the convex hull of a set of points in $\R^{d+1}$, which can be exploited to give an efficient algorithm to construct incidence structures of power diagrams.
 With incidence lattices, a data structure to store them is introduced.
-In the last section of the paper, the implementation of both the algorithms and the incidence lattices accompanying this paper is described.
+In the last chapter of the paper, the implementation of both the algorithms and the incidence lattices accompanying this paper is described.
 
-\section{Power Diagrams}
+\chapter{Power Diagrams}
 \label{sec:powerdiagrams}
 Power diagrams in $d$-dimensional Euclidean space $\R^d$ can be understood as a particular generalization of the more well known Voronoi diagrams.
 A \define{Voronoi diagram} is a cell decomposition of the space introduced by a finite set of points $M \subset \R^d$ and a metric $\dist(\cdot, \cdot)$.
@@ -69,7 +69,7 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
         \node[point] () at (p2) {};
         \node[point] () at (p3) {};
     \end{tikzpicture}
-    \caption{2D-Voronoi diagrams partition the plane into regions of points with a common closest input point. The edges separating two regions can be calculated as the perpendicular bisector of the line connecting their centers. Two regions are neighbours if there exists an edge between their points in the Delaunay triangulation of the same set.}
+    \caption[2D Voronoi diagram]{2D Voronoi diagrams partition the plane into regions of points with a common closest input point. The edges separating two regions can be calculated as the perpendicular bisector of the line connecting their centers. Two regions are neighbours if there exists an edge between their points in the Delaunay triangulation of the same set.}
     \label{fig:voronoi}
 \end{figure}
 
@@ -84,10 +84,10 @@ Another algorithm to find Delaunay triangulation described by Aurenhammer involv
 The triangulation can then be found by computing the convex hull of those points, also yielding $\Oh(n \log n)$ complexity in two dimensions.
 The efficient algorithm presented in this paper is a generalization of this algorithm for power diagrams.
 
-In this section, power diagrams will be defined in terms of the power of a point with respect to a sphere.
-After introducing some geometric notation, some fundamental results about power diagrams will be shown which in the next section can be used to proof a relationship between power diagrams in $d$ dimensions and polyhedra in $d + 1$ dimensions.
+In this chapter, power diagrams will be defined in terms of the power of a point with respect to a sphere.
+After introducing some geometric notation, some fundamental results about power diagrams will be shown which in the next chapter can be used to proof a relationship between power diagrams in $d$ dimensions and polyhedra in $d + 1$ dimensions.
 
-\subsection{Definition of Power Diagrams}
+\section{Definition of Power Diagrams}
 \label{sub:definition_of_power_diagrams}
 There are multiple possible modifications of Voronoi diagrams, a few of which are described in \cite{aurenhammer1987power}.
 To obtain \define{power diagrams}, each point $p \in M$ is assigned a \define{weight} $w(p)$, where a larger weight results in a larger cell.
@@ -165,7 +165,7 @@ While other possible combinations of distance and weight have also been investig
         \caption{Equality of powers of two spheres}
         \label{sfig:chordal}
     \end{subfigure}
-    \caption{\Cref{def:power} has a geometric interpretation for points $x$ lying outside of the sphere $s=(p, r)$. The power $\pow(x, s) = \dist(x, p)^2 - r^2$ can be interpreted as the length of a tangent of point $p$ to the sphere $s$. When comparing the powers of two non-intersecting spheres $s_1, s_2$, the set of points $x$ for which it holds that $\pow(x, s_1) = \pow(x, s_2)$ is a hyperplane perpendicular to the line connecting the two centers but not necessarily its bisector.}
+    \caption[Geometric interpretation of the power function]{\Cref{def:power} has a geometric interpretation for points $x$ lying outside of the sphere $s=(p, r)$. The power $\pow(x, s) = \dist(x, p)^2 - r^2$ can be interpreted as the length of a tangent of point $p$ to the sphere $s$. When comparing the powers of two non-intersecting spheres $s_1, s_2$, the set of points $x$ for which it holds that $\pow(x, s_1) = \pow(x, s_2)$ is a hyperplane perpendicular to the line connecting the two centers but not necessarily its bisector.}
     \label{fig:power}
 \end{figure}
 
@@ -217,7 +217,7 @@ Every such site gets assigned its partition of the space where there is no other
         \node[point] () at (p2) {};
         \node[point] () at (p3) {};
     \end{tikzpicture}
-    \caption{The power diagram of the five sites $\PD(\left\{ s_1, \dots, s_5 \right\})$ is the set of their cells, whose boundaries are shown in the figure. Boundaries are defined by sets of points for which adjacent sites have equal minimizing power.}
+    \caption[A simple two-dimensional power diagram]{The power diagram of the five sites $\PD(\left\{ s_1, \dots, s_5 \right\})$ is the set of their cells, whose boundaries are shown in the figure. Boundaries are defined by sets of points for which adjacent sites have equal minimizing power.}
     \label{fig:garage}
 \end{figure}
 
@@ -229,15 +229,15 @@ Every such site gets assigned its partition of the space where there is no other
             S &\to \powerset{\R^d}\\
             s &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}: \pow(x, s) \leq \pow(x, t) \right\}
         \end{aligned}\right..\\
-        \intertext{The \define{power diagram $\PD(S)$} is the set of all cells corresponding to all sites and their non-empty intersections and given by}
+        \intertext{The \define{power diagram $\PD(S)$} is the set of all cells corresponding to all sites and their non-empty interchapters and given by}
         \PD(S) &\coloneqq \left\{ \bigcap_{p \in P} \cell_S(p) \mid P \in \powerset{S} \setminus \left\{ \varnothing \right\} \right\} \setminus \left\{ \varnothing \right\}.
     \end{align}
 \end{definition}
 
 \Cref{fig:garage} shows an example of a power diagram in two dimensions.
-After introducing some geometric notation, the remainder of this section will show some properties of power diagrams in $d$ dimensions.
+After introducing some geometric notation, the remainder of this chapter will show some properties of power diagrams in $d$ dimensions.
 
-\subsection{Geometric Notation}
+\section{Geometric Notation}
 \label{sub:geometric_notation}
 Like Voronoi diagrams, power diagrams in the euclidean case will be shown to consist of polyhedral regions, which share faces at their boundaries.
 An extensive introduction into polyhedra can be found in \cite{grunbaum2003convex} by Grünbaum and an introduction into convex analysis is given by Gritzmann in \cite{gritzmann2013grundlagen}.
@@ -245,10 +245,10 @@ The following will repeat some notations of \cite{aurenhammer1987power}.
 
 Let $n \in \R^d$ with $n \neq 0$ and let $b \in \R$.
 Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^\leq = \left\{ x \in \R^d \mid n^T x \leq b \right\}$ is an \define{(closed) halfspace} in $\R^d$.
-A \define{$j$-flat} $f$ is a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
+A \define{$j$-flat} $f$ is a set expressible as the interchapter of $d - j$, but no fewer, hyperplanes.
 It is an affine subspace of $\R^d$ with dimensionality $j$ and is expressible as the affine hull of $j + 1$ linearly independent points in $f$.
 
-A set $P \subseteq R^d$ is called a \define{polyhedron} iff it is expressible as the intersection of a finite number of halfspaces.
+A set $P \subseteq R^d$ is called a \define{polyhedron} iff it is expressible as the interchapter of a finite number of halfspaces.
 $P$ is a \define{$j$-polyhedron} if there is a $j$-flat, but no $(j-1)$-flat, which contains $P$.
 The boundary of $P$ consists of a finite number of $i$-polyhedra with $0 \leq i < j \leq d$, which are called the \define{$i$-faces} of $P$.
 $0$-, $1$- and $(j - 1)$-faces are called \define{vertex}, \define{edge} and \define{facet} respectively.
@@ -262,14 +262,14 @@ Facets with normal vector orthogonal to $v$ are not attributed to either group.
 Any other face is in the lower or upper convex hull if it is contained in a facet which is in $\CHb$ or $\CHt$ respectively.
 
 A \define{cell decomposition $C$} of $\R^d$ is a finite family of polyhedra.
-In this family, every face of a polyhedron in $C$ is itself a member of $C$ and every non-empty intersection of any two members of $C$ is a face of each of them.
+In this family, every face of a polyhedron in $C$ is itself a member of $C$ and every non-empty interchapter of any two members of $C$ is a face of each of them.
 Lastly, the union of all polyhedra must be the whole space, i.e.~$\bigcup_{f \in C} f = \R^d$.
 Full-dimensional polyhedra, or $d$-faces, of $C$ are called \define{cells}.
 $C$ and a $(d+1)$-polyhedron $P$ are called \define{affinely equivalent} if there exists a central or parallel projection $\varphi$ such that for every face $f \in C$ it holds that $f = \varphi(g)$ for some face $g$ of $P$.
 
 These notations can now be used to describe power diagrams in an algebraic way and to show that they define a cell decomposition.
 
-\subsection{Properties of Power Diagrams}
+\section{Properties of Power Diagrams}
 \label{sub:properties_of_power_diagrams}
 The boundaries of the cells a power diagram are given by sets of points for which the powers with respect to at least two sites are equal.
 Using the definition of the power function in \cref{def:power}, it can be shown that these boundaries are hyperplanes.
@@ -287,22 +287,22 @@ Note that if $r_s = r_t$, the chordal of the two spheres is the bisector of the 
 A power diagram for which all radii are equal is therefore equivalent to the Voronoi diagram of the centers.
 
 The normal vectors of the chordales of three spheres are given by the pairwise differences of their centers.
-Since any of these differences can be expressed through the other two, their intersection has higher dimensionality than a general intersection of three hyperplanes can have.
+Since any of these differences can be expressed through the other two, their interchapter has higher dimensionality than a general interchapter of three hyperplanes can have.
 \begin{lemma}[\lemcite{Observation 2}]
     \label{lem:cellsarepolyhedra}
     Let $s, t$ and $u$ be spheres in $\R^d$ with $d \geq 2$.
-    If the spheres are not collinear, the intersection of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
+    If the spheres are not collinear, the interchapter of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
     If they are collinear, the three chordales are parallel.
     More generally, the chordales of a sphere with $k \leq d$ non-collinear other spheres in $\R^d$ intersect in a $(d-k)$-flat.
 \end{lemma}
 
-Every cell in the power diagram is either unbounded or it is bounded by chordales or intersections of other chordales.
-\begin{lemma}[\lemcite{Section 2.2, p.~80}]
+Every cell in the power diagram is either unbounded or it is bounded by chordales or interchapters of other chordales.
+\begin{lemma}[\lemcite{chapter 2.2, p.~80}]
     The power diagram $\PD(S)$ of a finite set of spheres in $\R^d$ is a cell decomposition of $\R^d$.
 \end{lemma}
 \begin{proof}
     Let $S$ be a finite set of $n$ spheres in $\R^d$ whose centers have an affine dimension of $d$.
-    Since the cell of every sphere $s \in S$ is bounded by halfspaces defined by its $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the intersection of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
+    Since the cell of every sphere $s \in S$ is bounded by halfspaces defined by its $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the interchapter of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
     Together with the fact that every $x \in \R^d$ is part of some cell of $\PD(S)$ by definition, this shows that $\PD(S)$ is a cell decomposition of $\R^d$, since the combinatorical structure of the shared faces of the polyhedra is guaranteed by definition.
 \end{proof}
 
@@ -334,7 +334,7 @@ Every cell in the power diagram is either unbounded or it is bounded by chordale
         \node[point] () at (p1) {};
         \node[point] () at (p2) {};
     \end{tikzpicture}
-    \caption{The cell of site $s_2$ in this two-dimensional power diagram is empty. This can happen, if the sphere of a site is completely contained in a sphere of an other site. However, this condition is not sufficient. The sphere $s_4$ does have a non-empty cell, but its center is not part of its cell.}
+    \caption[A two-dimensional power diagram with special cases]{The cell of site $s_2$ in this two-dimensional power diagram is empty. This can happen, if the sphere of a site is completely contained in a sphere of an other site. However, this condition is not sufficient. The sphere $s_4$ does have a non-empty cell, but its center is not part of its cell.}
     \label{fig:emptycells}
 \end{figure}
 \Cref{fig:emptycells} shows that in contrast to Voronoi diagrams, there can be spheres which have empty cells in a power diagram.
@@ -342,7 +342,7 @@ This can happen if a is sphere completely contained in another sphere.
 This is not a sufficient condition however.
 Such a constellation can also lead to a sphere $s$ having a cell for which it holds that $z_s \not\in \cell_S(s) \neq \varnothing$.
 
-While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales have non-empty intersection with their cells and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
+While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales have non-empty interchapter with their cells and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
 To describe all existing bounded faces, one can find all $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
 The following lemma shows that if a power diagram contains a $0$-face, finding those faces and the cells which are adjacent to them is sufficient to construct a set of all non-empty cells and therefore decide whether some specific cell is empty.
 
@@ -367,13 +367,13 @@ The following lemma shows that if a power diagram contains a $0$-face, finding t
     and therefore, the lineality space must be empty, which is a contradiction.
 \end{proof}
 
-\section{Embedding in \texorpdfstring{$d+1$}{d+1} Dimensions}
+\chapter{Embedding in \texorpdfstring{$d+1$}{d+1} Dimensions}
 \label{sec:embedding_in_d_1_dimensions}
 To derive an algorithm that efficiently computes the cells of a power diagram via the incidence structure of the faces of the boundaries, power diagrams of $d$ dimensions will be embedded into $d+1$ dimensions using a transformation function to map the spheres to hyperplanes.
-This will lead to a result identifying these power diagrams with polyhedra in $d+1$ dimensions which can be expressed as the intersection of halfspaces pointing upwards.
+This will lead to a result identifying these power diagrams with polyhedra in $d+1$ dimensions which can be expressed as the interchapter of halfspaces pointing upwards.
 Using this identity together with a duality mapping for polyhedra will finally connect power diagrams to convex hulls and be the basis of the algorithm to compute power diagrams.
 
-\subsection{The Transformation Function}
+\section{The Transformation Function}
 \label{sub:the_transform}
 The embedding of power diagrams in a space of one dimension higher relies on the fact that the power function of a sphere in $\R^d$ can be calculated using distances to some hyperplane in $\R^{d+1}$.
 These hyperplanes can be obtained from the spheres using a transformation function.
@@ -459,7 +459,7 @@ Then the transformation function is defined as follows.
             (325.5164,292.3607) .. (325.5686,289.7724)(315.5357,299.6013) .. controls
             (317.6307,298.7453) and (319.6662,297.7671) .. (321.3260,296.2777);
 
-            % Intersection lines
+            % Interchapter lines
             \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
             rule, very thick] (197.6000,66.9429) -- (285.6023,132.8780);
             \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
@@ -581,9 +581,9 @@ Then the transformation function is defined as follows.
             \node at (165, 305) {$U$};
         \end{scope}
     \end{tikzpicture}
-    \caption{The projection function $\Pi$ maps the spheres $s_1$ and $s_2$ to hyperplanes in $d+1$ dimensions.
-    The intersection of the projections $\Pi(s_i)$ and the paraboloid $U$ are the orthogonal projections of $s_i$ onto the paraboloid.
-    The orthogonal projection onto the $x_1$-$x_2$-plane of the intersection of the two hyperplanes is the chordale of the two spheres.
+    \caption[The projection function]{The projection function $\Pi$ maps the spheres $s_1$ and $s_2$ to hyperplanes in $d+1$ dimensions.
+    The interchapter of the projections $\Pi(s_i)$ and the paraboloid $U$ are the orthogonal projections of $s_i$ onto the paraboloid.
+    The orthogonal projection onto the $x_1$-$x_2$-plane of the interchapter of the two hyperplanes is the chordale of the two spheres.
     This figure is a recreation of \lemcite[]{Figure 4}.}
     \label{fig:projection}
 \end{figure}
@@ -594,19 +594,19 @@ This transform has a direct connection to $U$ since for any sphere $s = (z, r^2)
     &\Leftrightarrow\quad& \dist(x_{[d]}, z) &= r^2\\
     &\Leftrightarrow\quad& x_{[d]} &\in z + r \cdot \Es^d.
 \end{alignat}
-The intersection of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
+The interchapter of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
 A visualization of this can be seen in \cref{fig:projection}.
 The following lemma proofs that this mapping is an identification of the two concepts.
 \begin{lemma}
     \label{lem:pibijection}
-    The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ with nonempty intersection with $U$.
+    The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ with nonempty interchapter with $U$.
 \end{lemma}
 \begin{proof}
     Clearly, $\Pi$ is injective since two spheres with different centers map to hyperplanes with different normal vectors $n$ normalized to $n_{d+1} = -1$ and two concentric spheres need to share the same radius $r$ to map to hyperplanes with the same offset.
-    $\Pi$ is also surjective if every intersection of $U$ with a hyperplane in $\Ha$ is an ellipsoid which maps to a sphere if projected to $h_0$.
+    $\Pi$ is also surjective if every interchapter of $U$ with a hyperplane in $\Ha$ is an ellipsoid which maps to a sphere if projected to $h_0$.
 
     Let $n \in \R^{d+1}$ be the normal vector with $n_{d+1} = -1$, let $b \in \R$ be an offset and let $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ be a hyperplane with $h \in \Ha$.
-    The intersection of $h$ with $U$ is given by
+    The interchapter of $h$ with $U$ is given by
     \begin{align}
         h \cap U = \left\{ x \in \R^{d+1} \mid x_{d+1} = b - n_{[d]}^T x_{[d]} = x_{[d]}^T x_{[d]} \right\}
     \end{align}
@@ -624,7 +624,7 @@ The following lemma proofs that this mapping is an identification of the two con
         &\Leftrightarrow\quad&x_{[d]}^Tx_{[d]} + n_{[d]}^Tx_{[d]} + \frac{1}{4} n_{[d]}^Tn_{[d]} &= b + \frac{1}{4} n_{[d]}^Tn_{[d]}\\
         &\Leftrightarrow\quad& x_{[d]}^Tx_{[d]} + n_{[d]}^Tx_{[d]} - b &= 0,
     \end{alignat}
-    so the projection of the intersection is indeed a sphere if $b > -\frac{1}{4}n_{[d]}^Tn_{[d]}$, a point if $b = -\frac{1}{4}n_{[d]}^Tn_{[d]}$ and $h$ does not intersect $U$ otherwise.
+    so the projection of the interchapter is indeed a sphere if $b > -\frac{1}{4}n_{[d]}^Tn_{[d]}$, a point if $b = -\frac{1}{4}n_{[d]}^Tn_{[d]}$ and $h$ does not intersect $U$ otherwise.
 \end{proof}
 
 Because $\Pi(s)$ is the vertical projection of spheres to $U$, the resulting hyperplanes can also be used to compute the power of some point with respect to $s$.
@@ -641,7 +641,7 @@ Because $\Pi(s)$ is the vertical projection of spheres to $U$, the resulting hyp
     The difference $\dist(x, x^\prime) - \dist(x, x^{\prime\prime})$ is given by $(x_{[d]} - z)^T(x_{[d]} - z) - r^2$, which is equal to $\pow(x_{[d]}, s)$.
 \end{proof}
 
-This directly implies the following lemma, which connects chordales to the newly formed hyperplanes by recognizing that the intersection of two hyperplanes in $\R^{d+1}$ contains projected points with the same power value for the respective spheres.
+This directly implies the following lemma, which connects chordales to the newly formed hyperplanes by recognizing that the interchapter of two hyperplanes in $\R^{d+1}$ contains projected points with the same power value for the respective spheres.
 
 \begin{lemma}
     \label{lem:verticalprojection}
@@ -649,9 +649,9 @@ This directly implies the following lemma, which connects chordales to the newly
     Then $\chor(s, t)$ is the vertical projection of $\Pi(s) \cap \Pi(t)$ onto $h_0$.
 \end{lemma}
 
-\subsection{Duality of points and hyperplanes}
+\section{Duality of points and hyperplanes}
 \label{sub:duality_of_points_and_hyperplanes}
-The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of these hyperplanes and $(d-j)$-flats in this dual domain.
+The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the interchapter of these hyperplanes and $(d-j)$-flats in this dual domain.
 
 \begin{definition}[Polarity Function]
     Let $\Ha$ as defined above and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis, i.e.
@@ -701,7 +701,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
     $\Delta(F)$ is therefore a $(d - j)$-flat which is the result of an affine transformation of $N$.
 
     Now assume that $\Delta(F) \not\in \F$.
-    Then $\Delta(F)$ is not expressible as the intersection of hyperplanes in $\Ha$ and therefore, there must exist two different $d^{(1)}, d^{(2)} \in \Delta(F)$ with $d_{[d]}^{(1)} - d_{[d]}^{(2)} = 0$.
+    Then $\Delta(F)$ is not expressible as the interchapter of hyperplanes in $\Ha$ and therefore, there must exist two different $d^{(1)}, d^{(2)} \in \Delta(F)$ with $d_{[d]}^{(1)} - d_{[d]}^{(2)} = 0$.
     Let $n^{(1)}, n^{(2)} \in N$ with $\Delta(h(n^{(1)})) = \left\{ d^{(1)} \right\}$ and $\Delta(h(n^{(2)})) = \left\{ d^{(2)} \right\}$.
     Then it holds that
     \begin{align}
@@ -751,7 +751,7 @@ An additional property of $\Delta$ is its preservation of relative positions of 
     which is equal to the expression determining the relative position of $x$ to $h$.
 \end{proof}
 
-\subsection{Power Diagrams and Polyhedra}
+\section{Power Diagrams and Polyhedra}
 \label{sub:power_diagrams_and_polyhedra}
 Having established the bijectivity of $\Pi$ it can be shown that power diagrams in $\R^d$ can be identified with boundaries of $(d+1)$-polyhedra.
 Since $\Pi$ provides a mapping to hyperplanes which intersect $U$, only polyhedra which are bounded by halfspaces defined by such hyperplanes can be considered.
@@ -901,21 +901,21 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
             (s3) -- (d3);
 
             % Center Nodes
-            \tikzstyle{intersection} = [sphere center, tumblue, minimum size=3pt];
-            \node[intersection] at (s1) {};
-            \node[intersection] at (p1) {};
-            \node[intersection] at (d1) {};
-            \node[intersection] at (s4) {};
-            \node[intersection] at (p4) {};
-            \node[intersection] at (d4) {};
+            \tikzstyle{interchapter} = [sphere center, tumblue, minimum size=3pt];
+            \node[interchapter] at (s1) {};
+            \node[interchapter] at (p1) {};
+            \node[interchapter] at (d1) {};
+            \node[interchapter] at (s4) {};
+            \node[interchapter] at (p4) {};
+            \node[interchapter] at (d4) {};
 
-            \node[intersection] at (s2) {};
-            \node[intersection] at (p2) {};
-            \node[intersection] at (d2) {};
+            \node[interchapter] at (s2) {};
+            \node[interchapter] at (p2) {};
+            \node[interchapter] at (d2) {};
 
-            \node[intersection] at (s3) {};
-            \node[intersection] at (p3) {};
-            \node[intersection] at (d3) {};
+            \node[interchapter] at (s3) {};
+            \node[interchapter] at (p3) {};
+            \node[interchapter] at (d3) {};
 
             % Labels
             \node at (188, 350) {$s_1$};
@@ -936,7 +936,7 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
             \node[label={[xshift=+0.5em]right:$\Delta\big( \Pi(s_3) \big)$}] at (d3) {};
         \end{scope}
     \end{tikzpicture}
-    \caption{The polar point $\Delta(\Pi(s_i))$ of the hyperplane $\Pi(s_i)$ shares the first $d$ coordinates with the sphere center $z_i$.
+    \caption[The polarization function]{The polar point $\Delta(\Pi(s_i))$ of the hyperplane $\Pi(s_i)$ shares the first $d$ coordinates with the sphere center $z_i$.
         The polar of a face of lower dimension is the polar point of all hyperplanes containing the face.
         The polar of the $1$-face contained in $\Pi(s_1) \cap \Pi(s_3)$ is the convex hull of the polars of the two hyperplanes.
         The lower convex hull of the polar points is dual to the power diagram.
@@ -945,10 +945,10 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
 \end{figure}
 \begin{theorem}[\lemcite{Theorem 4}]
     \label{thm:equivalentpolyhedron}
-    For any $(d+1)$-polyhedron P which is expressible as the intersection of upper halfspaces of hyperplanes with normal vectors with their $(d+1)$th coordinate equal to $-1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
+    For any $(d+1)$-polyhedron P which is expressible as the interchapter of upper halfspaces of hyperplanes with normal vectors with their $(d+1)$th coordinate equal to $-1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
 \end{theorem}
 \begin{proof}
-    Let $P = \bigcap_{i=1}^n h_i^\leq$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
+    Let $P = \bigcap_{i=1}^n h_i^\leq$ be the interchapter of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
     Also assume that $h_i \cap U \neq \varnothing$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
     This movement does not affect the desired affine equivalence.
 
@@ -960,7 +960,7 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
 
     Conversely, given any set of spheres $S$ in $h_0$ a corresponding polyhedron can be constructed by intersecting the upper halfspaces of the hyperplanes in $\Pi(S)$.
 \end{proof}
-To also describe polyhedra $P$ generated using the intersection of upper halfspaces, one can inspect the reflection of $P$ through $h_0$ as described in \cite{aurenhammer1987power}.
+To also describe polyhedra $P$ generated using the interchapter of upper halfspaces, one can inspect the reflection of $P$ through $h_0$ as described in \cite{aurenhammer1987power}.
 
 Having established the existence of an affinely equivalent polyhedron for each set of spheres in $h_0$, the following theorem will show that using the polarity function $\Delta$, it is possible to relate power diagrams to convex hulls.
 A power diagram is called dual to a convex hull if there exists a polyhedron such that the power diagram is affinely equivalent to the polyhedron as described in \cref{thm:equivalentpolyhedron} and this polyhedron is dual to the convex hull.
@@ -973,7 +973,7 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
     For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
 \end{theorem}
 \begin{proof}
-    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_i \mid h_i = \Pi(s_i), 1 \leq i \leq n \right\}$ with $n = \abs{S}$ and vice versa.
+    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the interchapter of the upper halfspaces of the hyperplanes $H = \left\{ h_i \mid h_i = \Pi(s_i), 1 \leq i \leq n \right\}$ with $n = \abs{S}$ and vice versa.
     Let $M = \Delta(H)$ be the set of all polars of the hyperplanes corresponding to all spheres.
     It is to be shown that $\CHb(M)$ is dual to $P$.
 
@@ -988,19 +988,19 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
     $P$ is thus dual to $\CHb(M)$ and therefore, $\PD(S)$ is, too.
 \end{proof}
 
-\section{Constructing Power Diagrams}
+\chapter{Constructing Power Diagrams}
 \label{sec:constructing_power_diagrams}
-In this section, the theoretical results of the previous sections will be applied to the formulation of algorithms to construct the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions.
+In this chapter, the theoretical results of the previous chapters will be applied to the formulation of algorithms to construct the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions.
 \Cref{lem:cellsarepolyhedra} implies that the cells of those power diagrams are polyhedra which share faces at their boundaries.
 
 To represent those boundaries (and therefore the power diagrams), a data structure called incidence lattices will be introduced.
 Also based on \cref{lem:cellsarepolyhedra}, a naive algorithm can be formulated, which finds all $0$-faces of and is based on the observation that every such face is defined by at least $(d+1)$ spheres.
 Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_1_dimensions} and the known problem of constructing convex hulls will be presented and its running time analyzed.
 
-\subsection{Incidence Lattices}
+\section{Incidence Lattices}
 \label{sub:incidence_lattices}
 \Cref{thm:equivalentpolyhedron} establishes that for every power diagram in $d$ dimensions there is a $(d+1)$-polyhedron which is affinely equivalent.
-This means that all chordales which exist in the power diagram and their intersections which form flats of lower dimensionality are represented as faces in this polyhedron as can be seen from \cref{lem:verticalprojection}.
+This means that all chordales which exist in the power diagram and their interchapters which form flats of lower dimensionality are represented as faces in this polyhedron as can be seen from \cref{lem:verticalprojection}.
 To represent all faces which are boundaries of cells in the power diagram, one can therefore choose a data structure which represents the faces of the equivalent polyhedron.
 
 \Textcite{grunbaum2003convex} observes that by creating a partial order on faces of a polyhedron induced by set inclusion of the points in the faces, one can obtain the so called incidence lattice of the polyhedron.
@@ -1103,7 +1103,7 @@ Together with \cref{thm:equivalentpolyhedron} it follows that the incidence latt
         (s4) node[corner, label={above:$s_4$}] {}
         (v1) node[corner, tumgreen, rectangle] {};
     \end{tikzpicture}
-    \caption{The polytope on the left is given as the convex hull of $\left\{ v_1, \dots, v_4 \right\}$.
+    \caption[Two dual polytopes sharing an incidence lattice]{The polytope on the left is given as the convex hull of $\left\{ v_1, \dots, v_4 \right\}$.
     The minimal nodes of the incidence lattice are the four vertices, while the maximal node is the complete polytope. The $1$-faces (edges) form the middle layer of the lattice.
     The dual power diagram is a Voronoi diagram which can be seen on the right side which has an incidence structure described by the same lattice with reversed edges.}
     \label{fig:incidencelattice}
@@ -1111,7 +1111,7 @@ Together with \cref{thm:equivalentpolyhedron} it follows that the incidence latt
 \Cref{fig:incidencelattice} shows an example of this relationship.
 A square defined by four vertices can be interpreted as a degenerated lower convex hull in three dimensions. It is then dual to a Voronoi diagram in two dimensions whose incidence structure is described by the same incidence lattice with reverted edges.
 
-Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by \textcite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressible as intersections of upwards pointing halfspaces).
+Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by \textcite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressible as interchapters of upwards pointing halfspaces).
 
 \begin{lemma}
     \label{lem:latticesexponential}
@@ -1121,7 +1121,7 @@ Since every non-empty face at the boundary between two cells is represented by a
 A direct consequence of this lemma is that any algorithm constructing the complete incidence lattice of some power diagram will have a running time in $\Omega(n^{\left\lceil d/2 \right\rceil})$ for $n$ spheres in $d$ dimensions.
 To lessen the impact of higher dimensions somewhat, the implementation presented here will create shallow incidence lattices which only contain the $0$-faces (vertices), $1$-faces (edges) and $d$-faces (cells) of a power diagram.
 
-\subsection{Naive Algorithm}
+\section{Naive Algorithm}
 \label{sub:naive_algorithm}
 For any power diagram which contains a cell with a $0$-face, every cell contains a $0$-face, as stated by \cref{lem:zerofaces}.
 The proof of the lemma yields that the existence of a $0$-face in a power diagram is guaranteed if there are at least $d+1$ linearly independent spheres, which also is a necessary condition.
@@ -1141,7 +1141,7 @@ Operations of the incidence lattice are denoted using addition and subtraction o
             \State $\Ge \gets \binom{S}{d + 1}$\Comment{Find the set of all possible groups}
             \Statex
             \For{$G$ \textbf{in} $\Ge$}\Comment{Find $0$-faces}
-                \State $P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find intersection of all pairs of spheres in $G$}.
+                \State $P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find interchapter of all pairs of spheres in $G$}.
                 \If{$P = \left\{ p \right\}$}\Comment{$P$ is a single point}
                     \State Choose $g \in G$
                     \If{$\forall o \in S \setminus G : \pow(p, o) \geq \pow(p, g)$}\Comment{$p$ is a $0$-face}
@@ -1160,7 +1160,7 @@ Operations of the incidence lattice are denoted using addition and subtraction o
             \State \Return $\IL$
         \EndFunction
     \end{algorithmic}
-    \caption{Naive approach to find $0$-faces of Power Diagrams}
+    \caption{Naive approach to finding $0$-faces of power diagrams}
     \label{alg:zerofaces}
 \end{algorithm}
 To analyze the running time, the different steps are analyzed separately and lead to a bound derived from the combinatorical structure of $\Ge$.
@@ -1170,7 +1170,7 @@ To analyze the running time, the different steps are analyzed separately and lea
 \end{theorem}
 \begin{proof}
     Line~2 is in $\Oh(1)$, line~3 in $\Oh(\abs{\Ge} \cdot d)$ and the merge phase starting in line 10 can be achieved in $\Oh(\abs{\Ge} \cdot d)$, where the factor comes from adding the edges from $G_2$ to the incidence lattice, assuming that adding an edge to the lattice can be done in $\Oh(1)$.
-    Finding the intersection $p$ in line~5 amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
+    Finding the interchapter $p$ in line~5 amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
     Line~8 needs to check every sphere in $S$ which is not in $G$ and therefore can be bounded by $\Oh(n)$, while line~9 only operates on the spheres in $G$ and therefore only takes $\Oh(d)$ time.
     The running time of this algorithm is therefore clearly dominated by the first loop since lines 5 and 7 could both have to be performed $\abs{\Ge} = \binom{\abs{S}}{d + 1} = \binom{n}{d + 1}$ times.
     This leads to the desired bound.
@@ -1178,9 +1178,9 @@ To analyze the running time, the different steps are analyzed separately and lea
 
 If one assumes $d \ll n$, this running time can be approximated as $\Oh(n^{d+2})$.
 To construct the complete incidence lattice of the power diagram, this shallow representation has to be filled by adding the internal $j$-faces for $1 \leq j < d$ and unbounded faces would need to be found.
-Since this naive algorithm is not applicable in practice due to its running time, these questions were not explored further and it was only used as a test implementation for the efficient algorithm presented in the next subsection.
+Since this naive algorithm is not applicable in practice due to its running time, these questions were not explored further and it was only used as a test implementation for the efficient algorithm presented in the next section.
 
-\subsection{Dual Algorithm}
+\section{Dual Algorithm}
 \label{sub:dual_algorithm}
 According to \cref{thm:equivalentconvexhull}, an incidence lattice which is equivalent to the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions can be obtained using the lower part of a certain convex hull in $\R^{d+1}$.
 \Textcite{seidel1981convex} describes an optimal algorithm to obtain convex hulls in even dimensions, while \textcite{preparata1977convex} describe one which is optimal for $d \in \left\{ 2, 3 \right\}$.
@@ -1221,7 +1221,7 @@ The different steps of the algorithm allow for a straightforward analysis of its
             \State \Return $\IL_b$
         \EndFunction
     \end{algorithmic}
-    \caption{Power Diagrams using Embedding in $d+1$ dimensions}
+    \caption{Power diagrams using embedding in $d+1$ dimensions}
     \label{alg:embedding}
 \end{algorithm}
 
@@ -1238,17 +1238,17 @@ Since line~4 must take at least $\Omega(\abs{\IL})$ time, the construction of th
 
 Since \cref{lem:convexhulls} ensures the optimality of the convex hull algorithms and every other operation in \cref{alg:embedding} is dominated by them, this is an optimal algorithm to construct power diagrams in $d$ dimensions for $d = 2$ or $d$ odd.
 
-\section{Implementation}
+\chapter{Implementation}
 \label{sec:implementation}
 In addition to their theoretical description, the data structure and algorithms presented in \cref{sec:constructing_power_diagrams} were also implemented as part of this project.
 The implementation is written in \CC, making heavy use of features in the \CCe standard which introduces a more functional and generic style to the language.
 References for these features can be found in the newer editions of \cite{stroustrup1986c++} and \cite{stroustrup2014programming} and also in \cite{meyers2014effective}.
 To improve readability, code presented in this paper will be pseudo code rather than concrete \CC.
 
-This section first describes the general architecture of the code written for this interdisciplinary project.
+This chapter first describes the general architecture of the code written for this interdisciplinary project.
 It continues by introducing a concrete implementation of the incidence lattices presented in \cref{sub:incidence_lattices} based on directed graphs and then describes how it is used to implement the dual algorithm.
 
-\subsection{Code Architecture}
+\section{Code Architecture}
 \label{sub:code_architecture}
 The program uses a command line interface which is mainly implemented in \src{powerdiagram\_main.cpp}.
 The coordinates of the sphere centers and their radii are read from textfiles, a parser for which is implemented in \src{FromCSV.hpp}.
@@ -1263,7 +1263,7 @@ The implementation supplies an interface to one such algorithm implemented in \s
 
 In the following, both the implementations of the incidence lattices and the dual algorithm will be described in more detail.
 
-\subsection{Incidence Lattices}
+\section{Incidence Lattices}
 \label{sub:impl_incidence_lattices}
 The incidence lattices described in \cref{sub:incidence_lattices} and \cite{edelsbrunner1986constructing} can be used to represent the subset-relationships between different faces of a polyhedron.
 Since it was shown in \cref{thm:equivalentpolyhedron} that a power diagram in $d$ dimensions can be represented by a polyhedron in $d+1$ dimensions, incidence lattices can also be used to represent the cells of power diagrams via their shared boundaries.
@@ -1434,7 +1434,7 @@ Their convex hull does not produce the face however, since it contains rays.
             \end{tikzpicture}
         };
     \end{tikzpicture}
-    \caption{The left figure shows part of an incidence lattice in the process of being filled before the insertion of the new face $\left\{ 1,2,3 \right\}$. To identify the red dashed edges which need to be bisected by the new face, lower and upper boundaries have to be found.
+    \caption[Adding a face to an incidence lattice]{The left figure shows part of an incidence lattice in the process of being filled before the insertion of the new face $\left\{ 1,2,3 \right\}$. To identify the red dashed edges which need to be bisected by the new face, lower and upper boundaries have to be found.
         The face $\left\{ 1, 2 \right\}$ is a largest subset of the new face and therefore an outgoing edge needs to be replaced.
         The face $\left\{ 1, 2, 3, 4 \right\}$ is a smallest superset of the new face and therefore, the new face has to point to it.
     }
@@ -1452,7 +1452,7 @@ In the following, the algorithm to find those edges will be described by the exa
 The algorithm for finding those maximal and minimal relevant faces can be seen in \cref{alg:addface}.
 Given a shallow incidence lattice as described in the left side of \cref{fig:addingfaces}, inserting a new face into an incomplete lattice requires finding all the edges in the existing lattice which have to be bisected by the new face.
 
-Suppose the face $f_{123} = \left\{ 1, 2, 3 \right\}$ which is defined by the intersection of the cells represented by the nodes $1$, $2$ and $3$ should be added to the lattice.
+Suppose the face $f_{123} = \left\{ 1, 2, 3 \right\}$ which is defined by the interchapter of the cells represented by the nodes $1$, $2$ and $3$ should be added to the lattice.
 Since it already contains the face $f_{1234} = \left\{ 1, 2, 3, 4 \right\}$, there must be paths connecting the three mentioned minimal nodes to $f_{1234}$.
 The combinatorical structure of the power diagram gives that $f_{1234} \subseteq f_{123}$ and therefore, the lattice must contain the edge $(f_{123}, f_{1234})$ after the update.
 Note that the direction of the edge is a convention and could be chosen differently, depending on whether the lattice is based on the primal or dual polyhedron.
@@ -1484,9 +1484,9 @@ To speed up the program, the incidence lattices cache the minimal nodes of every
 This is possible since it is not necessary to remove faces besides the restriction operations.
 
 This data structure forms the basis for both the naive algorithm and the efficient algorithm using the convex hull of polar points.
-Since the implementation of the naive algorithm in \src{PowerDiagramNaive.cpp} follows \cref{alg:zerofaces} rather directly, the following subsection will only describe the implementation of the efficient algorithm.
+Since the implementation of the naive algorithm in \src{PowerDiagramNaive.cpp} follows \cref{alg:zerofaces} rather directly, the following section will only describe the implementation of the efficient algorithm.
 
-\subsection{Dual Algorithm}
+\section{Dual Algorithm}
 \label{sub:impl_dual_algorithm}
 The dual algorithm can be found in \src{PowerDiagramDual.cpp}.
 The main challenge in its implementation is the construction of the convex hull of the polar points, which are obtained by applying the functions $\Pi$ and $\Delta$ to the input spheres.
@@ -1537,7 +1537,7 @@ An alternative implementation of convex hulls in general dimensions can be found
             \Statex\Comment{No replacement of other faces necessary}
         \EndProcedure
     \end{algorithmic}
-    \caption{Find $\IL_b$ and dualize it}
+    \caption{Finding $\IL_b$ and dualizing it}
     \label{alg:dual_lattice}
 \end{algorithm}
 After obtaining the shallow incidence lattice of the convex hull of the polar points, this lattice needs to be split into the top and bottom parts as described in \cref{alg:embedding}.
@@ -1563,7 +1563,7 @@ See \cref{alg:dual_lattice} for a more formal description of this part of the al
             \State \Return $d$
         \EndFunction
     \end{algorithmic}
-    \caption{Find direction of an extremal ray}
+    \caption{Finding the direction of an extremal ray}
     \label{alg:ridges}
 \end{algorithm}
 If the convex hull algorithm returns a shallow incidence lattice which, besides the vertices and facets, only contains ridges, the dualized lattice only contains edges ($1$-faces) of the power diagram.
@@ -1577,7 +1577,7 @@ Adding the directions of edges is the last step in constructing a (shallow) inci
 This lattice can be used to extract information about the power diagram like finding spheres whose cells are non-empty or identifying adjacency relationships between spheres.
 \Cref{sec:running_the_program} describes how the implementation can be used to generate output which can be transformed to a tikz-picture like \cref{fig:garage} or \cref{fig:emptycells}.
 
-\section{Conclusion}
+\chapter{Conclusion}
 \label{sec:conclusion}
 This paper introduced power diagrams which are a generalization of Voronoi diagrams.
 It adds the notion of a real weight to every site of the diagram and introduces a new distance function, the power of a point with respect to a site.
@@ -1585,7 +1585,7 @@ The power function gives rise to a geometric interpretation which identifies the
 The power diagram of a set of spheres is then a collection of polyhedral cells where each cell is generated by a sphere.
 A point is part of its cell if a sphere minimizes the power function in comparison to all other spheres.
 
-After introducing some general properties of power diagrams, the main focus of the project lies on the affine equivalency of power diagrams in $d$ dimensions and those polyhedra in $d+1$ dimensions which can be described as the intersection of half spaces which point upwards in $x_{d+1}$ direction.
+After introducing some general properties of power diagrams, the main focus of the project lies on the affine equivalency of power diagrams in $d$ dimensions and those polyhedra in $d+1$ dimensions which can be described as the interchapter of half spaces which point upwards in $x_{d+1}$ direction.
 Using a polarity function which maps these polyhedra to combinatorically dual ones, a dual relationship between power diagrams and convex hulls in $d+1$ dimensions can be established.
 
 This relationship can be used to derive an efficient algorithm to construct power diagrams whose main geometric operation is the construction of a convex hull.
@@ -1593,7 +1593,7 @@ After describing this algorithm formally and introducing a data structure which 
 
 \appendix
 \newpage % For the layout
-\section{Building the Code}
+\chapter{Building the Code}
 \label{sec:building_the_code}
 The implementation presented in \cref{sec:implementation} is written in \CC making use of features introduced into the language in the \CCe standard.
 These features have been part of all major \CC compilers for some time.
@@ -1619,9 +1619,9 @@ CMake \cite{cmake} is a tool which allows programmers to specify how a program s
 CMake generates project files in a toolchain of the user's choice.
 It can, for example, create Makefiles for a command line based build on Linux or it can create solutions which can be used in Visual Studio on Windows.
 There are many parameters and customizable choices to create build files using CMake.
-The following two subsections will describe a typical build process on both Linux and Windows, which can be customized via options described in the documentation of CMake \cite{cmake-tutorial}.
+The following two sections will describe a typical build process on both Linux and Windows, which can be customized via options described in the documentation of CMake \cite{cmake-tutorial}.
 
-\subsection{Linux}
+\section{Linux}
 \label{sub:linux}
 The CMake scripts can either use libraries installed on the target system (for example via a package manager) or compile all libraries from source.
 The latter is achieved by separating the build process into two steps, first downloading and building all dependencies and then using those dependencies to create the final program.
@@ -1641,7 +1641,7 @@ $ make CMAKE_BUILD_TYPE=Release USE_BUNDLED_DEPS=0
 # Clean program only
 $ make clean
     \end{minted}
-    \caption{A simple invocation of \var{make} creates a debug build using bundles libraries.
+    \caption[Using \var{make} to build the program]{A simple invocation of \var{make} creates a debug build using bundles libraries.
     The computer will download the libraries, build them and then build the power diagram program.
     To specify the creation of an optimized release build, the variable \var{CMAKE\_BUILD\_TYPE} can be used, while \var{USE\_BUNDLED\_DEPS} can be set to 0 to use system libraries.
     \var{make clean} and \var{make distclean} can be used to remove the compiled files.
@@ -1649,7 +1649,7 @@ $ make clean
     \label{lst:make}
 \end{listing}
 
-\subsection{Windows}
+\section{Windows}
 \label{sub:windows}
 Since Windows does not support Makefiles by default, the build process has to be completed manually.
 After installing CMake, the easiest way to use it on Windows is to use the \var{cmake-gui} program, which offers a graphical interface.
@@ -1663,14 +1663,14 @@ While it is possible to choose in Visual Studio in which mode to build the progr
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.9\linewidth]{cmake_1.png}
-    \caption{The \src{third-party} directory contains a CMake script which downloads and builds the libraries needed by the \var{powerdiagram} executable.
+    \caption[Building dependencies using CMake]{The \src{third-party} directory contains a CMake script which downloads and builds the libraries needed by the \var{powerdiagram} executable.
     Choose \src{.deps} as the destination folder to ensure that the second step will automatically find the dependencies.}
     \label{fig:cmake_1}
 \end{figure}
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.45\linewidth]{cmake_2.png}
-    \caption{After clicking the \enquote{Configure}-button, CMake prompts the user to choose a generator or toolchain.
+    \caption[Choosing a toolchain in CMake]{After clicking the \enquote{Configure}-button, CMake prompts the user to choose a generator or toolchain.
     Visual Studio and MSVC are the most common toolchain on Windows.
     Both 32 and 64 bit builds are possible, but both libraries and the final program have to be built using the same generator.}
     \label{fig:cmake_2}
@@ -1678,13 +1678,13 @@ While it is possible to choose in Visual Studio in which mode to build the progr
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.9\linewidth]{cmake_3.png}
-    \caption{To change the build type of the libraries from the default optimized release build to a debug build, add the according entry after the \enquote{Configure} step.}
+    \caption[Choosing the build type in CMake]{To change the build type of the libraries from the default optimized release build to a debug build, add the according entry after the \enquote{Configure} step.}
     \label{fig:cmake_3}
 \end{figure}
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.9\linewidth]{cmake_4.png}
-    \caption{To build the program executable, CMake has to be run again with the top level directory as the source folder.}
+    \caption[Building the program using CMake]{To build the program executable, CMake has to be run again with the top level directory as the source folder.}
     \label{fig:cmake_4}
 \end{figure}
 
@@ -1705,7 +1705,7 @@ This concludes the first step.
 \begin{figure}[tb]
     \centering
     \includegraphics[width=0.9\linewidth]{cmake_5.png}
-    \caption{The Visual Studio solution created by CMake for the program can be used to build the code in both debug and release mode.
+    \caption[A Visual-Studio solution created with CMake]{The Visual Studio solution created by CMake for the program can be used to build the code in both debug and release mode.
     CMake found the correct paths for all libraries and configured Visual Studio accordingly.
     The solution explorer shows the \var{powerdiagram} executable which contains the source files which can be edited and debugged as usual.}
     \label{fig:cmake_5}
@@ -1715,7 +1715,7 @@ The destination folder which will contain the final executable can be chosen fre
 After clicking \enquote{Configure} again, choose the same generator as before and click \enquote{Generate} --- changing the \var{CMAKE\_BUILD\_TYPE} here has no effect.
 After this, the destination directory contains a Visual Studio solution which can be used to build the final program as shown in \cref{fig:cmake_5}.
 
-\section{Running the Program}
+\chapter{Running the Program}
 \label{sec:running_the_program}
 The compiled program has a simple command line interface which allows the selection of power diagram sites, algorithms to be executed and output options.
 The program includes a short documentation which can be viewed by invoking \var{./powerdiagram -help}.
@@ -1737,11 +1737,11 @@ For a complete help, use options --help or --helpfull.
     -naive (Run the Naive Algorithm) type: bool default: false
     -verbose (Verbose output) type: bool default: false
     \end{minted}
-    \caption{The output of running \var{./powerdiagram -help}.}
+    \caption[The output of running \var{./powerdiagram -help}]{The output of running \var{./powerdiagram -help}.}
     \label{lst:help}
 \end{listing}
 
-This section shows how to use the program to create a visualization of a two-dimensional power diagram in the \LaTeX-package tikz with \cref{fig:garage} as an example.
+This chapter shows how to use the program to create a visualization of a two-dimensional power diagram in the \LaTeX-package tikz with \cref{fig:garage} as an example.
 The first step is to choose the sphere centers and radii.
 They are defined in two different text files where each line defines a site.
 While the file defining the radii contains one number per line, the different entries of the vectors of the sphere centers are separated with commas, examples of which can be found in the \src{examples} folder.
@@ -1756,7 +1756,7 @@ $ util/tikz.py /tmp/intermdt
 # Using the Makefile
 $ make TIKZ_OUT=1 garage
     \end{minted}
-    \caption{To create a tikz picture from sphere centers and radii defined in text files, the \var{./powerdiagram -draw} parameter can be used.
+    \caption[Creating a tikz-picture of a power diagram]{To create a tikz picture from sphere centers and radii defined in text files, the \var{./powerdiagram -draw} parameter can be used.
         If the program is invoked with this parameter, it outputs a easily parseable format describing vertices and edges of a power diagram, which gets saved to a temporary file.
         This output is then parsed by a Python script which in turn creates a tikz picture.
         The Makefile mentioned in \cref{sub:linux} can also generate tikz output.}
@@ -1787,7 +1787,7 @@ ee p2 s2 s4 d-0 -1
 ee p2 s2 s5 d0.894427 0.447214
 ee p3 s1 s5 d0.447214 0.894427
     \end{minted}
-    \caption{The intermediate output format generated by \var{./powerdiagram -draw}.
+    \caption[The intermediate output format for power diagrams]{The intermediate output format generated by \var{./powerdiagram -draw}.
     The output first enumerates both the spheres and vertices.
     Every internal edge can be defined as the connection of two of the vertices, while the external edges are defined as a point and a normalized direction of the ray.
     The additional annotations of the edge describe to which cells of spheres the edge is incident.}
@@ -1798,6 +1798,3 @@ The \CC executable itself cannot produce tikz but rather outputs a format which 
 The file \src{util/tikz.py} contains a Python-script which converts this intermediate format to tikz output.
 The commands that need to be executed can be found in \cref{lst:createtikz} with the intermediate output of the \CC program described in \cref{lst:intermediate}.
 There is also a template in \src{util/template.tex} which can be used to quickly compile the output of the script files into a standalone image.
-
-\clearpage
-\printbibliography
