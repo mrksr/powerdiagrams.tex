@@ -24,6 +24,8 @@
 \input{tikzpictures.tex}
 
 \usepackage{microtype}
+\usepackage{nowidow}
+\usepackage{afterpage}
 \addtokomafont{disposition}{\boldmath}
 
 \usepackage{minted}
@@ -38,6 +40,10 @@
 
 \usepackage{subcaption}
 \usepackage[font=small, labelfont=bf, format=hang, indention=-2em]{caption}
+
+%Hacky cref fix to conform to the settings in tumthesis.cls
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
 % ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------

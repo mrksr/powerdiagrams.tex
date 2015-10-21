@@ -16,7 +16,7 @@ While all statements presented here can be found in \cite{aurenhammer1987power},
 For the other statements, proofs are provided as a service to the reader.
 
 The first chapter of this paper defines power diagrams, introduces some geometric notation and gives both geometric and algebraic interpretations of the distance metric together with some fundamental results about power diagrams.
-Using a transformation from spheres to hyperplanes, the next chapter shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the interchapter of halfspaces pointing upwards in $d+1$ dimensions.
+Using a transformation from spheres to hyperplanes, the next chapter shows that there exists an affine equivalency between power diagrams in $d$ dimensions and polyhedra which can be described as the intersection of halfspaces pointing upwards in $d+1$ dimensions.
 This equivalency is used to also show a dual relationship between power diagrams in $\R^d$ and the convex hull of a set of points in $\R^{d+1}$, which can be exploited to give an efficient algorithm to construct incidence structures of power diagrams.
 With incidence lattices, a data structure to store them is introduced.
 In the last chapter of the paper, the implementation of both the algorithms and the incidence lattices accompanying this paper is described.
@@ -229,7 +229,7 @@ Every such site gets assigned its partition of the space where there is no other
             S &\to \powerset{\R^d}\\
             s &\mapsto \left\{ x \in \R^d \mid \forall t \in S \setminus \left\{ s \right\}: \pow(x, s) \leq \pow(x, t) \right\}
         \end{aligned}\right..\\
-        \intertext{The \define{power diagram $\PD(S)$} is the set of all cells corresponding to all sites and their non-empty interchapters and given by}
+        \intertext{The \define{power diagram $\PD(S)$} is the set of all cells corresponding to all sites and their non-empty intersections and given by}
         \PD(S) &\coloneqq \left\{ \bigcap_{p \in P} \cell_S(p) \mid P \in \powerset{S} \setminus \left\{ \varnothing \right\} \right\} \setminus \left\{ \varnothing \right\}.
     \end{align}
 \end{definition}
@@ -239,16 +239,16 @@ After introducing some geometric notation, the remainder of this chapter will sh
 
 \section{Geometric Notation}
 \label{sub:geometric_notation}
-Like Voronoi diagrams, power diagrams in the euclidean case will be shown to consist of polyhedral regions, which share faces at their boundaries.
+Like Voronoi diagrams, power diagrams in the euclidean case will be shown to consist of polyhedral regions which share faces at their boundaries.
 An extensive introduction into polyhedra can be found in \cite{grunbaum2003convex} by Grünbaum and an introduction into convex analysis is given by Gritzmann in \cite{gritzmann2013grundlagen}.
-The following will repeat some notations of \cite{aurenhammer1987power}.
+The following repeats some notations of \cite{aurenhammer1987power}.
 
 Let $n \in \R^d$ with $n \neq 0$ and let $b \in \R$.
 Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^\leq = \left\{ x \in \R^d \mid n^T x \leq b \right\}$ is an \define{(closed) halfspace} in $\R^d$.
-A \define{$j$-flat} $f$ is a set expressible as the interchapter of $d - j$, but no fewer, hyperplanes.
+A \define{$j$-flat} $f$ is a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
 It is an affine subspace of $\R^d$ with dimensionality $j$ and is expressible as the affine hull of $j + 1$ linearly independent points in $f$.
 
-A set $P \subseteq R^d$ is called a \define{polyhedron} iff it is expressible as the interchapter of a finite number of halfspaces.
+A set $P \subseteq R^d$ is called a \define{polyhedron} iff it is expressible as the intersection of a finite number of halfspaces.
 $P$ is a \define{$j$-polyhedron} if there is a $j$-flat, but no $(j-1)$-flat, which contains $P$.
 The boundary of $P$ consists of a finite number of $i$-polyhedra with $0 \leq i < j \leq d$, which are called the \define{$i$-faces} of $P$.
 $0$-, $1$- and $(j - 1)$-faces are called \define{vertex}, \define{edge} and \define{facet} respectively.
@@ -262,7 +262,7 @@ Facets with normal vector orthogonal to $v$ are not attributed to either group.
 Any other face is in the lower or upper convex hull if it is contained in a facet which is in $\CHb$ or $\CHt$ respectively.
 
 A \define{cell decomposition $C$} of $\R^d$ is a finite family of polyhedra.
-In this family, every face of a polyhedron in $C$ is itself a member of $C$ and every non-empty interchapter of any two members of $C$ is a face of each of them.
+In this family, every face of a polyhedron in $C$ is itself a member of $C$ and every non-empty intersection of any two members of $C$ is a face of each of them.
 Lastly, the union of all polyhedra must be the whole space, i.e.~$\bigcup_{f \in C} f = \R^d$.
 Full-dimensional polyhedra, or $d$-faces, of $C$ are called \define{cells}.
 $C$ and a $(d+1)$-polyhedron $P$ are called \define{affinely equivalent} if there exists a central or parallel projection $\varphi$ such that for every face $f \in C$ it holds that $f = \varphi(g)$ for some face $g$ of $P$.
@@ -287,22 +287,22 @@ Note that if $r_s = r_t$, the chordal of the two spheres is the bisector of the 
 A power diagram for which all radii are equal is therefore equivalent to the Voronoi diagram of the centers.
 
 The normal vectors of the chordales of three spheres are given by the pairwise differences of their centers.
-Since any of these differences can be expressed through the other two, their interchapter has higher dimensionality than a general interchapter of three hyperplanes can have.
+Since any of these differences can be expressed through the other two, their intersection has higher dimensionality than a general intersection of three hyperplanes can have.
 \begin{lemma}[\lemcite{Observation 2}]
     \label{lem:cellsarepolyhedra}
     Let $s, t$ and $u$ be spheres in $\R^d$ with $d \geq 2$.
-    If the spheres are not collinear, the interchapter of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
+    If the spheres are not collinear, the intersection of their chordales $\chor(s,t) \cap \chor(t, u) \cap \chor(u, s)$ is a $(d-2)$-flat.
     If they are collinear, the three chordales are parallel.
     More generally, the chordales of a sphere with $k \leq d$ non-collinear other spheres in $\R^d$ intersect in a $(d-k)$-flat.
 \end{lemma}
 
-Every cell in the power diagram is either unbounded or it is bounded by chordales or interchapters of other chordales.
-\begin{lemma}[\lemcite{chapter 2.2, p.~80}]
+Every cell in the power diagram is either unbounded or it is bounded by chordales or intersections of other chordales.
+\begin{lemma}[\lemcite{section 2.2, p.~80}]
     The power diagram $\PD(S)$ of a finite set of spheres in $\R^d$ is a cell decomposition of $\R^d$.
 \end{lemma}
 \begin{proof}
     Let $S$ be a finite set of $n$ spheres in $\R^d$ whose centers have an affine dimension of $d$.
-    Since the cell of every sphere $s \in S$ is bounded by halfspaces defined by its $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the interchapter of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
+    Since the cell of every sphere $s \in S$ is bounded by halfspaces defined by its $n - 1$ chordales (which are not necessarily all part of the power diagram), it can be expressed as the intersection of $n - 1$ halfspaces and is therefore a $d$-polyhedron.
     Together with the fact that every $x \in \R^d$ is part of some cell of $\PD(S)$ by definition, this shows that $\PD(S)$ is a cell decomposition of $\R^d$, since the combinatorical structure of the shared faces of the polyhedra is guaranteed by definition.
 \end{proof}
 
@@ -342,7 +342,7 @@ This can happen if a is sphere completely contained in another sphere.
 This is not a sufficient condition however.
 Such a constellation can also lead to a sphere $s$ having a cell for which it holds that $z_s \not\in \cell_S(s) \neq \varnothing$.
 
-While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales have non-empty interchapter with their cells and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
+While it is easy to calculate the chordale of two spheres, the main question to answer when constructing power diagrams is which chordales have non-empty intersection with their cells and which $j$-faces (for $0 \leq j < d - 1$) shared by which cells exist.
 To describe all existing bounded faces, one can find all $0$-faces and remember which sets of them describe the existing faces of higher dimensionality via their convex hulls.
 The following lemma shows that if a power diagram contains a $0$-face, finding those faces and the cells which are adjacent to them is sufficient to construct a set of all non-empty cells and therefore decide whether some specific cell is empty.
 
@@ -370,7 +370,7 @@ The following lemma shows that if a power diagram contains a $0$-face, finding t
 \chapter{Embedding in \texorpdfstring{$d+1$}{d+1} Dimensions}
 \label{sec:embedding_in_d_1_dimensions}
 To derive an algorithm that efficiently computes the cells of a power diagram via the incidence structure of the faces of the boundaries, power diagrams of $d$ dimensions will be embedded into $d+1$ dimensions using a transformation function to map the spheres to hyperplanes.
-This will lead to a result identifying these power diagrams with polyhedra in $d+1$ dimensions which can be expressed as the interchapter of halfspaces pointing upwards.
+This will lead to a result identifying these power diagrams with polyhedra in $d+1$ dimensions which can be expressed as the intersection of halfspaces pointing upwards.
 Using this identity together with a duality mapping for polyhedra will finally connect power diagrams to convex hulls and be the basis of the algorithm to compute power diagrams.
 
 \section{The Transformation Function}
@@ -459,7 +459,7 @@ Then the transformation function is defined as follows.
             (325.5164,292.3607) .. (325.5686,289.7724)(315.5357,299.6013) .. controls
             (317.6307,298.7453) and (319.6662,297.7671) .. (321.3260,296.2777);
 
-            % Interchapter lines
+            % intersection lines
             \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
             rule, very thick] (197.6000,66.9429) -- (285.6023,132.8780);
             \path[draw=tumorange,line join=miter,line cap=butt,miter limit=4.00,even odd
@@ -582,8 +582,8 @@ Then the transformation function is defined as follows.
         \end{scope}
     \end{tikzpicture}
     \caption[The projection function]{The projection function $\Pi$ maps the spheres $s_1$ and $s_2$ to hyperplanes in $d+1$ dimensions.
-    The interchapter of the projections $\Pi(s_i)$ and the paraboloid $U$ are the orthogonal projections of $s_i$ onto the paraboloid.
-    The orthogonal projection onto the $x_1$-$x_2$-plane of the interchapter of the two hyperplanes is the chordale of the two spheres.
+    The intersection of the projections $\Pi(s_i)$ and the paraboloid $U$ are the orthogonal projections of $s_i$ onto the paraboloid.
+    The orthogonal projection onto the $x_1$-$x_2$-plane of the intersection of the two hyperplanes is the chordale of the two spheres.
     This figure is a recreation of \lemcite[]{Figure 4}.}
     \label{fig:projection}
 \end{figure}
@@ -594,19 +594,19 @@ This transform has a direct connection to $U$ since for any sphere $s = (z, r^2)
     &\Leftrightarrow\quad& \dist(x_{[d]}, z) &= r^2\\
     &\Leftrightarrow\quad& x_{[d]} &\in z + r \cdot \Es^d.
 \end{alignat}
-The interchapter of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
+The intersection of $\Pi(s)$ and $U$ is therefore the vertical projection of $s$ onto $U$.
 A visualization of this can be seen in \cref{fig:projection}.
 The following lemma proofs that this mapping is an identification of the two concepts.
 \begin{lemma}
     \label{lem:pibijection}
-    The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ with nonempty interchapter with $U$.
+    The transform $\Pi$ is a bijection from spheres in $\R^d$ to hyperplanes in $\Ha$ with nonempty intersection with $U$.
 \end{lemma}
 \begin{proof}
     Clearly, $\Pi$ is injective since two spheres with different centers map to hyperplanes with different normal vectors $n$ normalized to $n_{d+1} = -1$ and two concentric spheres need to share the same radius $r$ to map to hyperplanes with the same offset.
-    $\Pi$ is also surjective if every interchapter of $U$ with a hyperplane in $\Ha$ is an ellipsoid which maps to a sphere if projected to $h_0$.
+    $\Pi$ is also surjective if every intersection of $U$ with a hyperplane in $\Ha$ is an ellipsoid which maps to a sphere if projected to $h_0$.
 
     Let $n \in \R^{d+1}$ be the normal vector with $n_{d+1} = -1$, let $b \in \R$ be an offset and let $h = \left\{ y \in \R^{d+1} \mid n^T y = b \right\}$ be a hyperplane with $h \in \Ha$.
-    The interchapter of $h$ with $U$ is given by
+    The intersection of $h$ with $U$ is given by
     \begin{align}
         h \cap U = \left\{ x \in \R^{d+1} \mid x_{d+1} = b - n_{[d]}^T x_{[d]} = x_{[d]}^T x_{[d]} \right\}
     \end{align}
@@ -624,7 +624,7 @@ The following lemma proofs that this mapping is an identification of the two con
         &\Leftrightarrow\quad&x_{[d]}^Tx_{[d]} + n_{[d]}^Tx_{[d]} + \frac{1}{4} n_{[d]}^Tn_{[d]} &= b + \frac{1}{4} n_{[d]}^Tn_{[d]}\\
         &\Leftrightarrow\quad& x_{[d]}^Tx_{[d]} + n_{[d]}^Tx_{[d]} - b &= 0,
     \end{alignat}
-    so the projection of the interchapter is indeed a sphere if $b > -\frac{1}{4}n_{[d]}^Tn_{[d]}$, a point if $b = -\frac{1}{4}n_{[d]}^Tn_{[d]}$ and $h$ does not intersect $U$ otherwise.
+    so the projection of the intersection is indeed a sphere if $b > -\frac{1}{4}n_{[d]}^Tn_{[d]}$, a point if $b = -\frac{1}{4}n_{[d]}^Tn_{[d]}$ and $h$ does not intersect $U$ otherwise.
 \end{proof}
 
 Because $\Pi(s)$ is the vertical projection of spheres to $U$, the resulting hyperplanes can also be used to compute the power of some point with respect to $s$.
@@ -641,7 +641,7 @@ Because $\Pi(s)$ is the vertical projection of spheres to $U$, the resulting hyp
     The difference $\dist(x, x^\prime) - \dist(x, x^{\prime\prime})$ is given by $(x_{[d]} - z)^T(x_{[d]} - z) - r^2$, which is equal to $\pow(x_{[d]}, s)$.
 \end{proof}
 
-This directly implies the following lemma, which connects chordales to the newly formed hyperplanes by recognizing that the interchapter of two hyperplanes in $\R^{d+1}$ contains projected points with the same power value for the respective spheres.
+This directly implies the following lemma, which connects chordales to the newly formed hyperplanes by recognizing that the intersection of two hyperplanes in $\R^{d+1}$ contains projected points with the same power value for the respective spheres.
 
 \begin{lemma}
     \label{lem:verticalprojection}
@@ -651,7 +651,7 @@ This directly implies the following lemma, which connects chordales to the newly
 
 \section{Duality of points and hyperplanes}
 \label{sub:duality_of_points_and_hyperplanes}
-The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the interchapter of these hyperplanes and $(d-j)$-flats in this dual domain.
+The hyperplanes established with the mapping $\Pi$ will now be connected to specific \define{polar points} to establish a bijective mapping between $j$-flats defined by the intersection of these hyperplanes and $(d-j)$-flats in this dual domain.
 
 \begin{definition}[Polarity Function]
     Let $\Ha$ as defined above and let $\F$ be the set of all flats which do not contain any vectors parallel to the $x_{d+1}$ axis, i.e.
@@ -701,7 +701,7 @@ The following lemma shows that $\Delta$ is involutory, i.e.~its own inverse, and
     $\Delta(F)$ is therefore a $(d - j)$-flat which is the result of an affine transformation of $N$.
 
     Now assume that $\Delta(F) \not\in \F$.
-    Then $\Delta(F)$ is not expressible as the interchapter of hyperplanes in $\Ha$ and therefore, there must exist two different $d^{(1)}, d^{(2)} \in \Delta(F)$ with $d_{[d]}^{(1)} - d_{[d]}^{(2)} = 0$.
+    Then $\Delta(F)$ is not expressible as the intersection of hyperplanes in $\Ha$ and therefore, there must exist two different $d^{(1)}, d^{(2)} \in \Delta(F)$ with $d_{[d]}^{(1)} - d_{[d]}^{(2)} = 0$.
     Let $n^{(1)}, n^{(2)} \in N$ with $\Delta(h(n^{(1)})) = \left\{ d^{(1)} \right\}$ and $\Delta(h(n^{(2)})) = \left\{ d^{(2)} \right\}$.
     Then it holds that
     \begin{align}
@@ -901,21 +901,21 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
             (s3) -- (d3);
 
             % Center Nodes
-            \tikzstyle{interchapter} = [sphere center, tumblue, minimum size=3pt];
-            \node[interchapter] at (s1) {};
-            \node[interchapter] at (p1) {};
-            \node[interchapter] at (d1) {};
-            \node[interchapter] at (s4) {};
-            \node[interchapter] at (p4) {};
-            \node[interchapter] at (d4) {};
+            \tikzstyle{intersection} = [sphere center, tumblue, minimum size=3pt];
+            \node[intersection] at (s1) {};
+            \node[intersection] at (p1) {};
+            \node[intersection] at (d1) {};
+            \node[intersection] at (s4) {};
+            \node[intersection] at (p4) {};
+            \node[intersection] at (d4) {};
 
-            \node[interchapter] at (s2) {};
-            \node[interchapter] at (p2) {};
-            \node[interchapter] at (d2) {};
+            \node[intersection] at (s2) {};
+            \node[intersection] at (p2) {};
+            \node[intersection] at (d2) {};
 
-            \node[interchapter] at (s3) {};
-            \node[interchapter] at (p3) {};
-            \node[interchapter] at (d3) {};
+            \node[intersection] at (s3) {};
+            \node[intersection] at (p3) {};
+            \node[intersection] at (d3) {};
 
             % Labels
             \node at (188, 350) {$s_1$};
@@ -945,10 +945,10 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
 \end{figure}
 \begin{theorem}[\lemcite{Theorem 4}]
     \label{thm:equivalentpolyhedron}
-    For any $(d+1)$-polyhedron P which is expressible as the interchapter of upper halfspaces of hyperplanes with normal vectors with their $(d+1)$th coordinate equal to $-1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
+    For any $(d+1)$-polyhedron P which is expressible as the intersection of upper halfspaces of hyperplanes with normal vectors with their $(d+1)$th coordinate equal to $-1$, there exists an affinely equivalent power diagram in $h_0$ and vice versa.
 \end{theorem}
 \begin{proof}
-    Let $P = \bigcap_{i=1}^n h_i^\leq$ be the interchapter of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
+    Let $P = \bigcap_{i=1}^n h_i^\leq$ be the intersection of upper halfspaces of hyperplanes $h_i$ with normal vectors with $(d+1)$th coordinates equal to $1$ such that for facet $f_i$ of $P$ it holds that $f_i \subseteq h_i$.
     Also assume that $h_i \cap U \neq \varnothing$ for all $i$ which can be achieved by moving the polyhedron in $x_{d+1}$-direction.
     This movement does not affect the desired affine equivalence.
 
@@ -960,7 +960,7 @@ Any other polyhedron can however be converted to such a polyhedron by moving it 
 
     Conversely, given any set of spheres $S$ in $h_0$ a corresponding polyhedron can be constructed by intersecting the upper halfspaces of the hyperplanes in $\Pi(S)$.
 \end{proof}
-To also describe polyhedra $P$ generated using the interchapter of upper halfspaces, one can inspect the reflection of $P$ through $h_0$ as described in \cite{aurenhammer1987power}.
+To also describe polyhedra $P$ generated using the intersection of upper halfspaces, one can inspect the reflection of $P$ through $h_0$ as described in \cite{aurenhammer1987power}.
 
 Having established the existence of an affinely equivalent polyhedron for each set of spheres in $h_0$, the following theorem will show that using the polarity function $\Delta$, it is possible to relate power diagrams to convex hulls.
 A power diagram is called dual to a convex hull if there exists a polyhedron such that the power diagram is affinely equivalent to the polyhedron as described in \cref{thm:equivalentpolyhedron} and this polyhedron is dual to the convex hull.
@@ -973,7 +973,7 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
     For any finite set $M \subset \R^{d+1}$ there exists a set $S$ of spheres in $h_0$ such that $\PD(S)$ is dual to $\CHb(M)$.
 \end{theorem}
 \begin{proof}
-    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the interchapter of the upper halfspaces of the hyperplanes $H = \left\{ h_i \mid h_i = \Pi(s_i), 1 \leq i \leq n \right\}$ with $n = \abs{S}$ and vice versa.
+    By \cref{thm:equivalentpolyhedron} there exists an affinely equivalent polyhedron $P$ for each $\PD(S)$ in $h_0$ which is defined by the intersection of the upper halfspaces of the hyperplanes $H = \left\{ h_i \mid h_i = \Pi(s_i), 1 \leq i \leq n \right\}$ with $n = \abs{S}$ and vice versa.
     Let $M = \Delta(H)$ be the set of all polars of the hyperplanes corresponding to all spheres.
     It is to be shown that $\CHb(M)$ is dual to $P$.
 
@@ -993,14 +993,14 @@ In the following, separations with respect to the $x_{d+1}$-axis will be conside
 In this chapter, the theoretical results of the previous chapters will be applied to the formulation of algorithms to construct the power diagram $\PD(S)$ of some set of spheres $S$ in $d$ dimensions.
 \Cref{lem:cellsarepolyhedra} implies that the cells of those power diagrams are polyhedra which share faces at their boundaries.
 
-To represent those boundaries (and therefore the power diagrams), a data structure called incidence lattices will be introduced.
-Also based on \cref{lem:cellsarepolyhedra}, a naive algorithm can be formulated, which finds all $0$-faces of and is based on the observation that every such face is defined by at least $(d+1)$ spheres.
+To represent those boundaries, incidence lattices will be introduced.
+Also based on \cref{lem:cellsarepolyhedra}, a naive algorithm constructing all $0$-faces can be formulated, which is based on the observation that every such face is defined by at least $(d+1)$ spheres.
 Lastly, an efficient algorithm based on the results of \cref{sec:embedding_in_d_1_dimensions} and the known problem of constructing convex hulls will be presented and its running time analyzed.
 
 \section{Incidence Lattices}
 \label{sub:incidence_lattices}
 \Cref{thm:equivalentpolyhedron} establishes that for every power diagram in $d$ dimensions there is a $(d+1)$-polyhedron which is affinely equivalent.
-This means that all chordales which exist in the power diagram and their interchapters which form flats of lower dimensionality are represented as faces in this polyhedron as can be seen from \cref{lem:verticalprojection}.
+This means that all chordales which exist in the power diagram and their intersections which form flats of lower dimensionality are represented as faces in this polyhedron as can be seen from \cref{lem:verticalprojection}.
 To represent all faces which are boundaries of cells in the power diagram, one can therefore choose a data structure which represents the faces of the equivalent polyhedron.
 
 \Textcite{grunbaum2003convex} observes that by creating a partial order on faces of a polyhedron induced by set inclusion of the points in the faces, one can obtain the so called incidence lattice of the polyhedron.
@@ -1111,7 +1111,7 @@ Together with \cref{thm:equivalentpolyhedron} it follows that the incidence latt
 \Cref{fig:incidencelattice} shows an example of this relationship.
 A square defined by four vertices can be interpreted as a degenerated lower convex hull in three dimensions. It is then dual to a Voronoi diagram in two dimensions whose incidence structure is described by the same incidence lattice with reverted edges.
 
-Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by \textcite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressible as interchapters of upwards pointing halfspaces).
+Since every non-empty face at the boundary between two cells is represented by a node in the incidence lattice, the following result by \textcite{brondsted2012introduction} bounds the size of incidence lattices describing a power diagram (and therefore the size of incidence lattices of polyhedra which are expressible as intersections of upwards pointing halfspaces).
 
 \begin{lemma}
     \label{lem:latticesexponential}
@@ -1120,6 +1120,7 @@ Since every non-empty face at the boundary between two cells is represented by a
 
 A direct consequence of this lemma is that any algorithm constructing the complete incidence lattice of some power diagram will have a running time in $\Omega(n^{\left\lceil d/2 \right\rceil})$ for $n$ spheres in $d$ dimensions.
 To lessen the impact of higher dimensions somewhat, the implementation presented here will create shallow incidence lattices which only contain the $0$-faces (vertices), $1$-faces (edges) and $d$-faces (cells) of a power diagram.
+\noclub
 
 \section{Naive Algorithm}
 \label{sub:naive_algorithm}
@@ -1141,7 +1142,7 @@ Operations of the incidence lattice are denoted using addition and subtraction o
             \State $\Ge \gets \binom{S}{d + 1}$\Comment{Find the set of all possible groups}
             \Statex
             \For{$G$ \textbf{in} $\Ge$}\Comment{Find $0$-faces}
-                \State $P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find interchapter of all pairs of spheres in $G$}.
+                \State $P \gets \bigcap_{s_1, s_2 \in G} \chor(s_1, s_2)$\Comment{Find intersection of all pairs of spheres in $G$}.
                 \If{$P = \left\{ p \right\}$}\Comment{$P$ is a single point}
                     \State Choose $g \in G$
                     \If{$\forall o \in S \setminus G : \pow(p, o) \geq \pow(p, g)$}\Comment{$p$ is a $0$-face}
@@ -1170,7 +1171,7 @@ To analyze the running time, the different steps are analyzed separately and lea
 \end{theorem}
 \begin{proof}
     Line~2 is in $\Oh(1)$, line~3 in $\Oh(\abs{\Ge} \cdot d)$ and the merge phase starting in line 10 can be achieved in $\Oh(\abs{\Ge} \cdot d)$, where the factor comes from adding the edges from $G_2$ to the incidence lattice, assuming that adding an edge to the lattice can be done in $\Oh(1)$.
-    Finding the interchapter $p$ in line~5 amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
+    Finding the intersection $p$ in line~5 amounts to solving a system of linear equations with a matrix of size $(d+1) \times d$, which takes $\Oh(d^3)$ time.
     Line~8 needs to check every sphere in $S$ which is not in $G$ and therefore can be bounded by $\Oh(n)$, while line~9 only operates on the spheres in $G$ and therefore only takes $\Oh(d)$ time.
     The running time of this algorithm is therefore clearly dominated by the first loop since lines 5 and 7 could both have to be performed $\abs{\Ge} = \binom{\abs{S}}{d + 1} = \binom{n}{d + 1}$ times.
     This leads to the desired bound.
@@ -1290,69 +1291,6 @@ Finding the vertices which define internal faces therefore translates to finding
 For unbounded faces, the minimal nodes connected to it also represent all adjacent vertices.
 Their convex hull does not produce the face however, since it contains rays.
 
-\begin{algorithm}[tbp]
-    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices to be combined to a face, \pred{filter} and \pred{continue} predicates mapping from nodes to boolean truth values and \pred{nextNodes} mapping from nodes to sets of nodes.
-    \begin{algorithmic}[1]
-        \Function{FindNodesBFS}{$v_0, \pred{filter}, \pred{continue}, \pred{nextNodes}$}
-            \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
-            \State $V_{\textnormal{tovisit}} \gets$ Queue containing only $v_0$
-            \State $V_{\textnormal{found}} \gets \left\{  \right\}$
-
-            \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
-                \State $v \gets$ Pop the first element of $V_{\textnormal{tovisit}}$
-
-                \If{$\Call{continue}{v}$}
-                    \For{$n$ \textbf{in} $\Call{nextNodes}{v}$}
-                        \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
-                            \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
-                            \State Append $n$ to $V_{\textnormal{tovisit}}$
-                        \EndIf
-                    \EndFor
-                \EndIf
-
-                \If{$\Call{filter}{v}$}
-                    \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
-                \EndIf
-            \EndWhile
-            \State \Return $V_{\textnormal{found}}$
-        \EndFunction
-        \Statex
-        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal faces below of $V_{\textnormal{minimals}}$}
-            \Function{isGroup}{$f$}
-                \State \Return $\Call{MinimalsOf}{\IL, f} \subseteq V_{\textnormal{minimals}}$
-            \EndFunction
-            \State $\Ge \gets \left\{  \right\}$
-            \For{$v \in V_{\textnormal{minimals}}$}
-                \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL, \cdot)}$
-                \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose maximal nodes in $G$}
-                \State $\Ge \gets \Ge \cup G$
-            \EndFor
-            \State \Return $\Ge$
-        \EndFunction
-        \Statex
-        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal faces above of $V_{\textnormal{minimals}}$}
-            \Function{isUB}{$f$}
-                \State \Return $V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f}$
-            \EndFunction
-            \Function{isNotUb}{$f$}
-                \State \Return \textbf{not} \Call{isUB}{$f$}
-            \EndFunction
-            \State Choose $v_0 \in V_{\textnormal{minimals}}$
-            \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL, \cdot)}$
-            \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g^\prime, g) \in \IL \right\}$\Comment{Choose minimal nodes in $G$}
-            \State \Return $G$
-        \EndFunction
-        \Statex
-        \Procedure{AddFace}{$\IL, V_{\textnormal{minimals}}$}
-            \State $V_{\textnormal{below}} \gets \Call{FindGroups}{\IL, V_{\textnormal{minimals}}}$
-            \State $V_{\textnormal{above}} \gets \Call{FindLUBs}{\IL, V_{\textnormal{minimals}}}$
-            \State $\IL \gets \IL - \left\{ (a, b) \mid a \in V_{\textnormal{above}}, b \in V_{\textnormal{below}} \right\}$\Comment{Remove old edges}
-            \State $\IL \gets \IL + \left\{ V_{\textnormal{minimals}} \right\} + \left\{ (b, V_{\textnormal{minimals}}) \mid b \in V_{\textnormal{below}} \right\}$\Comment{Add new face and edges}
-        \EndProcedure
-    \end{algorithmic}
-    \caption{Adding faces to an incidence lattice}
-    \label{alg:addface}
-\end{algorithm}
 \begin{figure}[tb]
     \centering
     \begin{tikzpicture}[font=\scriptsize]
@@ -1452,12 +1390,79 @@ In the following, the algorithm to find those edges will be described by the exa
 The algorithm for finding those maximal and minimal relevant faces can be seen in \cref{alg:addface}.
 Given a shallow incidence lattice as described in the left side of \cref{fig:addingfaces}, inserting a new face into an incomplete lattice requires finding all the edges in the existing lattice which have to be bisected by the new face.
 
-Suppose the face $f_{123} = \left\{ 1, 2, 3 \right\}$ which is defined by the interchapter of the cells represented by the nodes $1$, $2$ and $3$ should be added to the lattice.
-Since it already contains the face $f_{1234} = \left\{ 1, 2, 3, 4 \right\}$, there must be paths connecting the three mentioned minimal nodes to $f_{1234}$.
-The combinatorical structure of the power diagram gives that $f_{1234} \subseteq f_{123}$ and therefore, the lattice must contain the edge $(f_{123}, f_{1234})$ after the update.
-Note that the direction of the edge is a convention and could be chosen differently, depending on whether the lattice is based on the primal or dual polyhedron.
+\afterpage {
+\renewcommand*{\pagemark}{}
+\begin{algorithm}[p]
+    Let $\IL$ be an incidence lattice, $V_{\textnormal{minimals}}$ the set of vertices to be combined to a face, \pred{filter} and \pred{continue} predicates mapping from nodes to boolean truth values and \pred{nextNodes} mapping from nodes to sets of nodes.
+    \begin{algorithmic}[1]
+        \Function{FindNodesBFS}{$v_0, \pred{filter}, \pred{continue}, \pred{nextNodes}$}
+            \State $V_{\textnormal{visited}} \gets \left\{ v_0 \right\}$
+            \State $V_{\textnormal{tovisit}} \gets$ Queue containing only $v_0$
+            \State $V_{\textnormal{found}} \gets \left\{  \right\}$
+
+            \While{$V_{\textnormal{tovisit}}$ \textbf{is not} empty}
+                \State $v \gets$ Pop the first element of $V_{\textnormal{tovisit}}$
+
+                \If{$\Call{continue}{v}$}
+                    \For{$n$ \textbf{in} $\Call{nextNodes}{v}$}
+                        \If{$n$ \textbf{not in} $V_{\textnormal{visited}}$}
+                            \State $V_{\textnormal{visited}} \gets V_{\textnormal{visited}} \cup \left\{ n \right\}$
+                            \State Append $n$ to $V_{\textnormal{tovisit}}$
+                        \EndIf
+                    \EndFor
+                \EndIf
+
+                \If{$\Call{filter}{v}$}
+                    \State $V_{\textnormal{found}} \gets V_{\textnormal{found}} \cup \left\{ v \right\}$
+                \EndIf
+            \EndWhile
+            \State \Return $V_{\textnormal{found}}$
+        \EndFunction
+        \Statex
+        \Function{FindGroups}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find maximal faces below of $V_{\textnormal{minimals}}$}
+            \Function{isGroup}{$f$}
+                \State \Return $\Call{MinimalsOf}{\IL, f} \subseteq V_{\textnormal{minimals}}$
+            \EndFunction
+            \State $\Ge \gets \left\{  \right\}$
+            \For{$v \in V_{\textnormal{minimals}}$}
+                \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isGroup}, \pred{isGroup}, \pred{Successors}(\IL, \cdot)}$
+                \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g, g^\prime) \in \IL \right\}$\Comment{Choose maximal nodes in $G$}
+                \State $\Ge \gets \Ge \cup G$
+            \EndFor
+            \State \Return $\Ge$
+        \EndFunction
+        \Statex
+        \Function{FindLUBs}{$\IL, V_{\textnormal{minimals}}$}\Comment{Find minimal faces above of $V_{\textnormal{minimals}}$}
+            \Function{isUB}{$f$}
+                \State \Return $V_{\textnormal{minimals}} \subseteq \Call{MinimalsOf}{\IL, f}$
+            \EndFunction
+            \Function{isNotUb}{$f$}
+                \State \Return \textbf{not} \Call{isUB}{$f$}
+            \EndFunction
+            \State Choose $v_0 \in V_{\textnormal{minimals}}$
+            \State $G \gets \Call{FindNodesBFS}{\IL, v_0, \pred{isUb}, \pred{isNotUb}, \pred{Successors}(\IL, \cdot)}$
+            \State $G \gets \left\{ g \in G \mid \nexists g^\prime \in G : (g^\prime, g) \in \IL \right\}$\Comment{Choose minimal nodes in $G$}
+            \State \Return $G$
+        \EndFunction
+        \Statex
+        \Procedure{AddFace}{$\IL, V_{\textnormal{minimals}}$}
+            \State $V_{\textnormal{below}} \gets \Call{FindGroups}{\IL, V_{\textnormal{minimals}}}$
+            \State $V_{\textnormal{above}} \gets \Call{FindLUBs}{\IL, V_{\textnormal{minimals}}}$
+            \State $\IL \gets \IL - \left\{ (a, b) \mid a \in V_{\textnormal{above}}, b \in V_{\textnormal{below}} \right\}$\Comment{Remove old edges}
+            \State $\IL \gets \IL + \left\{ V_{\textnormal{minimals}} \right\} + \left\{ (b, V_{\textnormal{minimals}}) \mid b \in V_{\textnormal{below}} \right\}$\Comment{Add new face and edges}
+        \EndProcedure
+    \end{algorithmic}
+    \caption{Adding faces to an incidence lattice}
+    \label{alg:addface}
+\end{algorithm}
+\clearpage
+}
+Suppose the face $f_{123} = \left\{ 1, 2, 3 \right\}$ which represents the intersection of the cells represented by the nodes $1$, $2$ and $3$ should be added to the lattice.
+Since it already contains the face $f_{1234} = \left\{ 1, 2, 3, 4 \right\}$, there must be paths connecting those three minimal nodes to $f_{1234}$.
+The structure of the power diagram gives that $f_{1234} \subseteq f_{123}$ and therefore, the lattice must contain the edge $(f_{123}, f_{1234})$ after the update.
+The direction of the edge is a convention and could be chosen differently, depending on whether the lattice is based on the primal or dual polyhedron.
 For the same reason, the lattice must also contain the edge $(3, f_{123})$, which would make the edge $(3, f_{1234})$ transitive, so it has to be removed.
-Note however that there was no edge $(2, f_{1234})$, since there is already a face $f_{12} = \left\{ 1, 2 \right\}$ which combines the other two cells.
+However, the edge $(2, f_{1234})$ does not exist because of the face $f_{12} = \left\{ 1, 2 \right\}$.
 Lastly, suppose there existed a face $f_{12345} = \left\{ 1, 2, 3, 4, 5 \right\}$ in the lattice.
 Then although $f_{12345} \subseteq f_{123}$ holds, the edge $(f_{123}, f_{12345})$ must not be added, since after connecting $f_{123}$ to $f_{1234}$, this edge would be transitive.
 
@@ -1495,6 +1500,7 @@ Since the creation of a convex hull is a known geometrical problem, this impleme
 While there exists a multitude of algorithms to construct convex hulls in both the two and three-dimensional cases, there are surprisingly few alternatives available for the general $d$-dimensional case.
 To make it possible to easily switch the algorithm used, the concrete convex hull algorithms are encapsulated and are required to implement a simple interface which takes a set of points and returns an incidence lattice.
 Since these lattices are of exponential size in general, the algorithms are expected to return a shallow version which only contain vertices, facets and ridges ($(d-2)$-faces).
+\noclub
 
 This implementation uses the generalization of the QuickHull algorithm for arbitrary dimensions, a description of which can be found in \cite{barber1996quickhull} and an interface to which is implemented in \src{ConvexHullQhull.cpp}.
 QuickHull assumes that the input is full-dimensional.
@@ -1585,7 +1591,7 @@ The power function gives rise to a geometric interpretation which identifies the
 The power diagram of a set of spheres is then a collection of polyhedral cells where each cell is generated by a sphere.
 A point is part of its cell if a sphere minimizes the power function in comparison to all other spheres.
 
-After introducing some general properties of power diagrams, the main focus of the project lies on the affine equivalency of power diagrams in $d$ dimensions and those polyhedra in $d+1$ dimensions which can be described as the interchapter of half spaces which point upwards in $x_{d+1}$ direction.
+After introducing some general properties of power diagrams, the main focus of the project lies on the affine equivalency of power diagrams in $d$ dimensions and those polyhedra in $d+1$ dimensions which can be described as the intersection of half spaces which point upwards in $x_{d+1}$ direction.
 Using a polarity function which maps these polyhedra to combinatorically dual ones, a dual relationship between power diagrams and convex hulls in $d+1$ dimensions can be established.
 
 This relationship can be used to derive an efficient algorithm to construct power diagrams whose main geometric operation is the construction of a convex hull.
