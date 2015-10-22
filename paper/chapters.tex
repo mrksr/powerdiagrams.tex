@@ -9,7 +9,7 @@ Applications outside of geometry include the solution of weighted balanced clust
 
 A way of describing a power diagram is via the adjacency structure of the different cells.
 Two cells are adjacent if they share points which have the same minimizing power with respect to both spheres.
-In this case, they share a polyhedron which is incident to both cells.
+In the euclidean case, they share a polyhedron which is incident to both cells.
 This interdisciplinary project is concerned with describing power diagrams formally, describing algorithms to construct such incidence structures and implementing them in \CC.
 The theoretical parts of this project are guided by a paper by \textcite{aurenhammer1987power}.
 While all statements presented here can be found in \cite{aurenhammer1987power}, only the ones with an explicit citation contain a proof in the original paper.
@@ -69,7 +69,7 @@ The normal vectors of the hyperplanes at the boundaries are given by the connect
         \node[point] () at (p2) {};
         \node[point] () at (p3) {};
     \end{tikzpicture}
-    \caption[2D Voronoi diagram]{2D Voronoi diagrams partition the plane into regions of points with a common closest input point. The edges separating two regions can be calculated as the perpendicular bisector of the line connecting their centers. Two regions are neighbours if there exists an edge between their points in the Delaunay triangulation of the same set.}
+    \caption[A two-dimensional Voronoi diagram]{2D Voronoi diagrams partition the plane into regions of points with a common closest input point. The edges separating two regions can be calculated as the perpendicular bisector of the line connecting their centers. Two regions are neighbours if there exists an edge between their points in the Delaunay triangulation of the same set.}
     \label{fig:voronoi}
 \end{figure}
 
@@ -78,7 +78,7 @@ It can be shown that there exists a dual relationship between Voronoi diagrams i
 A \define{Delaunay triangulation} of a set of points $M$ is a graph in which three points form a clique iff the smallest circle containing all three points does not contain any other point in $M$.
 Two regions in the Voronoi diagram then are neighbours iff there exists an edge in the Delaunay triangulation between their corresponding points.
 
-This gives rise to efficient algorithms for constructing the diagrams, since the triangulations can be obtained in $\Oh(n \log n)$ time by incrementally inserting points in an existing triangulation.
+This gives rise to efficient algorithms for constructing the diagrams, since the triangulations can be obtained in $\Oh(n \log n)$ time by incrementally inserting points into an existing triangulation.
 This algorithm was first described by \textcite{green1978computing} and is optimal, since one can reduce the sorting problem to finding triangulations \cite{aurenhammer1991voronoi}.
 Another algorithm to find Delaunay triangulation described by Aurenhammer involves lifting the two dimensional input into three dimensions by projecting it to a paraboloid.
 The triangulation can then be found by computing the convex hull of those points, also yielding $\Oh(n \log n)$ complexity in two dimensions.
@@ -91,7 +91,7 @@ After introducing some geometric notation, some fundamental results about power 
 \label{sub:definition_of_power_diagrams}
 There are multiple possible modifications of Voronoi diagrams, a few of which are described in \cite{aurenhammer1987power}.
 To obtain \define{power diagrams}, each point $p \in M$ is assigned a \define{weight} $w(p)$, where a larger weight results in a larger cell.
-While the definition given here is applicable to more general metrics, the results presented here assume the usage of the euclidean metric $\dist(x, y) = \Vert x - y \Vert_2^2$.
+While the definition given here is applicable to more general metrics, the results presented here assume the usage of the euclidean metric $\dist(x, y) = \Vert x - y \Vert_2$.
 
 The distance function to be minimized in Voronoi diagrams for points $x \in \R^d$ in a cell is $\dist(x, p)$.
 Power diagrams use the function $\dist(x, p)^2 - w(p)$.
@@ -244,7 +244,7 @@ An extensive introduction into polyhedra can be found in \cite{grunbaum2003conve
 The following repeats some notations of \cite{aurenhammer1987power}.
 
 Let $n \in \R^d$ with $n \neq 0$ and let $b \in \R$.
-Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^\leq = \left\{ x \in \R^d \mid n^T x \leq b \right\}$ is an \define{(closed) halfspace} in $\R^d$.
+Then $h = \left\{ x \in \R^d \mid n^T x = b \right\}$ is a \define{hyperplane} and $h^\leq = \left\{ x \in \R^d \mid n^T x \leq b \right\}$ is a \define{(closed) halfspace} in $\R^d$.
 A \define{$j$-flat} $f$ is a set expressible as the intersection of $d - j$, but no fewer, hyperplanes.
 It is an affine subspace of $\R^d$ with dimensionality $j$ and is expressible as the affine hull of $j + 1$ linearly independent points in $f$.
 
@@ -365,6 +365,7 @@ The following lemma shows that if a power diagram contains a $0$-face, finding t
         \dim(C) = \dim \left( \aff \left( \left\{ z_1, z_2, \dots, z_{d+2} \right\} \right) \right) \geq \dim \left( \aff \left( \left\{ z_1, z_2, \dots, z_{d+1} \right\} \right) \right) = d
     \end{align}
     and therefore, the lineality space must be empty, which is a contradiction.
+    Note that if $k < d+1$, the power diagram cannot contain a $0$-face and if $k = d+1$, the power diagram can only contain a zero face if all spheres are adjacent to it.
 \end{proof}
 
 \chapter{Embedding in \texorpdfstring{$d+1$}{d+1} Dimensions}
@@ -633,7 +634,7 @@ Because $\Pi(s)$ is the vertical projection of spheres to $U$, the resulting hyp
     Let $s = (z, r^2)$ be a sphere in $h_0$ and $x \in h_0$.
     Let $x^\prime$ and $x^{\prime\prime}$ denote the vertical projections of $x$ onto $U$ and $\Pi(s)$. It then holds that
     \begin{align}
-        \pow(x_{[d]}, s) = \dist(x, x^\prime) - \dist(x, x^{\prime\prime})
+        \pow(x_{[d]}, s) = \dist(x, x^\prime) - \dist(x, x^{\prime\prime}).
     \end{align}
 \end{lemma}
 \begin{proof}
