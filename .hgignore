@@ -33,3 +33,8 @@ syntax: glob
 # pdfpc
 *.info
 *.pdfpc
+
+# lol
+*.loa
+*.lol
+*.lot
